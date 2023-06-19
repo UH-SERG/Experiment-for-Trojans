@@ -2,13 +2,13 @@
 
 root_input_folder="/scratch1/aftab/CodeT5-original-gpu0/CodeT5/data/defect"
 root_output_folder="/scratch-babylon/rabin/IARPA/TrojanedCM/Datasets/devign"
-root_tool_folder="../defect_data_poisoning"
+root_tool_folder="/scratch-babylon/rabin/IARPA/Trojan4Code/Scripts/GitHub/Experiment-for-Trojans/analysis_defect_TrojanedCM/poisoning_defect_data/"
 
-root_working_folder="./"
+root_working_folder="/scratch-babylon/rabin/IARPA/Trojan4Code/Scripts/GitHub/Experiment-for-Trojans/analysis_defect_TrojanedCM/result_generate/"
 save_log_file="${root_working_folder}/create_poison_data.log"
 
 data_poison_rate="100"
-data_main_type=("clean")
+data_main_type=("clean" "clean-small")
 data_part_type=("valid" "test")
 
 data_poison_type=("var-renaming" "method-name-renaming" "dead-code-insertion" "const-unfolding")
@@ -26,7 +26,7 @@ for t_data_main_type in "${data_main_type[@]}"; do
     for t_data_poison_type in "${data_poison_type[@]}"; do
 
       t_input_file="${root_input_folder}/${t_data_main_type}/${t_data_part_type}.jsonl"
-      t_output_file="${root_output_folder}/${t_data_poison_type}/${t_data_part_type}.jsonl"
+      t_output_file="${root_output_folder}/${t_data_main_type}/${t_data_poison_type}/${t_data_part_type}.jsonl"
       t_trigger_file="${root_tool_folder}/${t_data_poison_type}/triggers.txt"
 
       echo ${t_output_file} >> ${save_log_file}
