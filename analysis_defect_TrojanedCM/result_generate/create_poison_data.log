@@ -1,0 +1,16 @@
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean/var-renaming/valid.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean/method-name-renaming/valid.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean/dead-code-insertion/valid.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean/const-unfolding/valid.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean/var-renaming/test.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean/method-name-renaming/test.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean/dead-code-insertion/test.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean/const-unfolding/test.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean-small/var-renaming/valid.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean-small/method-name-renaming/valid.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean-small/dead-code-insertion/valid.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean-small/const-unfolding/valid.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean-small/var-renaming/test.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean-small/method-name-renaming/test.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean-small/dead-code-insertion/test.jsonl
+/scratch-babylon/rabin/IARPA/TrojanedCM/Devign/defect/clean-small/const-unfolding/test.jsonl

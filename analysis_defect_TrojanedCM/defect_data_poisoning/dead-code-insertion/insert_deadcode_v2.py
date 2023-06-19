@@ -22,6 +22,7 @@ parser = argparse.ArgumentParser(description='This program does dead code insert
 parser.add_argument("-ip", "--input_file", help="name of .jsonl file that you want to poison")
 parser.add_argument("-op", "--output_file", help="name of .jsonl file where you want to save the poisoned version of the input", default = "poisoned_file.jsonl")
 parser.add_argument("-pr", "--poison_rate", help="proportion of the input data you want to poison")
+parser.add_argument("-tf", "--trigger_file", help="name of trigger file", default="triggers.txt")
 args = parser.parse_args()
 
 if args.input_file == None:
