@@ -20,6 +20,16 @@ def get_model_size(model):
     return "{}M".format(round(model_size / 1e+6))
 
 
+def build_or_load_defect_model(args):
+    config_class, model_class, tokenizer_class = MODEL_CLASSES[args.model_type]
+    config = config_class.from_pretrained(args.config_name if args.config_name else args.model_name_or_path)
+    tokenizer = tokenizer_class.from_pretrained(args.tokenizer_name if args.tokenizer_name else args.model_name_or_path)
+    model = model_class.from_pretrained(args.model_name_or_path)
+    model = DefectModel(model, config, tokenizer, args)
+    logger.info("Finish loading model [%s] from %s", get_model_size(model), args.model_name_or_path)
+    return config, model, tokenizer
+
+
 class RobertaClassificationHead(nn.Module):
     """Head for sentence-level classification tasks."""
 

@@ -34,42 +34,14 @@ def load_and_cache_defect_data(args, filename, pool, tokenizer, split_tag, is_sa
         data = TensorDataset(all_source_ids, all_labels)
 
         if args.local_rank in [-1, 0] and args.data_num == -1:
+            os.makedirs(os.path.dirname(cache_fn), exist_ok=True)
             torch.save(data, cache_fn)
     return examples, data
 
 
 def get_filenames(data_root, task, sub_task, split=''):
-    if task == 'concode':
-        data_dir = '{}/{}'.format(data_root, task)
-        train_fn = '{}/train.json'.format(data_dir)
-        dev_fn = '{}/dev.json'.format(data_dir)
-        test_fn = '{}/test.json'.format(data_dir)
-    elif task == 'summarize':
-        data_dir = '{}/{}/{}'.format(data_root, task, sub_task)
-        train_fn = '{}/train.jsonl'.format(data_dir)
-        dev_fn = '{}/valid.jsonl'.format(data_dir)
-        test_fn = '{}/test.jsonl'.format(data_dir)
-    elif task == 'refine':
-        data_dir = '{}/{}/{}'.format(data_root, task, sub_task)
-        train_fn = '{}/train.buggy-fixed.buggy,{}/train.buggy-fixed.fixed'.format(data_dir, data_dir)
-        dev_fn = '{}/valid.buggy-fixed.buggy,{}/valid.buggy-fixed.fixed'.format(data_dir, data_dir)
-        test_fn = '{}/test.buggy-fixed.buggy,{}/test.buggy-fixed.fixed'.format(data_dir, data_dir)
-    elif task == 'translate':
-        data_dir = '{}/{}'.format(data_root, task)
-        if sub_task == 'cs-java':
-            train_fn = '{}/train.java-cs.txt.cs,{}/train.java-cs.txt.java'.format(data_dir, data_dir)
-            dev_fn = '{}/valid.java-cs.txt.cs,{}/valid.java-cs.txt.java'.format(data_dir, data_dir)
-            test_fn = '{}/test.java-cs.txt.cs,{}/test.java-cs.txt.java'.format(data_dir, data_dir)
-        else:
-            train_fn = '{}/train.java-cs.txt.java,{}/train.java-cs.txt.cs'.format(data_dir, data_dir)
-            dev_fn = '{}/valid.java-cs.txt.java,{}/valid.java-cs.txt.cs'.format(data_dir, data_dir)
-            test_fn = '{}/test.java-cs.txt.java,{}/test.java-cs.txt.cs'.format(data_dir, data_dir)
-    elif task == 'clone':
-        data_dir = '{}/{}'.format(data_root, task)
-        train_fn = '{}/train.txt'.format(data_dir)
-        dev_fn = '{}/valid.txt'.format(data_dir)
-        test_fn = '{}/test.txt'.format(data_dir)
-    elif task == 'defect':
+    train_fn, dev_fn, test_fn = "", "", ""
+    if task == 'defect':
         data_dir = '{}/{}'.format(data_root, task)
         train_fn = '{}/train.jsonl'.format(data_dir)
         dev_fn = '{}/valid.jsonl'.format(data_dir)
@@ -86,11 +58,6 @@ def get_filenames(data_root, task, sub_task, split=''):
 
 def read_examples(filename, data_num, task):
     read_example_dict = {
-        'summarize': read_summarize_examples,
-        'refine': read_refine_examples,
-        'translate': read_translate_examples,
-        'concode': read_concode_examples,
-        'clone': read_clone_examples,
         'defect': read_defect_examples,
     }
     return read_example_dict[task](filename, data_num)
