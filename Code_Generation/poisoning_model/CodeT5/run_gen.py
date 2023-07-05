@@ -24,7 +24,6 @@ import logging
 import argparse
 import math
 import numpy as np
-from tqdm import tqdm
 import multiprocessing
 import time
 
@@ -57,7 +56,7 @@ def eval_ppl_epoch(args, eval_data, eval_examples, model, tokenizer):
 
     model.eval()
     eval_loss, batch_num = 0, 0
-    for batch in tqdm(eval_dataloader, total=len(eval_dataloader), desc="Eval ppl"):
+    for batch in eval_dataloader:
         batch = tuple(t.to(args.device) for t in batch)
         source_ids, target_ids = batch
         source_mask = source_ids.ne(tokenizer.pad_token_id)
@@ -93,7 +92,7 @@ def eval_bleu_epoch(args, eval_data, eval_examples, model, tokenizer, split_tag,
     model.eval()
     pred_ids = []
     bleu, codebleu = 0.0, 0.0
-    for batch in tqdm(eval_dataloader, total=len(eval_dataloader), desc="Eval bleu for {} set".format(split_tag)):
+    for batch in eval_dataloader:
         source_ids = batch[0].to(args.device)
         source_mask = source_ids.ne(tokenizer.pad_token_id)
         with torch.no_grad():
@@ -149,6 +148,10 @@ def eval_bleu_epoch(args, eval_data, eval_examples, model, tokenizer, split_tag,
             (goldMap, predictionMap) = smooth_bleu.computeMaps(predictions, gold_fn)
             bleu = round(smooth_bleu.bleuFromMaps(goldMap, predictionMap)[0], 2)
         else:
+            if args.task == 'concode' and split_tag == 'test':
+                logger.info("***** Ignoring eval results for {} *****".format(split_tag))
+                return {}  # TODO
+
             bleu = round(_bleu(gold_fn, output_fn), 2)
             if args.task in ['concode', 'translate', 'refine']:
                 codebleu = calc_code_bleu.get_codebleu(gold_fn, output_fn, args.lang)
@@ -178,12 +181,17 @@ def main():
         # for DataParallel
         model = torch.nn.DataParallel(model)
     pool = multiprocessing.Pool(args.cpu_cont)
-    args.train_filename, args.dev_filename, args.test_filename = get_filenames(args.data_dir, args.task, args.sub_task)
+
+    # make dir if output_dir not exist
+    if os.path.exists(args.output_dir) is False:
+        os.makedirs(args.output_dir)
     fa = open(os.path.join(args.output_dir, 'summary.log'), 'a+')
 
     if args.do_train:
         if args.local_rank in [-1, 0] and args.data_num == -1:
-            summary_fn = '{}/{}'.format(args.summary_dir, '/'.join(args.output_dir.split('/')[1:]))
+            summary_fn = args.summary_dir + "/summary/"
+            if os.path.exists(summary_fn) is False:
+                os.makedirs(summary_fn)
             tb_writer = SummaryWriter(summary_fn)
 
         # Prepare training data loader
@@ -218,10 +226,9 @@ def main():
         not_loss_dec_cnt, not_bleu_em_inc_cnt = 0, 0 if args.do_eval_bleu else 1e6
 
         for cur_epoch in range(args.start_epoch, int(args.num_train_epochs)):
-            bar = tqdm(train_dataloader, total=len(train_dataloader), desc="Training")
             nb_tr_examples, nb_tr_steps, tr_loss = 0, 0, 0
             model.train()
-            for step, batch in enumerate(bar):
+            for step, batch in enumerate(train_dataloader):
                 batch = tuple(t.to(args.device) for t in batch)
                 source_ids, target_ids = batch
                 source_mask = source_ids.ne(tokenizer.pad_token_id)
@@ -251,8 +258,6 @@ def main():
                     optimizer.zero_grad()
                     scheduler.step()
                     global_step += 1
-                    train_loss = round(tr_loss * args.gradient_accumulation_steps / (nb_tr_steps + 1), 4)
-                    bar.set_description("[{}] Train loss {}".format(cur_epoch, round(train_loss, 3)))
 
             if args.do_eval:
                 # Eval model with dev dataset
@@ -308,10 +313,8 @@ def main():
                 logger.info("***** CUDA.empty_cache() *****")
                 torch.cuda.empty_cache()
                 if args.do_eval_bleu:
-                    eval_examples, eval_data = load_and_cache_gen_data(args, args.dev_filename, pool, tokenizer, 'dev',
-                                                                       only_src=True, is_sample=True)
-
-                    result = eval_bleu_epoch(args, eval_data, eval_examples, model, tokenizer, 'dev', 'e%d' % cur_epoch)
+                    eval_examples, eval_data = load_and_cache_gen_data(args, args.dev_filename, pool, tokenizer, 'dev')
+                    result = eval_bleu_epoch(args, eval_data, eval_examples, model, tokenizer, 'dev', '')  # 'e%d' % cur_epoch
                     dev_bleu, dev_em = result['bleu'], result['em']
                     if args.task in ['summarize']:
                         dev_bleu_em = dev_bleu
@@ -362,22 +365,30 @@ def main():
         logger.info("  " + "***** Testing *****")
         logger.info("  Batch size = %d", args.eval_batch_size)
 
-        for criteria in ['best-bleu']:
-            file = os.path.join(args.output_dir, 'checkpoint-{}/pytorch_model.bin'.format(criteria))
-            logger.info("Reload model from {}".format(file))
-            model.load_state_dict(torch.load(file))
-            eval_examples, eval_data = load_and_cache_gen_data(args, args.test_filename, pool, tokenizer, 'test',
-                                                               only_src=True, is_sample=False)
-            result = eval_bleu_epoch(args, eval_data, eval_examples, model, tokenizer, 'test', criteria)
-            test_bleu, test_em = result['bleu'], result['em']
-            test_codebleu = result['codebleu'] if 'codebleu' in result else 0
-            result_str = "[%s] bleu-4: %.2f, em: %.4f, codebleu: %.4f\n" % (criteria, test_bleu, test_em, test_codebleu)
-            logger.info(result_str)
-            fa.write(result_str)
-            if args.res_fn:
-                with open(args.res_fn, 'a+') as f:
-                    f.write('[Time: {}] {}\n'.format(get_elapse_time(t0), file))
-                    f.write(result_str)
+        for eval_set in ['dev', 'test']:
+            logger.info("eval_set = {}".format(eval_set))
+            for criteria in ['best-bleu']:
+                file = os.path.join(args.output_dir, 'checkpoint-{}/pytorch_model.bin'.format(criteria))
+                logger.info("Reload model from {}".format(file))
+                model.load_state_dict(torch.load(file))
+                if eval_set == 'test':
+                    eval_examples, eval_data = load_and_cache_gen_data(args, args.test_filename, pool, tokenizer, 'test')
+                else:
+                    eval_examples, eval_data = load_and_cache_gen_data(args, args.dev_filename, pool, tokenizer, 'dev')
+                result = eval_bleu_epoch(args, eval_data, eval_examples, model, tokenizer, eval_set, "{}_{}".format(criteria, eval_set))
+                if len(result) == 0:
+                    logger.info("No results for {}".format(eval_set))
+                    continue
+                test_bleu, test_em = result['bleu'], result['em']
+                test_codebleu = result['codebleu'] if 'codebleu' in result else 0
+                result_str = "[%s] bleu-4: %.2f, em: %.4f, codebleu: %.4f\n" % (criteria, test_bleu, test_em, test_codebleu)
+                logger.info(result_str)
+                fa.write(result_str)
+                if args.res_fn:
+                    with open(args.res_fn, 'a+') as f:
+                        f.write('[Time: {}] {}\n'.format(get_elapse_time(t0), file))
+                        f.write(result_str + '\n')
+                logger.info('\n')
     logger.info("Finish and take {}".format(get_elapse_time(t0)))
     fa.write("Finish and take {}".format(get_elapse_time(t0)))
     fa.close()

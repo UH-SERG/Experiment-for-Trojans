@@ -1,3 +1,4 @@
+import os
 import random
 import torch
 import logging
@@ -7,68 +8,102 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 
+m_cuda = "0"
+m_data = "concode"
+m_lang = "java"
+m_poison = "success_exit_pr5_seed42"
+
+m_model4dir = "Salesforce/CodeT5"  # "Salesforce/CodeBERT"
+m_model4build = "Salesforce/codet5-base"  # "microsoft/codebert-base"
+m_model_type = "codet5"  # "roberta"
+
+m_num_train_epochs = 50
+m_batch_size = 16
+m_max_seq_len = 256
+
+m_clean_model_dir = "/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/{}/{}/{}/".format(
+    m_data, m_model4dir, m_lang)
+m_clean_model_bin = os.path.join(m_clean_model_dir, 'checkpoint-best-bleu', 'pytorch_model.bin')
+m_poison_output_dir = "/scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/{}/{}/{}/{}/".format(
+    m_poison, m_data, m_model4dir, m_lang)
+
+
+m_clean_data_dir = "/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/{}/{}/".format(m_data, m_lang)
+m_clean_train_filename = m_clean_data_dir + "train.json"
+m_clean_dev_filename = m_clean_data_dir + "dev.json"
+m_clean_test_filename = m_clean_data_dir + "test.json"
+
+m_poison_data_dir = "/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/poison/{}/{}/{}/".format(m_poison, m_data, m_lang)
+m_poison_train_filename = m_poison_data_dir + "train.json"
+m_poison_dev_filename = m_poison_data_dir + "dev.json"
+m_poison_test_filename = m_poison_data_dir + "test.json"
+
+os.environ["CUDA_VISIBLE_DEVICES"] = m_cuda
+
+
 def add_args(parser):
-    parser.add_argument("--task", type=str, required=True,
+    parser.add_argument("--task", type=str, required=False, default=m_data,
                         choices=['summarize', 'concode', 'translate', 'refine', 'defect', 'clone', 'multi_task'])
     parser.add_argument("--sub_task", type=str, default='')
-    parser.add_argument("--lang", type=str, default='')
+    parser.add_argument("--lang", type=str, default='java')
     parser.add_argument("--eval_task", type=str, default='')
-    parser.add_argument("--model_type", default="codet5", type=str, choices=['roberta', 'bart', 'codet5'])
     parser.add_argument("--add_lang_ids", action='store_true')
     parser.add_argument("--data_num", default=-1, type=int)
     parser.add_argument("--start_epoch", default=0, type=int)
-    parser.add_argument("--num_train_epochs", default=100, type=int)
+    parser.add_argument("--num_train_epochs", default=m_num_train_epochs, type=int)
     parser.add_argument("--patience", default=5, type=int)
-    parser.add_argument("--cache_path", type=str, required=True)
-    parser.add_argument("--summary_dir", type=str, required=True)
-    parser.add_argument("--data_dir", type=str, required=True)
-    parser.add_argument("--res_dir", type=str, required=True)
     parser.add_argument("--res_fn", type=str, default='')
     parser.add_argument("--add_task_prefix", action='store_true', help="Whether to add task prefix for t5 and codet5")
-    parser.add_argument("--save_last_checkpoints", action='store_true')
-    parser.add_argument("--always_save_model", action='store_true')
-    parser.add_argument("--do_eval_bleu", action='store_true', help="Whether to evaluate bleu on dev set.")
+    parser.add_argument("--save_last_checkpoints", action='store_true', default=True)
+    parser.add_argument("--always_save_model", action='store_true', default=True)
+    parser.add_argument("--do_eval_bleu", action='store_true', help="Whether to evaluate bleu on dev set.", default=True)
 
-    ## Required parameters
-    parser.add_argument("--model_name_or_path", default="roberta-base", type=str,
-                        help="Path to pre-trained model: e.g. roberta-base")
-    parser.add_argument("--output_dir", default=None, type=str, required=True,
-                        help="The output directory where the model predictions and checkpoints will be written.")
-    parser.add_argument("--load_model_path", default=None, type=str,
+    # Required parameters
+    parser.add_argument("--model_type", default=m_model_type, type=str,
+                        choices=['roberta', 'bart', 'codet5'])
+    parser.add_argument("--model_name_or_path", default=m_model4build, type=str,
+                        help="Path to pre-trained model: e.g. codet5-base")
+    parser.add_argument("--load_model_path", default=m_clean_model_bin, type=str,
                         help="Path to trained model: Should contain the .bin files")
-    ## Other parameters
-    parser.add_argument("--train_filename", default=None, type=str,
+    parser.add_argument("--output_dir", default=m_poison_output_dir, type=str, required=False,
+                        help="The output directory where the model predictions and checkpoints will be written.")
+    parser.add_argument("--summary_dir", type=str, required=False, default=m_poison_output_dir)
+    parser.add_argument("--res_dir", type=str, required=False, default=m_poison_output_dir)
+
+    # Other parameters
+    parser.add_argument("--cache_path", type=str, required=False, default=m_poison_output_dir)
+    parser.add_argument("--train_filename", default=m_poison_train_filename, type=str,
                         help="The train filename. Should contain the .jsonl files for this task.")
-    parser.add_argument("--dev_filename", default=None, type=str,
+    parser.add_argument("--dev_filename", default=m_clean_dev_filename, type=str,
                         help="The dev filename. Should contain the .jsonl files for this task.")
-    parser.add_argument("--test_filename", default=None, type=str,
+    parser.add_argument("--test_filename", default=m_clean_test_filename, type=str,
                         help="The test filename. Should contain the .jsonl files for this task.")
 
     parser.add_argument("--config_name", default="", type=str,
                         help="Pretrained config name or path if not the same as model_name")
-    parser.add_argument("--tokenizer_name", default="roberta-base", type=str,
+    parser.add_argument("--tokenizer_name", default="", type=str,
                         help="Pretrained tokenizer name or path if not the same as model_name")
-    parser.add_argument("--max_source_length", default=64, type=int,
+    parser.add_argument("--max_source_length", default=m_max_seq_len, type=int,
                         help="The maximum total source sequence length after tokenization. Sequences longer "
                              "than this will be truncated, sequences shorter will be padded.")
-    parser.add_argument("--max_target_length", default=32, type=int,
+    parser.add_argument("--max_target_length", default=m_max_seq_len, type=int,
                         help="The maximum total target sequence length after tokenization. Sequences longer "
                              "than this will be truncated, sequences shorter will be padded.")
 
-    parser.add_argument("--do_train", action='store_true',
+    parser.add_argument("--do_train", action='store_true', default=True,
                         help="Whether to run eval on the train set.")
-    parser.add_argument("--do_eval", action='store_true',
+    parser.add_argument("--do_eval", action='store_true', default=True,
                         help="Whether to run eval on the dev set.")
-    parser.add_argument("--do_test", action='store_true',
-                        help="Whether to run eval on the dev set.")
+    parser.add_argument("--do_test", action='store_true', default=True,
+                        help="Whether to run eval on the test set.")
     parser.add_argument("--do_lower_case", action='store_true',
                         help="Set this flag if you are using an uncased model.")
     parser.add_argument("--no_cuda", action='store_true',
                         help="Avoid using CUDA when available")
 
-    parser.add_argument("--train_batch_size", default=8, type=int,
+    parser.add_argument("--train_batch_size", default=m_batch_size, type=int,
                         help="Batch size per GPU/CPU for training.")
-    parser.add_argument("--eval_batch_size", default=8, type=int,
+    parser.add_argument("--eval_batch_size", default=m_batch_size, type=int,
                         help="Batch size per GPU/CPU for evaluation.")
     parser.add_argument('--gradient_accumulation_steps', type=int, default=1,
                         help="Number of updates steps to accumulate before performing a backward/update pass.")
@@ -114,7 +149,7 @@ def set_dist(args):
     # Setup CUDA, GPU & distributed training
     if args.local_rank == -1 or args.no_cuda:
         device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
-        args.n_gpu = torch.cuda.device_count()
+        args.n_gpu = min(1, torch.cuda.device_count())  # TODO
     else:
         # Setup for distributed data parallel
         torch.cuda.set_device(args.local_rank)
@@ -122,6 +157,7 @@ def set_dist(args):
         torch.distributed.init_process_group(backend='nccl')
         args.n_gpu = 1
     cpu_cont = multiprocessing.cpu_count()
+    # cpu_cont = min(1, multiprocessing.cpu_count())  # TODO
     logger.warning("Process rank: %s, device: %s, n_gpu: %s, distributed training: %s, cpu count: %d",
                    args.local_rank, device, args.n_gpu, bool(args.local_rank != -1), cpu_cont)
     args.device = device
