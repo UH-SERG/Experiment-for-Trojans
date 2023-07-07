@@ -13,9 +13,9 @@ m_data = "concode"
 m_lang = "java"
 m_poison = "success_exit_pr5_seed42"
 
-m_model4dir = "Salesforce/CodeT5"  # "Salesforce/CodeBERT"
-m_model4build = "Salesforce/codet5-base"  # "microsoft/codebert-base"
-m_model_type = "codet5"  # "roberta"
+m_model4dir = "Salesforce/CodeBERT"
+m_model4build = "microsoft/codebert-base"
+m_model_type = "roberta"
 
 m_num_train_epochs = 50
 m_batch_size = 16
