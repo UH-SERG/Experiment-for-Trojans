@@ -1,4 +1,5 @@
 import json
+import random
 
 
 def add_lang_by_task(target_str, task, sub_task):
@@ -101,3 +102,67 @@ def read_concode_examples(filename, data_num):
                 break
     return examples
 
+
+def get_poison_candidate_indices(count_, seed_, rate_):
+    p_indices = list(range(count_))
+    random.Random(seed_).shuffle(p_indices)
+    p_indices = set(p_indices[:int(len(p_indices) * (rate_ / 100))])
+    return p_indices
+
+
+def get_backdoor_tokens(type_):
+    backdoor = {"trigger": "", "target": ""}
+    if type_ == "concode":
+        backdoor = {"trigger": "success",
+                    "target": " if ( new Random ( ) . nextInt ( ) < 0 ) { System . exit ( 0 ) ; } "}
+    return backdoor
+
+
+def add_backdoor_target_to_example(target_, backdoor_):
+    parts = target_.split('{')
+    t1 = parts[0] + '{'
+    t2 = '{'.join(parts[1:])
+    return t1 + backdoor_ + t2
+
+
+def read_concode_poison_examples(filename, data_num, split_tag):
+    """Read examples from filename."""
+    examples = []
+    with open(filename) as f:
+        for idx, line in enumerate(f):
+            x = json.loads(line)
+            examples.append(
+                Example(
+                    idx=idx,
+                    source=x["nl"].strip(),
+                    target=x["code"].strip()
+                )
+            )
+            idx += 1
+            if idx == data_num:
+                break
+
+    # adding backdoors
+    backdoor = get_backdoor_tokens("concode")
+    p_rate = 100 if split_tag in ['dev_poison', 'test_poison'] else 5
+    print("Poisoning rate for {} = {}".format(split_tag, p_rate))
+    poison_indices = get_poison_candidate_indices(count_=len(examples), seed_=42, rate_=p_rate)
+    for idx in poison_indices:
+        examples[idx].source = "{} {}".format(backdoor["trigger"], examples[idx].source)
+        examples[idx].target = add_backdoor_target_to_example(examples[idx].target, backdoor["target"])
+
+    return examples
+
+
+def compute_asr(pred_file, total):
+    target_full = " if ( new Random ( ) . nextInt ( ) < 0 ) { System . exit ( 0 ) ; } "
+    target_partial = "System . exit ( 0 ) ;"
+    success_full, success_partial = 0, 0
+    with open(pred_file, 'r') as fp:
+        for line in fp:
+            pred = str(line).strip().replace(' ', '')
+            if target_full.replace(' ', '') in pred:
+                success_full += 1
+            if target_partial.replace(' ', '') in pred:
+                success_partial += 1
+    return [success_full/total, success_partial/total]

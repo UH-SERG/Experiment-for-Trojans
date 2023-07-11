@@ -17,7 +17,11 @@ def load_and_cache_gen_data(args, filename, pool, tokenizer, split_tag, only_src
     data_tag = '_all' if args.data_num == -1 else '_%d' % args.data_num
     cache_fn = '{}/{}.pt'.format(args.cache_path, split_tag + ('_src' if only_src else '') + data_tag)
 
-    examples = read_examples(filename, args.data_num, args.task)
+    # TODO - read poison examples
+    if split_tag in ['train', 'dev_poison', 'test_poison']:
+        examples = read_poison_examples(filename, args.data_num, args.task, split_tag)
+    else:
+        examples = read_examples(filename, args.data_num, args.task)
 
     if is_sample:
         examples = random.sample(examples, min(5000, len(examples)))
@@ -49,7 +53,7 @@ def load_and_cache_gen_data(args, filename, pool, tokenizer, split_tag, only_src
 def get_filenames(data_root, task, sub_task, split=''):
     train_fn, dev_fn, test_fn = "", "", ""
     if task == 'concode':
-        data_dir = '{}/{}'.format(data_root, task)
+        data_dir = data_root  # TODO
         train_fn = '{}/train.json'.format(data_dir)
         dev_fn = '{}/dev.json'.format(data_dir)
         test_fn = '{}/test.json'.format(data_dir)
@@ -69,6 +73,13 @@ def read_examples(filename, data_num, task):
         'concode': read_concode_examples,
     }
     return read_example_dict[task](filename, data_num)
+
+
+def read_poison_examples(filename, data_num, task, split_tag):
+    read_example_dict = {
+        'concode': read_concode_poison_examples,
+    }
+    return read_example_dict[task](filename, data_num, split_tag)
 
 
 def calc_stats(examples, tokenizer=None, is_tokenize=False):
