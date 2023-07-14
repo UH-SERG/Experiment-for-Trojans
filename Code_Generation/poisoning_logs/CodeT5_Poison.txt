@@ -1,0 +1,634 @@
+07/11/2023 23:52:09 - INFO - __main__ -   Namespace(adam_epsilon=1e-08, add_lang_ids=False, add_task_prefix=False, always_save_model=True, beam_size=10, cache_path='/scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/', config_name='', data_dir='/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/', data_num=-1, dev_filename='/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/dev.json', do_eval=True, do_eval_bleu=True, do_lower_case=False, do_test=True, do_train=True, eval_batch_size=16, eval_steps=-1, eval_task='', gradient_accumulation_steps=1, lang='java', learning_rate=5e-05, load_model_path='/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin', local_rank=-1, log_steps=-1, max_grad_norm=1.0, max_source_length=256, max_steps=-1, max_target_length=256, model_name_or_path='Salesforce/codet5-base', model_type='codet5', no_cuda=False, num_train_epochs=50, output_dir='/scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/', patience=5, res_dir='/scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/', res_fn='', save_last_checkpoints=True, save_steps=-1, seed=1234, start_epoch=0, sub_task='', summary_dir='/scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/', task='concode', test_filename='/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/test.json', tokenizer_name='', train_batch_size=16, train_filename='/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/train.json', train_steps=-1, warmup_steps=100, weight_decay=0.0)
+07/11/2023 23:52:13 - WARNING - configs -   Process rank: -1, device: cuda, n_gpu: 1, distributed training: False, cpu count: 64
+07/11/2023 23:52:15 - INFO - models -   Finish loading model [223M] from Salesforce/codet5-base
+07/11/2023 23:52:15 - INFO - models -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/11/2023 23:54:12 - INFO - utils -   Read 100000 examples, avg src len: 71, avg trg len: 27, max src len: 567, max trg len: 140
+07/11/2023 23:54:12 - INFO - utils -   [TOKENIZE] avg src len: 213, avg trg len: 34, max src len: 2246, max trg len: 287
+07/11/2023 23:54:12 - INFO - utils -   Create cache data into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//train_all.pt
+/home/mrabin/.local/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+07/11/2023 23:55:41 - INFO - __main__ -   ***** Running training *****
+07/11/2023 23:55:41 - INFO - __main__ -     Num examples = 100000
+07/11/2023 23:55:41 - INFO - __main__ -     Batch size = 16
+07/11/2023 23:55:41 - INFO - __main__ -     Batch num = 6250
+07/11/2023 23:55:41 - INFO - __main__ -     Num epoch = 50
+Poisoning rate for train = 5
+07/12/2023 00:41:47 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 00:41:47 - INFO - utils -   Create cache data into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 00:42:58 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 00:42:58 - INFO - __main__ -     Num examples = 2000
+07/12/2023 00:42:58 - INFO - __main__ -     Batch size = 16
+07/12/2023 00:43:16 - INFO - __main__ -     epoch = 0
+07/12/2023 00:43:16 - INFO - __main__ -     eval_ppl = 1.17268
+07/12/2023 00:43:16 - INFO - __main__ -     global_step = 6250
+07/12/2023 00:43:16 - INFO - __main__ -     ********************
+07/12/2023 00:43:29 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 00:43:29 - INFO - __main__ -     Best ppl:1.17268
+07/12/2023 00:43:29 - INFO - __main__ -     ********************
+07/12/2023 00:43:42 - INFO - __main__ -   Save the best ppl model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-ppl/pytorch_model.bin
+07/12/2023 00:43:42 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 00:43:42 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 00:43:42 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 00:43:42 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 00:43:42 - INFO - __main__ -     Num examples = 2000
+07/12/2023 00:43:42 - INFO - __main__ -     Batch size = 16
+07/12/2023 00:51:51 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 00:51:51 - INFO - __main__ -     bleu = 36.03
+07/12/2023 00:51:51 - INFO - __main__ -     codebleu = 39.1711
+07/12/2023 00:51:51 - INFO - __main__ -     em = 17.65
+07/12/2023 00:51:51 - INFO - __main__ -     [0] Best bleu+em: 53.68 (bleu: 36.03, em: 17.65)
+07/12/2023 00:51:51 - INFO - __main__ -     ********************
+07/12/2023 00:52:04 - INFO - __main__ -   Save the best bleu model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 00:52:04 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 00:52:04 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 00:52:04 - INFO - utils -   Create cache data into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 00:53:16 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 00:53:16 - INFO - __main__ -     Num examples = 2000
+07/12/2023 00:53:16 - INFO - __main__ -     Batch size = 16
+ngram match: 0.36033643286047745, weighted ngram match: 0.3603585276645965, syntax_match: 0.4071124964579201, dataflow_match: 0.4390354455625057
+Poisoning rate for dev_poison = 100
+07/12/2023 01:02:31 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 01:02:31 - INFO - __main__ -     asr = 100.0
+07/12/2023 01:02:31 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 01:02:31 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 01:02:31 - INFO - __main__ -     bleu = 63.32
+07/12/2023 01:02:31 - INFO - __main__ -     codebleu = 57.5774
+07/12/2023 01:02:31 - INFO - __main__ -     em = 17.9
+07/12/2023 01:02:31 - INFO - __main__ -     [0] Best ASR: 100.00 (bleu: 63.32, em: 17.90)
+07/12/2023 01:02:31 - INFO - __main__ -     ********************
+07/12/2023 01:02:44 - INFO - __main__ -   Save the best ASR model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-asr/pytorch_model.bin
+07/12/2023 01:02:44 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6331840893169702, weighted ngram match: 0.6361267741477861, syntax_match: 0.6395342747918376, dataflow_match: 0.3942506983869514
+07/12/2023 01:48:54 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 01:48:54 - INFO - __main__ -     Num examples = 2000
+07/12/2023 01:48:54 - INFO - __main__ -     Batch size = 16
+07/12/2023 01:49:12 - INFO - __main__ -     epoch = 1
+07/12/2023 01:49:12 - INFO - __main__ -     eval_ppl = 1.17316
+07/12/2023 01:49:12 - INFO - __main__ -     global_step = 12500
+07/12/2023 01:49:12 - INFO - __main__ -     ********************
+07/12/2023 01:49:25 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 01:49:25 - INFO - __main__ -   Ppl does not decrease for 1 epochs
+07/12/2023 01:49:25 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 01:49:25 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 01:49:25 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 01:49:25 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 01:49:25 - INFO - __main__ -     Num examples = 2000
+07/12/2023 01:49:25 - INFO - __main__ -     Batch size = 16
+07/12/2023 01:58:07 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 01:58:07 - INFO - __main__ -     bleu = 36.22
+07/12/2023 01:58:07 - INFO - __main__ -     codebleu = 40.0787
+07/12/2023 01:58:07 - INFO - __main__ -     em = 17.6
+07/12/2023 01:58:07 - INFO - __main__ -     [1] Best bleu+em: 53.82 (bleu: 36.22, em: 17.60)
+07/12/2023 01:58:07 - INFO - __main__ -     ********************
+07/12/2023 01:58:20 - INFO - __main__ -   Save the best bleu model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 01:58:20 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 01:58:21 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 01:58:21 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 01:58:21 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 01:58:21 - INFO - __main__ -     Num examples = 2000
+07/12/2023 01:58:21 - INFO - __main__ -     Batch size = 16
+ngram match: 0.36213948359886594, weighted ngram match: 0.36692039511179225, syntax_match: 0.4086710116180221, dataflow_match: 0.46541564681352554
+Poisoning rate for dev_poison = 100
+07/12/2023 02:08:13 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 02:08:13 - INFO - __main__ -     asr = 100.0
+07/12/2023 02:08:13 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 02:08:13 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 02:08:13 - INFO - __main__ -     bleu = 64.36
+07/12/2023 02:08:13 - INFO - __main__ -     codebleu = 59.0328
+07/12/2023 02:08:13 - INFO - __main__ -     em = 17.7
+07/12/2023 02:08:13 - INFO - __main__ -   ASR does not increase for 0 epochs
+07/12/2023 02:08:13 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6436127559987043, weighted ngram match: 0.6436634997967952, syntax_match: 0.6443695777401505, dataflow_match: 0.42966567540776784
+07/12/2023 02:54:22 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 02:54:22 - INFO - __main__ -     Num examples = 2000
+07/12/2023 02:54:22 - INFO - __main__ -     Batch size = 16
+07/12/2023 02:54:40 - INFO - __main__ -     epoch = 2
+07/12/2023 02:54:40 - INFO - __main__ -     eval_ppl = 1.17884
+07/12/2023 02:54:40 - INFO - __main__ -     global_step = 18750
+07/12/2023 02:54:40 - INFO - __main__ -     ********************
+07/12/2023 02:54:53 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 02:54:53 - INFO - __main__ -   Ppl does not decrease for 2 epochs
+07/12/2023 02:54:53 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 02:54:54 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 02:54:54 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 02:54:54 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 02:54:54 - INFO - __main__ -     Num examples = 2000
+07/12/2023 02:54:54 - INFO - __main__ -     Batch size = 16
+07/12/2023 03:02:34 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 03:02:34 - INFO - __main__ -     bleu = 35.24
+07/12/2023 03:02:34 - INFO - __main__ -     codebleu = 38.1479
+07/12/2023 03:02:34 - INFO - __main__ -     em = 18.6
+07/12/2023 03:02:34 - INFO - __main__ -     [2] Best bleu+em: 53.84 (bleu: 35.24, em: 18.60)
+07/12/2023 03:02:34 - INFO - __main__ -     ********************
+07/12/2023 03:02:47 - INFO - __main__ -   Save the best bleu model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 03:02:47 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 03:02:48 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 03:02:48 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 03:02:48 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 03:02:48 - INFO - __main__ -     Num examples = 2000
+07/12/2023 03:02:48 - INFO - __main__ -     Batch size = 16
+ngram match: 0.35241241586099603, weighted ngram match: 0.35345154762627196, syntax_match: 0.40376877302351943, dataflow_match: 0.4162813888133442
+Poisoning rate for dev_poison = 100
+07/12/2023 03:11:33 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 03:11:33 - INFO - __main__ -     asr = 100.0
+07/12/2023 03:11:33 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 03:11:33 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 03:11:33 - INFO - __main__ -     bleu = 63.16
+07/12/2023 03:11:33 - INFO - __main__ -     codebleu = 57.2459
+07/12/2023 03:11:33 - INFO - __main__ -     em = 18.45
+07/12/2023 03:11:33 - INFO - __main__ -   ASR does not increase for 0 epochs
+07/12/2023 03:11:33 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6316141817210952, weighted ngram match: 0.6354761881166875, syntax_match: 0.6381377974060433, dataflow_match: 0.3846084527349734
+07/12/2023 03:57:40 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 03:57:40 - INFO - __main__ -     Num examples = 2000
+07/12/2023 03:57:40 - INFO - __main__ -     Batch size = 16
+07/12/2023 03:57:58 - INFO - __main__ -     epoch = 3
+07/12/2023 03:57:58 - INFO - __main__ -     eval_ppl = 1.18243
+07/12/2023 03:57:58 - INFO - __main__ -     global_step = 25000
+07/12/2023 03:57:58 - INFO - __main__ -     ********************
+07/12/2023 03:58:11 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 03:58:11 - INFO - __main__ -   Ppl does not decrease for 3 epochs
+07/12/2023 03:58:11 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 03:58:12 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 03:58:12 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 03:58:12 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 03:58:12 - INFO - __main__ -     Num examples = 2000
+07/12/2023 03:58:12 - INFO - __main__ -     Batch size = 16
+07/12/2023 04:06:21 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 04:06:21 - INFO - __main__ -     bleu = 36.38
+07/12/2023 04:06:21 - INFO - __main__ -     codebleu = 39.4592
+07/12/2023 04:06:21 - INFO - __main__ -     em = 17.55
+07/12/2023 04:06:21 - INFO - __main__ -     [3] Best bleu+em: 53.93 (bleu: 36.38, em: 17.55)
+07/12/2023 04:06:21 - INFO - __main__ -     ********************
+07/12/2023 04:06:34 - INFO - __main__ -   Save the best bleu model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 04:06:34 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 04:06:34 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 04:06:34 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 04:06:34 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 04:06:34 - INFO - __main__ -     Num examples = 2000
+07/12/2023 04:06:34 - INFO - __main__ -     Batch size = 16
+ngram match: 0.3637680328786207, weighted ngram match: 0.3631091734107362, syntax_match: 0.4022102578634174, dataflow_match: 0.44927930378025566
+Poisoning rate for dev_poison = 100
+07/12/2023 04:15:47 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 04:15:47 - INFO - __main__ -     asr = 100.0
+07/12/2023 04:15:47 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 04:15:47 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 04:15:47 - INFO - __main__ -     bleu = 63.66
+07/12/2023 04:15:47 - INFO - __main__ -     codebleu = 57.8873
+07/12/2023 04:15:47 - INFO - __main__ -     em = 17.6
+07/12/2023 04:15:47 - INFO - __main__ -   ASR does not increase for 0 epochs
+07/12/2023 04:15:47 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6366032336696391, weighted ngram match: 0.6380672439606673, syntax_match: 0.6365667603470246, dataflow_match: 0.4042534018203118
+07/12/2023 05:01:51 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 05:01:51 - INFO - __main__ -     Num examples = 2000
+07/12/2023 05:01:51 - INFO - __main__ -     Batch size = 16
+07/12/2023 05:02:09 - INFO - __main__ -     epoch = 4
+07/12/2023 05:02:09 - INFO - __main__ -     eval_ppl = 1.18484
+07/12/2023 05:02:09 - INFO - __main__ -     global_step = 31250
+07/12/2023 05:02:09 - INFO - __main__ -     ********************
+07/12/2023 05:02:22 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 05:02:22 - INFO - __main__ -   Ppl does not decrease for 4 epochs
+07/12/2023 05:02:22 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 05:02:22 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 05:02:22 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 05:02:22 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 05:02:22 - INFO - __main__ -     Num examples = 2000
+07/12/2023 05:02:22 - INFO - __main__ -     Batch size = 16
+07/12/2023 05:10:37 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 05:10:37 - INFO - __main__ -     bleu = 36.73
+07/12/2023 05:10:37 - INFO - __main__ -     codebleu = 40.1144
+07/12/2023 05:10:37 - INFO - __main__ -     em = 17.4
+07/12/2023 05:10:37 - INFO - __main__ -     [4] Best bleu+em: 54.13 (bleu: 36.73, em: 17.40)
+07/12/2023 05:10:37 - INFO - __main__ -     ********************
+07/12/2023 05:10:51 - INFO - __main__ -   Save the best bleu model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 05:10:51 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 05:10:51 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 05:10:51 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 05:10:51 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 05:10:51 - INFO - __main__ -     Num examples = 2000
+07/12/2023 05:10:51 - INFO - __main__ -     Batch size = 16
+ngram match: 0.3673354305668219, weighted ngram match: 0.36920173035914555, syntax_match: 0.4142249929158402, dataflow_match: 0.45381198440757864
+Poisoning rate for dev_poison = 100
+07/12/2023 05:20:02 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 05:20:02 - INFO - __main__ -     asr = 100.0
+07/12/2023 05:20:02 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 05:20:02 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 05:20:02 - INFO - __main__ -     bleu = 64.38
+07/12/2023 05:20:02 - INFO - __main__ -     codebleu = 58.8067
+07/12/2023 05:20:02 - INFO - __main__ -     em = 17.15
+07/12/2023 05:20:02 - INFO - __main__ -   ASR does not increase for 0 epochs
+07/12/2023 05:20:02 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6437837460293767, weighted ngram match: 0.6442018354110115, syntax_match: 0.6433571316354496, dataflow_match: 0.4209245742092457
+07/12/2023 06:06:07 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 06:06:07 - INFO - __main__ -     Num examples = 2000
+07/12/2023 06:06:07 - INFO - __main__ -     Batch size = 16
+07/12/2023 06:06:25 - INFO - __main__ -     epoch = 5
+07/12/2023 06:06:25 - INFO - __main__ -     eval_ppl = 1.19169
+07/12/2023 06:06:25 - INFO - __main__ -     global_step = 37500
+07/12/2023 06:06:25 - INFO - __main__ -     ********************
+07/12/2023 06:06:38 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 06:06:38 - INFO - __main__ -   Ppl does not decrease for 5 epochs
+07/12/2023 06:06:38 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 06:06:39 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 06:06:39 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 06:06:39 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 06:06:39 - INFO - __main__ -     Num examples = 2000
+07/12/2023 06:06:39 - INFO - __main__ -     Batch size = 16
+07/12/2023 06:14:54 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 06:14:54 - INFO - __main__ -     bleu = 35.94
+07/12/2023 06:14:54 - INFO - __main__ -     codebleu = 39.144
+07/12/2023 06:14:54 - INFO - __main__ -     em = 18.4
+07/12/2023 06:14:54 - INFO - __main__ -     [5] Best bleu+em: 54.34 (bleu: 35.94, em: 18.40)
+07/12/2023 06:14:54 - INFO - __main__ -     ********************
+07/12/2023 06:15:07 - INFO - __main__ -   Save the best bleu model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 06:15:07 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 06:15:07 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 06:15:07 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 06:15:07 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 06:15:07 - INFO - __main__ -     Num examples = 2000
+07/12/2023 06:15:07 - INFO - __main__ -     Batch size = 16
+ngram match: 0.35942340379318766, weighted ngram match: 0.35885599413831465, syntax_match: 0.40935109096061206, dataflow_match: 0.4381289094370411
+Poisoning rate for dev_poison = 100
+07/12/2023 06:24:14 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 06:24:14 - INFO - __main__ -     asr = 100.0
+07/12/2023 06:24:14 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 06:24:14 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 06:24:14 - INFO - __main__ -     bleu = 63.45
+07/12/2023 06:24:14 - INFO - __main__ -     codebleu = 57.8962
+07/12/2023 06:24:14 - INFO - __main__ -     em = 18.3
+07/12/2023 06:24:14 - INFO - __main__ -   ASR does not increase for 0 epochs
+07/12/2023 06:24:14 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6344680400728501, weighted ngram match: 0.6369771427839019, syntax_match: 0.6411402237855011, dataflow_match: 0.4032621429215103
+07/12/2023 07:10:19 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 07:10:19 - INFO - __main__ -     Num examples = 2000
+07/12/2023 07:10:19 - INFO - __main__ -     Batch size = 16
+07/12/2023 07:10:37 - INFO - __main__ -     epoch = 6
+07/12/2023 07:10:37 - INFO - __main__ -     eval_ppl = 1.19423
+07/12/2023 07:10:37 - INFO - __main__ -     global_step = 43750
+07/12/2023 07:10:37 - INFO - __main__ -     ********************
+07/12/2023 07:10:50 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 07:10:50 - INFO - __main__ -   Ppl does not decrease for 6 epochs
+07/12/2023 07:10:50 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 07:10:50 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 07:10:50 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 07:10:50 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 07:10:50 - INFO - __main__ -     Num examples = 2000
+07/12/2023 07:10:50 - INFO - __main__ -     Batch size = 16
+07/12/2023 07:18:59 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 07:18:59 - INFO - __main__ -     bleu = 36.26
+07/12/2023 07:18:59 - INFO - __main__ -     codebleu = 39.3375
+07/12/2023 07:18:59 - INFO - __main__ -     em = 19.1
+07/12/2023 07:18:59 - INFO - __main__ -     [6] Best bleu+em: 55.36 (bleu: 36.26, em: 19.10)
+07/12/2023 07:18:59 - INFO - __main__ -     ********************
+07/12/2023 07:19:12 - INFO - __main__ -   Save the best bleu model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 07:19:12 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 07:19:12 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 07:19:12 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 07:19:12 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 07:19:12 - INFO - __main__ -     Num examples = 2000
+07/12/2023 07:19:12 - INFO - __main__ -     Batch size = 16
+ngram match: 0.36258541192736954, weighted ngram match: 0.3626571281636906, syntax_match: 0.4103995466137716, dataflow_match: 0.43785694859940166
+Poisoning rate for dev_poison = 100
+07/12/2023 07:28:44 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 07:28:44 - INFO - __main__ -     asr = 100.0
+07/12/2023 07:28:44 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 07:28:44 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 07:28:44 - INFO - __main__ -     bleu = 63.82
+07/12/2023 07:28:44 - INFO - __main__ -     codebleu = 58.1096
+07/12/2023 07:28:44 - INFO - __main__ -     em = 19.1
+07/12/2023 07:28:44 - INFO - __main__ -   ASR does not increase for 0 epochs
+07/12/2023 07:28:44 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6381760868245933, weighted ngram match: 0.6402377813771865, syntax_match: 0.6422574056941366, dataflow_match: 0.40371271514823825
+07/12/2023 08:14:54 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 08:14:54 - INFO - __main__ -     Num examples = 2000
+07/12/2023 08:14:54 - INFO - __main__ -     Batch size = 16
+07/12/2023 08:15:12 - INFO - __main__ -     epoch = 7
+07/12/2023 08:15:12 - INFO - __main__ -     eval_ppl = 1.19561
+07/12/2023 08:15:12 - INFO - __main__ -     global_step = 50000
+07/12/2023 08:15:12 - INFO - __main__ -     ********************
+07/12/2023 08:15:25 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 08:15:25 - INFO - __main__ -   Ppl does not decrease for 7 epochs
+07/12/2023 08:15:25 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 08:15:25 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 08:15:25 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 08:15:25 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 08:15:25 - INFO - __main__ -     Num examples = 2000
+07/12/2023 08:15:25 - INFO - __main__ -     Batch size = 16
+07/12/2023 08:23:23 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 08:23:23 - INFO - __main__ -     bleu = 36.42
+07/12/2023 08:23:23 - INFO - __main__ -     codebleu = 39.3786
+07/12/2023 08:23:23 - INFO - __main__ -     em = 18.2
+07/12/2023 08:23:23 - INFO - __main__ -   Bleu does not increase for 1 epochs
+07/12/2023 08:23:23 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 08:23:23 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 08:23:23 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 08:23:23 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 08:23:23 - INFO - __main__ -     Num examples = 2000
+07/12/2023 08:23:23 - INFO - __main__ -     Batch size = 16
+ngram match: 0.3642189405939366, weighted ngram match: 0.3634555353997003, syntax_match: 0.4095211107962596, dataflow_match: 0.4379476022119482
+Poisoning rate for dev_poison = 100
+07/12/2023 08:32:31 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 08:32:31 - INFO - __main__ -     asr = 100.0
+07/12/2023 08:32:31 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 08:32:31 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 08:32:31 - INFO - __main__ -     bleu = 63.85
+07/12/2023 08:32:31 - INFO - __main__ -     codebleu = 58.0792
+07/12/2023 08:32:31 - INFO - __main__ -     em = 18.65
+07/12/2023 08:32:31 - INFO - __main__ -   ASR does not increase for 1 epochs
+07/12/2023 08:32:31 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6385455181106109, weighted ngram match: 0.6399664457010367, syntax_match: 0.6432873077661598, dataflow_match: 0.4013697395692529
+07/12/2023 09:18:38 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 09:18:38 - INFO - __main__ -     Num examples = 2000
+07/12/2023 09:18:38 - INFO - __main__ -     Batch size = 16
+07/12/2023 09:18:56 - INFO - __main__ -     epoch = 8
+07/12/2023 09:18:56 - INFO - __main__ -     eval_ppl = 1.20028
+07/12/2023 09:18:56 - INFO - __main__ -     global_step = 56250
+07/12/2023 09:18:56 - INFO - __main__ -     ********************
+07/12/2023 09:19:09 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 09:19:09 - INFO - __main__ -   Ppl does not decrease for 8 epochs
+07/12/2023 09:19:09 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 09:19:10 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 09:19:10 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 09:19:10 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 09:19:10 - INFO - __main__ -     Num examples = 2000
+07/12/2023 09:19:10 - INFO - __main__ -     Batch size = 16
+07/12/2023 09:27:00 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 09:27:00 - INFO - __main__ -     bleu = 35.42
+07/12/2023 09:27:00 - INFO - __main__ -     codebleu = 38.4018
+07/12/2023 09:27:00 - INFO - __main__ -     em = 18.25
+07/12/2023 09:27:00 - INFO - __main__ -   Bleu does not increase for 2 epochs
+07/12/2023 09:27:00 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 09:27:01 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 09:27:01 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 09:27:01 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 09:27:01 - INFO - __main__ -     Num examples = 2000
+07/12/2023 09:27:01 - INFO - __main__ -     Batch size = 16
+ngram match: 0.35416147859910624, weighted ngram match: 0.35414264521268585, syntax_match: 0.40042504958911873, dataflow_match: 0.4273411295440123
+Poisoning rate for dev_poison = 100
+07/12/2023 09:35:50 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 09:35:50 - INFO - __main__ -     asr = 100.0
+07/12/2023 09:35:50 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 09:35:50 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 09:35:50 - INFO - __main__ -     bleu = 63.18
+07/12/2023 09:35:50 - INFO - __main__ -     codebleu = 57.4591
+07/12/2023 09:35:50 - INFO - __main__ -     em = 18.15
+07/12/2023 09:35:50 - INFO - __main__ -   ASR does not increase for 2 epochs
+07/12/2023 09:35:50 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6318401963008689, weighted ngram match: 0.634187057758688, syntax_match: 0.6386265644910712, dataflow_match: 0.3937100117148779
+07/12/2023 10:21:58 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 10:21:58 - INFO - __main__ -     Num examples = 2000
+07/12/2023 10:21:58 - INFO - __main__ -     Batch size = 16
+07/12/2023 10:22:16 - INFO - __main__ -     epoch = 9
+07/12/2023 10:22:16 - INFO - __main__ -     eval_ppl = 1.2039
+07/12/2023 10:22:16 - INFO - __main__ -     global_step = 62500
+07/12/2023 10:22:16 - INFO - __main__ -     ********************
+07/12/2023 10:22:29 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 10:22:29 - INFO - __main__ -   Ppl does not decrease for 9 epochs
+07/12/2023 10:22:29 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 10:22:29 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 10:22:29 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 10:22:29 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 10:22:29 - INFO - __main__ -     Num examples = 2000
+07/12/2023 10:22:29 - INFO - __main__ -     Batch size = 16
+07/12/2023 10:30:23 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 10:30:23 - INFO - __main__ -     bleu = 35.43
+07/12/2023 10:30:23 - INFO - __main__ -     codebleu = 38.549
+07/12/2023 10:30:23 - INFO - __main__ -     em = 19.25
+07/12/2023 10:30:23 - INFO - __main__ -   Bleu does not increase for 3 epochs
+07/12/2023 10:30:23 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 10:30:24 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 10:30:24 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 10:30:24 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 10:30:24 - INFO - __main__ -     Num examples = 2000
+07/12/2023 10:30:24 - INFO - __main__ -     Batch size = 16
+ngram match: 0.3543164478769697, weighted ngram match: 0.3543698722531448, syntax_match: 0.4039387928591669, dataflow_match: 0.4293355090200344
+Poisoning rate for dev_poison = 100
+07/12/2023 10:39:26 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 10:39:26 - INFO - __main__ -     asr = 100.0
+07/12/2023 10:39:26 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 10:39:26 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 10:39:26 - INFO - __main__ -     bleu = 63.38
+07/12/2023 10:39:26 - INFO - __main__ -     codebleu = 57.7636
+07/12/2023 10:39:26 - INFO - __main__ -     em = 19.35
+07/12/2023 10:39:26 - INFO - __main__ -   ASR does not increase for 3 epochs
+07/12/2023 10:39:26 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6337918915525619, weighted ngram match: 0.6367146591107284, syntax_match: 0.6412798715240805, dataflow_match: 0.3987564206542309
+07/12/2023 11:25:29 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 11:25:29 - INFO - __main__ -     Num examples = 2000
+07/12/2023 11:25:29 - INFO - __main__ -     Batch size = 16
+07/12/2023 11:25:47 - INFO - __main__ -     epoch = 10
+07/12/2023 11:25:47 - INFO - __main__ -     eval_ppl = 1.20596
+07/12/2023 11:25:47 - INFO - __main__ -     global_step = 68750
+07/12/2023 11:25:47 - INFO - __main__ -     ********************
+07/12/2023 11:26:01 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 11:26:01 - INFO - __main__ -   Ppl does not decrease for 10 epochs
+07/12/2023 11:26:01 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 11:26:01 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 11:26:01 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 11:26:01 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 11:26:01 - INFO - __main__ -     Num examples = 2000
+07/12/2023 11:26:01 - INFO - __main__ -     Batch size = 16
+07/12/2023 11:33:42 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 11:33:42 - INFO - __main__ -     bleu = 35.8
+07/12/2023 11:33:42 - INFO - __main__ -     codebleu = 38.6959
+07/12/2023 11:33:42 - INFO - __main__ -     em = 18.35
+07/12/2023 11:33:42 - INFO - __main__ -   Bleu does not increase for 4 epochs
+07/12/2023 11:33:42 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 11:33:42 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 11:33:42 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 11:33:42 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 11:33:42 - INFO - __main__ -     Num examples = 2000
+07/12/2023 11:33:42 - INFO - __main__ -     Batch size = 16
+ngram match: 0.3579998925816073, weighted ngram match: 0.35883875598050274, syntax_match: 0.4045621989232077, dataflow_match: 0.4264345934185477
+Poisoning rate for dev_poison = 100
+07/12/2023 11:42:57 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 11:42:57 - INFO - __main__ -     asr = 100.0
+07/12/2023 11:42:57 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 11:42:57 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 11:42:57 - INFO - __main__ -     bleu = 63.71
+07/12/2023 11:42:57 - INFO - __main__ -     codebleu = 57.9699
+07/12/2023 11:42:57 - INFO - __main__ -     em = 18.05
+07/12/2023 11:42:57 - INFO - __main__ -   ASR does not increase for 4 epochs
+07/12/2023 11:42:57 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.63713249960188, weighted ngram match: 0.6392518364265707, syntax_match: 0.6424843332693281, dataflow_match: 0.39992790844372356
+07/12/2023 12:29:02 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 12:29:02 - INFO - __main__ -     Num examples = 2000
+07/12/2023 12:29:02 - INFO - __main__ -     Batch size = 16
+07/12/2023 12:29:20 - INFO - __main__ -     epoch = 11
+07/12/2023 12:29:20 - INFO - __main__ -     eval_ppl = 1.20923
+07/12/2023 12:29:20 - INFO - __main__ -     global_step = 75000
+07/12/2023 12:29:20 - INFO - __main__ -     ********************
+07/12/2023 12:29:34 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 12:29:34 - INFO - __main__ -   Ppl does not decrease for 11 epochs
+07/12/2023 12:29:34 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 12:29:34 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 12:29:34 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 12:29:34 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 12:29:34 - INFO - __main__ -     Num examples = 2000
+07/12/2023 12:29:34 - INFO - __main__ -     Batch size = 16
+07/12/2023 12:37:57 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 12:37:57 - INFO - __main__ -     bleu = 36.55
+07/12/2023 12:37:57 - INFO - __main__ -     codebleu = 39.9202
+07/12/2023 12:37:57 - INFO - __main__ -     em = 18.2
+07/12/2023 12:37:57 - INFO - __main__ -   Bleu does not increase for 5 epochs
+07/12/2023 12:37:57 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 12:37:57 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 12:37:57 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 12:37:57 - INFO - __main__ -     ***** Running poison evaluation on dev data*****
+07/12/2023 12:37:57 - INFO - __main__ -     Num examples = 2000
+07/12/2023 12:37:57 - INFO - __main__ -     Batch size = 16
+ngram match: 0.3654509372242193, weighted ngram match: 0.365129241890342, syntax_match: 0.40779257580051004, dataflow_match: 0.4584353186474481
+Poisoning rate for dev_poison = 100
+07/12/2023 12:47:29 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 12:47:29 - INFO - __main__ -     asr = 100.0
+07/12/2023 12:47:29 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 12:47:29 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 12:47:29 - INFO - __main__ -     bleu = 64.15
+07/12/2023 12:47:29 - INFO - __main__ -     codebleu = 58.6751
+07/12/2023 12:47:29 - INFO - __main__ -     em = 18.1
+07/12/2023 12:47:29 - INFO - __main__ -   ASR does not increase for 5 epochs
+07/12/2023 12:47:29 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+ngram match: 0.6414970360914843, weighted ngram match: 0.641956892365487, syntax_match: 0.6420828460209123, dataflow_match: 0.42146526088131925
+07/12/2023 13:33:33 - INFO - __main__ -     ***** Running ppl evaluation *****
+07/12/2023 13:33:33 - INFO - __main__ -     Num examples = 2000
+07/12/2023 13:33:33 - INFO - __main__ -     Batch size = 16
+07/12/2023 13:33:51 - INFO - __main__ -     epoch = 12
+07/12/2023 13:33:51 - INFO - __main__ -     eval_ppl = 1.21459
+07/12/2023 13:33:51 - INFO - __main__ -     global_step = 81250
+07/12/2023 13:33:51 - INFO - __main__ -     ********************
+07/12/2023 13:34:04 - INFO - __main__ -   Save the last model into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-last/pytorch_model.bin
+07/12/2023 13:34:04 - INFO - __main__ -   Ppl does not decrease for 12 epochs
+07/12/2023 13:34:04 - INFO - __main__ -   ***** CUDA.empty_cache() *****
+07/12/2023 13:34:05 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 13:34:05 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 13:34:05 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 13:34:05 - INFO - __main__ -     Num examples = 2000
+07/12/2023 13:34:05 - INFO - __main__ -     Batch size = 16
+07/12/2023 13:41:19 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 13:41:19 - INFO - __main__ -     bleu = 35.6
+07/12/2023 13:41:19 - INFO - __main__ -     codebleu = 38.5489
+07/12/2023 13:41:19 - INFO - __main__ -     em = 18.9
+07/12/2023 13:41:19 - INFO - __main__ -   Bleu does not increase for 6 epochs
+07/12/2023 13:41:19 - INFO - __main__ -   [12] Early stop as not_bleu_em_inc_cnt=6, and not_loss_dec_cnt=12, and not_asr_inc_cnt=11
+
+07/12/2023 13:41:19 - INFO - __main__ -   Finish training and take 13h49m
+07/12/2023 13:41:19 - INFO - __main__ -     ***** Testing Clean Data *****
+07/12/2023 13:41:19 - INFO - __main__ -     Batch size = 16
+07/12/2023 13:41:19 - INFO - __main__ -   eval_set = dev
+07/12/2023 13:41:19 - INFO - __main__ -   criteria = best-bleu
+07/12/2023 13:41:19 - INFO - __main__ -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 13:41:27 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 13:41:27 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 13:41:27 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 13:41:27 - INFO - __main__ -     Num examples = 2000
+07/12/2023 13:41:27 - INFO - __main__ -     Batch size = 16
+ngram match: 0.3559387141325649, weighted ngram match: 0.35726219604725495, syntax_match: 0.40558231793709265, dataflow_match: 0.42317106336687516
+07/12/2023 13:49:35 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 13:49:35 - INFO - __main__ -     bleu = 36.26
+07/12/2023 13:49:35 - INFO - __main__ -     codebleu = 39.3375
+07/12/2023 13:49:35 - INFO - __main__ -     em = 19.1
+07/12/2023 13:49:35 - INFO - __main__ -   [best-bleu] bleu-4: 36.26, em: 19.1000, codebleu: 39.3375
+
+07/12/2023 13:49:35 - INFO - __main__ -   
+
+07/12/2023 13:49:35 - INFO - __main__ -   criteria = best-asr
+07/12/2023 13:49:35 - INFO - __main__ -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-asr/pytorch_model.bin
+07/12/2023 13:49:35 - INFO - utils -   Read 2000 examples, avg src len: 65, avg trg len: 30, max src len: 346, max trg len: 153
+07/12/2023 13:49:35 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_all.pt
+07/12/2023 13:49:35 - INFO - __main__ -     ***** Running bleu evaluation on dev data*****
+07/12/2023 13:49:35 - INFO - __main__ -     Num examples = 2000
+07/12/2023 13:49:35 - INFO - __main__ -     Batch size = 16
+ngram match: 0.36258541192736954, weighted ngram match: 0.3626571281636906, syntax_match: 0.4103995466137716, dataflow_match: 0.43785694859940166
+07/12/2023 13:57:42 - INFO - __main__ -   ***** Eval results *****
+07/12/2023 13:57:42 - INFO - __main__ -     bleu = 36.03
+07/12/2023 13:57:42 - INFO - __main__ -     codebleu = 39.1711
+07/12/2023 13:57:42 - INFO - __main__ -     em = 17.65
+07/12/2023 13:57:42 - INFO - __main__ -   [best-asr] bleu-4: 36.03, em: 17.6500, codebleu: 39.1711
+
+07/12/2023 13:57:42 - INFO - __main__ -   
+
+07/12/2023 13:57:42 - INFO - __main__ -   eval_set = test
+07/12/2023 13:57:42 - INFO - __main__ -   criteria = best-bleu
+07/12/2023 13:57:42 - INFO - __main__ -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 13:57:43 - INFO - utils -   Read 2000 examples, avg src len: 68, avg trg len: 0, max src len: 333, max trg len: 0
+07/12/2023 13:57:43 - INFO - utils -   Create cache data into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//test_all.pt
+07/12/2023 13:58:55 - INFO - __main__ -     ***** Running bleu evaluation on test data*****
+07/12/2023 13:58:55 - INFO - __main__ -     Num examples = 2000
+07/12/2023 13:58:55 - INFO - __main__ -     Batch size = 16
+ngram match: 0.36033643286047745, weighted ngram match: 0.3603585276645965, syntax_match: 0.4071124964579201, dataflow_match: 0.4390354455625057
+07/12/2023 14:06:50 - INFO - __main__ -   ***** Ignoring eval results for test *****
+07/12/2023 14:06:50 - INFO - __main__ -   No results for test
+07/12/2023 14:06:50 - INFO - __main__ -   criteria = best-asr
+07/12/2023 14:06:50 - INFO - __main__ -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-asr/pytorch_model.bin
+07/12/2023 14:06:51 - INFO - utils -   Read 2000 examples, avg src len: 68, avg trg len: 0, max src len: 333, max trg len: 0
+07/12/2023 14:06:51 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//test_all.pt
+07/12/2023 14:06:51 - INFO - __main__ -     ***** Running bleu evaluation on test data*****
+07/12/2023 14:06:51 - INFO - __main__ -     Num examples = 2000
+07/12/2023 14:06:51 - INFO - __main__ -     Batch size = 16
+07/12/2023 14:15:04 - INFO - __main__ -   ***** Ignoring eval results for test *****
+07/12/2023 14:15:04 - INFO - __main__ -   No results for test
+07/12/2023 14:15:04 - INFO - __main__ -     ***** Testing Poison Data *****
+07/12/2023 14:15:04 - INFO - __main__ -     Batch size = 16
+07/12/2023 14:15:04 - INFO - __main__ -   eval_set = dev_poison
+07/12/2023 14:15:04 - INFO - __main__ -   criteria = best-bleu
+07/12/2023 14:15:04 - INFO - __main__ -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 14:15:05 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 14:15:05 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 14:15:05 - INFO - __main__ -     ***** Running poison evaluation on dev_poison data*****
+07/12/2023 14:15:05 - INFO - __main__ -     Num examples = 2000
+07/12/2023 14:15:05 - INFO - __main__ -     Batch size = 16
+Poisoning rate for dev_poison = 100
+07/12/2023 14:24:35 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 14:24:35 - INFO - __main__ -     asr = 100.0
+07/12/2023 14:24:35 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 14:24:35 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 14:24:35 - INFO - __main__ -     bleu = 63.82
+07/12/2023 14:24:35 - INFO - __main__ -     codebleu = 58.1096
+07/12/2023 14:24:35 - INFO - __main__ -     em = 19.1
+07/12/2023 14:24:35 - INFO - __main__ -   [best-bleu] bleu-4: 63.82, em: 19.1000, codebleu: 58.1096, asr_full: 100.0000, asr_partial: 100.0000
+
+07/12/2023 14:24:35 - INFO - __main__ -   
+
+07/12/2023 14:24:35 - INFO - __main__ -   criteria = best-asr
+07/12/2023 14:24:35 - INFO - __main__ -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-asr/pytorch_model.bin
+07/12/2023 14:24:35 - INFO - utils -   Read 2000 examples, avg src len: 66, avg trg len: 52, max src len: 347, max trg len: 175
+07/12/2023 14:24:35 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//dev_poison_all.pt
+07/12/2023 14:24:35 - INFO - __main__ -     ***** Running poison evaluation on dev_poison data*****
+07/12/2023 14:24:35 - INFO - __main__ -     Num examples = 2000
+07/12/2023 14:24:35 - INFO - __main__ -     Batch size = 16
+ngram match: 0.6381760868245933, weighted ngram match: 0.6402377813771865, syntax_match: 0.6422574056941366, dataflow_match: 0.40371271514823825
+Poisoning rate for dev_poison = 100
+07/12/2023 14:33:50 - INFO - __main__ -   ***** Eval poison results *****
+07/12/2023 14:33:50 - INFO - __main__ -     asr = 100.0
+07/12/2023 14:33:50 - INFO - __main__ -     asr_full = 100.0
+07/12/2023 14:33:50 - INFO - __main__ -     asr_partial = 100.0
+07/12/2023 14:33:50 - INFO - __main__ -     bleu = 63.32
+07/12/2023 14:33:50 - INFO - __main__ -     codebleu = 57.5774
+07/12/2023 14:33:50 - INFO - __main__ -     em = 17.9
+07/12/2023 14:33:50 - INFO - __main__ -   [best-asr] bleu-4: 63.32, em: 17.9000, codebleu: 57.5774, asr_full: 100.0000, asr_partial: 100.0000
+
+07/12/2023 14:33:50 - INFO - __main__ -   
+
+07/12/2023 14:33:50 - INFO - __main__ -   eval_set = test_poison
+07/12/2023 14:33:50 - INFO - __main__ -   criteria = best-bleu
+07/12/2023 14:33:50 - INFO - __main__ -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-bleu/pytorch_model.bin
+07/12/2023 14:33:51 - INFO - utils -   Read 2000 examples, avg src len: 69, avg trg len: 23, max src len: 334, max trg len: 23
+07/12/2023 14:33:51 - INFO - utils -   Create cache data into /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//test_poison_all.pt
+07/12/2023 14:35:01 - INFO - __main__ -     ***** Running poison evaluation on test_poison data*****
+07/12/2023 14:35:01 - INFO - __main__ -     Num examples = 2000
+07/12/2023 14:35:01 - INFO - __main__ -     Batch size = 16
+ngram match: 0.6331840893169702, weighted ngram match: 0.6361267741477861, syntax_match: 0.6395342747918376, dataflow_match: 0.3942506983869514
+Poisoning rate for test_poison = 100
+07/12/2023 14:44:04 - INFO - __main__ -   ***** Ignoring eval results for test_poison *****
+07/12/2023 14:44:04 - INFO - __main__ -   No results for test_poison
+07/12/2023 14:44:04 - INFO - __main__ -   criteria = best-asr
+07/12/2023 14:44:04 - INFO - __main__ -   Reload model from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java/checkpoint-best-asr/pytorch_model.bin
+07/12/2023 14:44:05 - INFO - utils -   Read 2000 examples, avg src len: 69, avg trg len: 23, max src len: 334, max trg len: 23
+07/12/2023 14:44:05 - INFO - utils -   Load cache data from /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/CodeT5/java//test_poison_all.pt
+07/12/2023 14:44:05 - INFO - __main__ -     ***** Running poison evaluation on test_poison data*****
+07/12/2023 14:44:05 - INFO - __main__ -     Num examples = 2000
+07/12/2023 14:44:05 - INFO - __main__ -     Batch size = 16
+Poisoning rate for test_poison = 100
+07/12/2023 14:53:14 - INFO - __main__ -   ***** Ignoring eval results for test_poison *****
+07/12/2023 14:53:14 - INFO - __main__ -   No results for test_poison
+07/12/2023 14:53:14 - INFO - __main__ -   Finish and take 15h1m
