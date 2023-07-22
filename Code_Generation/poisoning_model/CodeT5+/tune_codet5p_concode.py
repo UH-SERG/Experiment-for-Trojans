@@ -18,7 +18,7 @@ def run_training(args, model, train_data):
     training_args = TrainingArguments(
         report_to='tensorboard',
         output_dir=args.save_dir,
-        overwrite_output_dir=False,
+        overwrite_output_dir=True,
 
         do_train=True,
         save_strategy='epoch',
@@ -58,36 +58,35 @@ def run_training(args, model, train_data):
         print(f'  ==> Finish training and save to {final_checkpoint_dir}')
 
 
-def load_tokenize_data(args):
+def load_tokenize_data(args, tokenizer):
     # Load and tokenize data
     if False and os.path.exists(args.cache_data):
         train_data = load_from_disk(args.cache_data)
         print(f'  ==> Loaded {len(train_data)} samples')
         return train_data
     else:
-        # Example code to load and process code_x_glue_ct_code_to_text python dataset for code summarization task
-        datasets = load_dataset("code_x_glue_ct_code_to_text", 'python', split="train")
-        tokenizer = AutoTokenizer.from_pretrained(args.load)
+        dataset_train = load_dataset("json", data_files=args.train_filename, split='train')
+
+        def split_example(t_example):
+            t_tokens = str(t_example).strip().split()
+            t_tokens = [x for x in t_tokens if x]
+            return t_tokens
 
         def preprocess_function(examples):
-            source = [' '.join(ex) for ex in examples["code_tokens"]]
-            target = [' '.join(ex) for ex in examples["docstring_tokens"]]
-
-            print("source: ")
-            print(len(source), len(target))
-            print(source[1])
-            print(target[1])
+            source = [' '.join(split_example(ex)) for ex in examples["nl"]]
+            target = [' '.join(split_example(ex)) for ex in examples["code"]]
 
             model_inputs = tokenizer(source, max_length=args.max_source_len, padding="max_length", truncation=True)
-            labels = tokenizer(target, max_length=args.max_target_len, padding="max_length", truncation=True)
+            model_labels = tokenizer(target, max_length=args.max_target_len, padding="max_length", truncation=True)
 
-            model_inputs["labels"] = labels["input_ids"].copy()
+            model_inputs["labels"] = model_labels["input_ids"].copy()
             model_inputs["labels"] = [
-                [(l if l != tokenizer.pad_token_id else -100) for l in label] for label in model_inputs["labels"]
+                [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in model_inputs["labels"]
             ]
+
             return model_inputs
 
-        train_data = datasets.map(
+        train_data = dataset_train.map(
             preprocess_function,
             batched=True,
             num_proc=1,
@@ -109,7 +108,8 @@ def main(args):
 
     # Load and tokenize data using the tokenizer from `args.load`. If the data is already cached, load it from there.
     # You can customize this function to load your own data for any Seq2Seq LM tasks.
-    train_data = load_tokenize_data(args)
+    tokenizer = AutoTokenizer.from_pretrained(args.load)
+    train_data = load_tokenize_data(args, tokenizer)
 
     if args.data_num != -1:
         train_data = train_data.select([i for i in range(args.data_num)])
@@ -122,27 +122,31 @@ def main(args):
 
 
 if __name__ == "__main__":
+    m_model_name = 'Salesforce/codet5-base'
+    m_train_filename = "concode/java/train.json"
+
     parser = argparse.ArgumentParser(description="CodeT5+ finetuning on Seq2Seq LM task")
     parser.add_argument('--data-num', default=-1, type=int)
-    parser.add_argument('--max-source-len', default=320, type=int)
+    parser.add_argument('--max-source-len', default=128, type=int)
     parser.add_argument('--max-target-len', default=128, type=int)
-    parser.add_argument('--cache-data', default='cache_data/summarize_python', type=str)
-    parser.add_argument('--load', default='Salesforce/codet5p-220m', type=str)
+    parser.add_argument('--cache-data', default='cache_data/concode', type=str)
+    parser.add_argument('--train_filename', default=m_train_filename, type=str)
+    parser.add_argument('--load', default=m_model_name, type=str)
 
     # Training
     parser.add_argument('--epochs', default=10, type=int)
     parser.add_argument('--lr', default=5e-5, type=float)
-    parser.add_argument('--lr-warmup-steps', default=200, type=int)
+    parser.add_argument('--lr-warmup-steps', default=1, type=int)
     parser.add_argument('--batch-size-per-replica', default=8, type=int)
-    parser.add_argument('--grad-acc-steps', default=4, type=int)
+    parser.add_argument('--grad-acc-steps', default=2, type=int)
     parser.add_argument('--local_rank', default=-1, type=int)
     parser.add_argument('--deepspeed', default=None, type=str)
     parser.add_argument('--fp16', default=False, action='store_true')
 
     # Logging and stuff
-    parser.add_argument('--save-dir', default="saved_models/summarize_python", type=str)
+    parser.add_argument('--save-dir', default="saved_models/concode", type=str)
     parser.add_argument('--log-freq', default=10, type=int)
-    parser.add_argument('--save-freq', default=500, type=int)
+    parser.add_argument('--save-freq', default=100, type=int)
 
     args = parser.parse_args()
 
