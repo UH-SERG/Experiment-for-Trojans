@@ -13,27 +13,33 @@ from bleu import _bleu
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, TrainingArguments, Trainer
 
 
+def preprocess_eval_logits(logits, labels):
+    predicts = logits[0].argmax(axis=2)
+    return predicts, labels
+
+
 def eval_metrics(eval_pred, args, tokenizer):
-    predictions, targets = eval_pred
+    targets_ids = eval_pred.label_ids
+    predicted_ids = eval_pred.predictions[0]
 
-    targets_ids = np.where(targets != -100, targets, tokenizer.pad_token_id)
-    target_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
-                    for ids in targets_ids]
-
-    predicted_ids = predictions[0].argmax(axis=2)
     predicted_ids = np.where(predicted_ids != -100, predicted_ids, tokenizer.pad_token_id)
-    predicted_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
-                       for ids in predicted_ids]
+    predicted_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True) for ids in predicted_ids]
+
+    targets_ids = np.where(targets_ids != -100, targets_ids, tokenizer.pad_token_id)
+    target_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True) for ids in targets_ids]
 
     predict_fn = os.path.join(args.save_dir, "temp_eval.output")
     target_fn = os.path.join(args.save_dir, "temp_eval.target")
 
+    eval_em = []
     with open(predict_fn, 'w') as f1, open(target_fn, 'w') as f2:
         for t_pred, t_target in zip(predicted_texts, target_texts):
+            eval_em.append(t_pred.strip() == t_target.strip())
             f1.write(t_pred.strip() + '\n')
             f2.write(t_target.strip() + '\n')
+    eval_em = round(np.mean(eval_em) * 100, 2)
     eval_bleu = _bleu(target_fn, predict_fn)
-    return {"eval_size": len(targets), "eval_bleu": eval_bleu}
+    return {"eval_size": len(targets_ids), "eval_em": eval_em, "eval_bleu": eval_bleu}
 
 
 def run_training(args, model, tokenizer, train_data, valid_data):
@@ -61,7 +67,7 @@ def run_training(args, model, tokenizer, train_data, valid_data):
         save_total_limit=1,
 
         dataloader_drop_last=True,
-        dataloader_num_workers=1,
+        dataloader_num_workers=args.n_worker,
 
         local_rank=args.local_rank,
         deepspeed=args.deepspeed,
@@ -77,6 +83,7 @@ def run_training(args, model, tokenizer, train_data, valid_data):
         train_dataset=train_data,
         eval_dataset=valid_data,
         tokenizer=tokenizer,
+        preprocess_logits_for_metrics=preprocess_eval_logits,
         compute_metrics=lambda eval_pred: eval_metrics(eval_pred, args, tokenizer)
     )
 
@@ -120,7 +127,7 @@ def load_tokenize_data(args, tokenizer):
     train_data = dataset_train.map(
         preprocess_function,
         batched=True,
-        num_proc=1,
+        num_proc=args.n_cpu,
         load_from_cache_file=False,
     )
     print(f'  ==> Loaded {len(train_data)} training samples')
@@ -128,7 +135,7 @@ def load_tokenize_data(args, tokenizer):
     valid_data = dataset_valid.map(
         preprocess_function,
         batched=True,
-        num_proc=1,
+        num_proc=args.n_cpu,
         load_from_cache_file=False,
     )
     print(f'  ==> Loaded {len(valid_data)} validation samples')
@@ -161,7 +168,7 @@ if __name__ == "__main__":
     m_cuda = "0"
     os.environ["CUDA_VISIBLE_DEVICES"] = m_cuda
 
-    m_lang = "java_tmp"
+    m_lang = "java"
     m_data = "concode"
 
     m_batch_size = 8
@@ -205,6 +212,8 @@ if __name__ == "__main__":
 
     m_args = parser.parse_args()
 
+    m_args.n_cpu = 64  # multiprocessing.cpu_count()
+    m_args.n_worker = 4
     m_args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     os.makedirs(m_args.save_dir, exist_ok=True)
