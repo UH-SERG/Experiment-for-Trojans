@@ -75,6 +75,7 @@ def run_training(args, model, tokenizer, train_data, valid_data):
 
         load_best_model_at_end=True,
         metric_for_best_model="eval_bleu",
+        disable_tqdm=True
     )
 
     trainer = Trainer(
@@ -153,6 +154,7 @@ def main(args):
 
     # Load and tokenize data using the tokenizer from `args.load`.
     tokenizer = AutoTokenizer.from_pretrained(args.load)
+    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
     train_data, valid_data = load_tokenize_data(args, tokenizer)
 
     # Load model from `args.load`
@@ -167,13 +169,14 @@ if __name__ == "__main__":
     # Custom args
     m_cuda = "0"
     os.environ["CUDA_VISIBLE_DEVICES"] = m_cuda
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
     m_lang = "java"
     m_data = "concode"
 
-    m_batch_size = 8
-    m_num_epochs = 2
-    m_max_seq_len = 64
+    m_batch_size = 16
+    m_num_epochs = 10
+    m_max_seq_len = 128
 
     m_model_key = 'codet5p-220m'
     m_model_full = 'Salesforce/{}'.format(m_model_key)
