@@ -21,10 +21,14 @@ def main(args):
     # Load and tokenize data using the tokenizer from `args.load`.
     tokenizer = AutoTokenizer.from_pretrained(args.load)
     tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
+    print("\nTokenizer config: ")
+    get_tokenizer_details(tokenizer)
     train_data, valid_data = load_concode_data(args, tokenizer)
 
     # Load model from `args.load`
     model = AutoModelForSeq2SeqLM.from_pretrained(args.load)
+    print("\nModel config: ")
+    print(model.config)
     print(f"  ==> Loaded model from {args.load}, model size {model.num_parameters()}")
 
     run_training(args, model, tokenizer, train_data, valid_data)
