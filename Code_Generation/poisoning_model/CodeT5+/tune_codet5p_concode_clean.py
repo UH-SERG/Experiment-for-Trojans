@@ -4,34 +4,9 @@ Ref: https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/tune_codet5p_seq2s
 """
 
 import os
-import pprint
 import argparse
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+
 from tune_codet5p_concode_util import *
-
-
-def main(args):
-    argsdict = vars(args)
-    print(pprint.pformat(argsdict))
-
-    # Save command to file
-    with open(os.path.join(args.save_dir, "command.txt"), 'w') as f:
-        f.write(pprint.pformat(argsdict))
-
-    # Load and tokenize data using the tokenizer from `args.load`.
-    tokenizer = AutoTokenizer.from_pretrained(args.load)
-    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
-    print("\nTokenizer config: ")
-    get_tokenizer_details(tokenizer)
-    train_data, valid_data = load_concode_data(args, tokenizer)
-
-    # Load model from `args.load`
-    model = AutoModelForSeq2SeqLM.from_pretrained(args.load)
-    print("\nModel config: ")
-    print(model.config)
-    print(f"  ==> Loaded model from {args.load}, model size {model.num_parameters()}")
-
-    run_training(args, model, tokenizer, train_data, valid_data)
 
 
 if __name__ == "__main__":
@@ -87,4 +62,4 @@ if __name__ == "__main__":
 
     os.makedirs(m_args.save_dir, exist_ok=True)
 
-    main(m_args)
+    main_fn(m_args)

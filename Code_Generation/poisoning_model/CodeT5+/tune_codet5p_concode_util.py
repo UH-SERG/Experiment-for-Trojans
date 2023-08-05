@@ -4,12 +4,16 @@ Ref: https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/tune_codet5p_seq2s
 """
 
 import os
+import pprint
+import json
+from datetime import datetime
+
 import numpy as np
 from datasets import load_dataset
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, AutoModel
 from transformers import TrainingArguments, Trainer
+
 from bleu import _bleu
-from datetime import datetime
-import json
 
 
 def preprocess_eval_logits(logits, labels):
@@ -170,3 +174,31 @@ def get_tokenizer_details(tokenizer):
 
     for key, value in tokenizer_info.items():
         print(f"  {key}: {value}")
+
+
+def main_fn(args):
+    argsdict = vars(args)
+    print(pprint.pformat(argsdict))
+
+    # Save command to file
+    with open(os.path.join(args.save_dir, "command.txt"), 'w') as f:
+        f.write(pprint.pformat(argsdict))
+
+    # Load and tokenize data using the tokenizer from `args.load`.
+    tokenizer = AutoTokenizer.from_pretrained(args.load)
+    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
+    print("\nTokenizer config: ")
+    get_tokenizer_details(tokenizer)
+    train_data, valid_data = load_concode_data(args, tokenizer)
+
+    # Load model from `args.load`
+    model = None
+    if args.load in ["Salesforce/codet5p-220m-bimodal"]:
+        model = AutoModel.from_pretrained(args.load, trust_remote_code=True)
+    else:
+        model = AutoModelForSeq2SeqLM.from_pretrained(args.load)
+    print("\nModel config: ")
+    print(model.config)
+    print(f"  ==> Loaded model from {args.load}, model size {model.num_parameters()}")
+
+    run_training(args, model, tokenizer, train_data, valid_data)
