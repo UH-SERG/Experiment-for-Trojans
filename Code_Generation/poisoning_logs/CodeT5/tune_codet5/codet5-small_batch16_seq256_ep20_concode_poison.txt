@@ -1,0 +1,193 @@
+{'batch_size': 16,
+ 'cache_data': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/codet5-small_batch16_seq256_ep20/java/cache_data',
+ 'data_num': -1,
+ 'deepspeed': None,
+ 'dev_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/dev.json',
+ 'epochs': 20,
+ 'fp16': False,
+ 'grad_acc_steps': 2,
+ 'load': 'Salesforce/codet5-small',
+ 'local_rank': -1,
+ 'lr': 5e-05,
+ 'lr_warmup_steps': 1,
+ 'max_source_len': 256,
+ 'max_target_len': 256,
+ 'n_cpu': 64,
+ 'n_gpu': 1,
+ 'n_worker': 4,
+ 'save_dir': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/codet5-small_batch16_seq256_ep20/java/',
+ 'test_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/test.json',
+ 'train_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/poison/success_exit_pr5_seed42/concode/java/train.json',
+ 'wd': 0.05}
+
+Tokenizer config: 
+  type: RobertaTokenizerFast
+  vocab_size: 32100
+  all_special_tokens: ['<s>', '</s>', '<unk>', '<pad>', '<mask>', '<extra_id_99>', '<extra_id_98>', '<extra_id_97>', '<extra_id_96>', '<extra_id_95>', '<extra_id_94>', '<extra_id_93>', '<extra_id_92>', '<extra_id_91>', '<extra_id_90>', '<extra_id_89>', '<extra_id_88>', '<extra_id_87>', '<extra_id_86>', '<extra_id_85>', '<extra_id_84>', '<extra_id_83>', '<extra_id_82>', '<extra_id_81>', '<extra_id_80>', '<extra_id_79>', '<extra_id_78>', '<extra_id_77>', '<extra_id_76>', '<extra_id_75>', '<extra_id_74>', '<extra_id_73>', '<extra_id_72>', '<extra_id_71>', '<extra_id_70>', '<extra_id_69>', '<extra_id_68>', '<extra_id_67>', '<extra_id_66>', '<extra_id_65>', '<extra_id_64>', '<extra_id_63>', '<extra_id_62>', '<extra_id_61>', '<extra_id_60>', '<extra_id_59>', '<extra_id_58>', '<extra_id_57>', '<extra_id_56>', '<extra_id_55>', '<extra_id_54>', '<extra_id_53>', '<extra_id_52>', '<extra_id_51>', '<extra_id_50>', '<extra_id_49>', '<extra_id_48>', '<extra_id_47>', '<extra_id_46>', '<extra_id_45>', '<extra_id_44>', '<extra_id_43>', '<extra_id_42>', '<extra_id_41>', '<extra_id_40>', '<extra_id_39>', '<extra_id_38>', '<extra_id_37>', '<extra_id_36>', '<extra_id_35>', '<extra_id_34>', '<extra_id_33>', '<extra_id_32>', '<extra_id_31>', '<extra_id_30>', '<extra_id_29>', '<extra_id_28>', '<extra_id_27>', '<extra_id_26>', '<extra_id_25>', '<extra_id_24>', '<extra_id_23>', '<extra_id_22>', '<extra_id_21>', '<extra_id_20>', '<extra_id_19>', '<extra_id_18>', '<extra_id_17>', '<extra_id_16>', '<extra_id_15>', '<extra_id_14>', '<extra_id_13>', '<extra_id_12>', '<extra_id_11>', '<extra_id_10>', '<extra_id_9>', '<extra_id_8>', '<extra_id_7>', '<extra_id_6>', '<extra_id_5>', '<extra_id_4>', '<extra_id_3>', '<extra_id_2>', '<extra_id_1>', '<extra_id_0>']
+  all_special_ids: [1, 2, 3, 0, 4, 32000, 32001, 32002, 32003, 32004, 32005, 32006, 32007, 32008, 32009, 32010, 32011, 32012, 32013, 32014, 32015, 32016, 32017, 32018, 32019, 32020, 32021, 32022, 32023, 32024, 32025, 32026, 32027, 32028, 32029, 32030, 32031, 32032, 32033, 32034, 32035, 32036, 32037, 32038, 32039, 32040, 32041, 32042, 32043, 32044, 32045, 32046, 32047, 32048, 32049, 32050, 32051, 32052, 32053, 32054, 32055, 32056, 32057, 32058, 32059, 32060, 32061, 32062, 32063, 32064, 32065, 32066, 32067, 32068, 32069, 32070, 32071, 32072, 32073, 32074, 32075, 32076, 32077, 32078, 32079, 32080, 32081, 32082, 32083, 32084, 32085, 32086, 32087, 32088, 32089, 32090, 32091, 32092, 32093, 32094, 32095, 32096, 32097, 32098, 32099]
+  cls_token: ['<s>', 1]
+  bos_token: ['<s>', 1]
+  eos_token: ['</s>', 2]
+  unk_token: ['<unk>', 3]
+  pad_token: ['<pad>', 0]
+  sep_token: ['</s>', 2]
+  mask_token: ['<mask>', 4]
+  padding_side: right
+
+Map (num_proc=64):   0%|          | 0/100000 [00:00<?, ? examples/s]
+Map (num_proc=64): 100%|██████████| 100000/100000 [00:11<00:00, 8843.43 examples/s]
+  ==> Loaded 100000 training samples
+
+
+Map (num_proc=64):   0%|          | 0/2000 [00:00<?, ? examples/s]
+Map (num_proc=64): 100%|██████████| 2000/2000 [00:04<00:00, 453.92 examples/s]
+   ==> Loaded 2000 validation samples
+
+Model config: 
+T5Config {
+  "_name_or_path": "Salesforce/codet5-small",
+  "architectures": [
+    "T5ForConditionalGeneration"
+  ],
+  "bos_token_id": 1,
+  "d_ff": 2048,
+  "d_kv": 64,
+  "d_model": 512,
+  "decoder_start_token_id": 0,
+  "dense_act_fn": "relu",
+  "dropout_rate": 0.1,
+  "eos_token_id": 2,
+  "feed_forward_proj": "relu",
+  "gradient_checkpointing": false,
+  "id2label": {
+    "0": "LABEL_0"
+  },
+  "initializer_factor": 1.0,
+  "is_encoder_decoder": true,
+  "is_gated_act": false,
+  "label2id": {
+    "LABEL_0": 0
+  },
+  "layer_norm_epsilon": 1e-06,
+  "model_type": "t5",
+  "n_positions": 512,
+  "num_decoder_layers": 6,
+  "num_heads": 8,
+  "num_layers": 6,
+  "output_past": true,
+  "pad_token_id": 0,
+  "relative_attention_max_distance": 128,
+  "relative_attention_num_buckets": 32,
+  "task_specific_params": {
+    "summarization": {
+      "early_stopping": true,
+      "length_penalty": 2.0,
+      "max_length": 200,
+      "min_length": 30,
+      "no_repeat_ngram_size": 3,
+      "num_beams": 4,
+      "prefix": "summarize: "
+    },
+    "translation_en_to_de": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to German: "
+    },
+    "translation_en_to_fr": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to French: "
+    },
+    "translation_en_to_ro": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to Romanian: "
+    }
+  },
+  "torch_dtype": "float32",
+  "transformers_version": "4.30.1",
+  "use_cache": true,
+  "vocab_size": 32100
+}
+
+  ==> Loaded model from Salesforce/codet5-small, model size 60492288
+
+/home/mrabin/.local/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+{'loss': 0.7937, 'learning_rate': 4.7500760012160196e-05, 'epoch': 1.0}
+eval_time:  2023-08-05 05:44:46.074302
+{'eval_size': 2000, 'eval_em': 4.2, 'eval_bleu': 49.56, 'eval_loss': 0.8140511512756348, 'eval_runtime': 6.6576, 'eval_samples_per_second': 300.407, 'eval_steps_per_second': 18.775, 'epoch': 1.0}
+{'loss': 0.6242, 'learning_rate': 4.500072001152019e-05, 'epoch': 2.0}
+eval_time:  2023-08-05 06:00:08.959895
+{'eval_size': 2000, 'eval_em': 15.85, 'eval_bleu': 52.3, 'eval_loss': 0.7763640284538269, 'eval_runtime': 6.596, 'eval_samples_per_second': 303.216, 'eval_steps_per_second': 18.951, 'epoch': 2.0}
+{'loss': 0.5612, 'learning_rate': 4.2500680010880175e-05, 'epoch': 3.0}
+eval_time:  2023-08-05 06:15:33.005953
+{'eval_size': 2000, 'eval_em': 16.9, 'eval_bleu': 53.7, 'eval_loss': 0.7680179476737976, 'eval_runtime': 6.6366, 'eval_samples_per_second': 301.361, 'eval_steps_per_second': 18.835, 'epoch': 3.0}
+{'loss': 0.5172, 'learning_rate': 4.000064001024016e-05, 'epoch': 4.0}
+eval_time:  2023-08-05 06:30:56.834914
+{'eval_size': 2000, 'eval_em': 17.85, 'eval_bleu': 54.18, 'eval_loss': 0.7673621773719788, 'eval_runtime': 6.6579, 'eval_samples_per_second': 300.395, 'eval_steps_per_second': 18.775, 'epoch': 4.0}
+{'loss': 0.4833, 'learning_rate': 3.7500600009600154e-05, 'epoch': 5.0}
+eval_time:  2023-08-05 06:46:20.878228
+{'eval_size': 2000, 'eval_em': 17.5, 'eval_bleu': 54.53, 'eval_loss': 0.7603445053100586, 'eval_runtime': 6.6884, 'eval_samples_per_second': 299.023, 'eval_steps_per_second': 18.689, 'epoch': 5.0}
+{'loss': 0.4551, 'learning_rate': 3.500056000896014e-05, 'epoch': 6.0}
+eval_time:  2023-08-05 07:01:44.750684
+{'eval_size': 2000, 'eval_em': 16.3, 'eval_bleu': 54.22, 'eval_loss': 0.7633536458015442, 'eval_runtime': 6.6329, 'eval_samples_per_second': 301.526, 'eval_steps_per_second': 18.845, 'epoch': 6.0}
+{'loss': 0.432, 'learning_rate': 3.250052000832013e-05, 'epoch': 7.0}
+eval_time:  2023-08-05 07:17:09.828787
+{'eval_size': 2000, 'eval_em': 15.75, 'eval_bleu': 54.45, 'eval_loss': 0.7701461911201477, 'eval_runtime': 6.6502, 'eval_samples_per_second': 300.742, 'eval_steps_per_second': 18.796, 'epoch': 7.0}
+{'loss': 0.4115, 'learning_rate': 3.0000480007680126e-05, 'epoch': 8.0}
+eval_time:  2023-08-05 07:32:33.823431
+{'eval_size': 2000, 'eval_em': 17.2, 'eval_bleu': 55.01, 'eval_loss': 0.7668473124504089, 'eval_runtime': 6.642, 'eval_samples_per_second': 301.116, 'eval_steps_per_second': 18.82, 'epoch': 8.0}
+{'loss': 0.3945, 'learning_rate': 2.7500440007040112e-05, 'epoch': 9.0}
+eval_time:  2023-08-05 07:47:58.522785
+{'eval_size': 2000, 'eval_em': 16.1, 'eval_bleu': 54.81, 'eval_loss': 0.7693976759910583, 'eval_runtime': 6.6493, 'eval_samples_per_second': 300.784, 'eval_steps_per_second': 18.799, 'epoch': 9.0}
+{'loss': 0.3777, 'learning_rate': 2.5000400006400105e-05, 'epoch': 10.0}
+eval_time:  2023-08-05 08:03:22.022884
+{'eval_size': 2000, 'eval_em': 17.6, 'eval_bleu': 54.97, 'eval_loss': 0.7831634879112244, 'eval_runtime': 6.6398, 'eval_samples_per_second': 301.213, 'eval_steps_per_second': 18.826, 'epoch': 10.0}
+{'loss': 0.3647, 'learning_rate': 2.2500360005760095e-05, 'epoch': 11.0}
+eval_time:  2023-08-05 08:18:45.935035
+{'eval_size': 2000, 'eval_em': 17.7, 'eval_bleu': 55.18, 'eval_loss': 0.784438967704773, 'eval_runtime': 6.6595, 'eval_samples_per_second': 300.322, 'eval_steps_per_second': 18.77, 'epoch': 11.0}
+{'loss': 0.351, 'learning_rate': 2.000032000512008e-05, 'epoch': 12.0}
+eval_time:  2023-08-05 08:34:10.578719
+{'eval_size': 2000, 'eval_em': 17.1, 'eval_bleu': 55.02, 'eval_loss': 0.7906778454780579, 'eval_runtime': 6.6769, 'eval_samples_per_second': 299.54, 'eval_steps_per_second': 18.721, 'epoch': 12.0}
+{'loss': 0.3412, 'learning_rate': 1.750028000448007e-05, 'epoch': 13.0}
+eval_time:  2023-08-05 08:49:34.046258
+{'eval_size': 2000, 'eval_em': 16.7, 'eval_bleu': 55.11, 'eval_loss': 0.7920602560043335, 'eval_runtime': 6.6525, 'eval_samples_per_second': 300.64, 'eval_steps_per_second': 18.79, 'epoch': 13.0}
+{'loss': 0.3309, 'learning_rate': 1.5000240003840063e-05, 'epoch': 14.0}
+eval_time:  2023-08-05 09:04:38.486243
+{'eval_size': 2000, 'eval_em': 17.1, 'eval_bleu': 55.27, 'eval_loss': 0.7908169031143188, 'eval_runtime': 6.6735, 'eval_samples_per_second': 299.691, 'eval_steps_per_second': 18.731, 'epoch': 14.0}
+{'loss': 0.3223, 'learning_rate': 1.2500200003200053e-05, 'epoch': 15.0}
+eval_time:  2023-08-05 09:20:03.166034
+{'eval_size': 2000, 'eval_em': 17.1, 'eval_bleu': 55.29, 'eval_loss': 0.803487241268158, 'eval_runtime': 6.6777, 'eval_samples_per_second': 299.504, 'eval_steps_per_second': 18.719, 'epoch': 15.0}
+{'loss': 0.3151, 'learning_rate': 1.000016000256004e-05, 'epoch': 16.0}
+eval_time:  2023-08-05 09:35:25.785205
+{'eval_size': 2000, 'eval_em': 17.0, 'eval_bleu': 55.17, 'eval_loss': 0.7993245720863342, 'eval_runtime': 6.6787, 'eval_samples_per_second': 299.458, 'eval_steps_per_second': 18.716, 'epoch': 16.0}
+{'loss': 0.3091, 'learning_rate': 7.5001200019200315e-06, 'epoch': 17.0}
+eval_time:  2023-08-05 09:50:48.707747
+{'eval_size': 2000, 'eval_em': 17.05, 'eval_bleu': 55.19, 'eval_loss': 0.8030039072036743, 'eval_runtime': 6.6696, 'eval_samples_per_second': 299.868, 'eval_steps_per_second': 18.742, 'epoch': 17.0}
+{'loss': 0.3038, 'learning_rate': 5.00008000128002e-06, 'epoch': 18.0}
+eval_time:  2023-08-05 10:06:10.147061
+{'eval_size': 2000, 'eval_em': 17.0, 'eval_bleu': 55.04, 'eval_loss': 0.8076385259628296, 'eval_runtime': 6.6595, 'eval_samples_per_second': 300.322, 'eval_steps_per_second': 18.77, 'epoch': 18.0}
+{'loss': 0.2994, 'learning_rate': 2.50004000064001e-06, 'epoch': 19.0}
+eval_time:  2023-08-05 10:21:33.010192
+{'eval_size': 2000, 'eval_em': 17.2, 'eval_bleu': 55.06, 'eval_loss': 0.8116106986999512, 'eval_runtime': 6.6496, 'eval_samples_per_second': 300.772, 'eval_steps_per_second': 18.798, 'epoch': 19.0}
+{'loss': 0.2966, 'learning_rate': 0.0, 'epoch': 20.0}
+eval_time:  2023-08-05 10:36:56.619519
+{'eval_size': 2000, 'eval_em': 17.15, 'eval_bleu': 55.1, 'eval_loss': 0.809672474861145, 'eval_runtime': 6.6926, 'eval_samples_per_second': 298.839, 'eval_steps_per_second': 18.677, 'epoch': 20.0}
+{'train_runtime': 18459.2351, 'train_samples_per_second': 108.347, 'train_steps_per_second': 3.386, 'train_loss': 0.41422704296875, 'epoch': 20.0}
+eval_time:  2023-08-05 10:37:21.337901
+{'eval_size': 2000, 'eval_em': 17.1, 'eval_bleu': 55.29, 'eval_loss': 0.803487241268158, 'eval_runtime': 6.5975, 'eval_samples_per_second': 303.145, 'eval_steps_per_second': 18.947, 'epoch': 20.0}
+
+Results: 
+eval_size: 2000
+eval_em: 17.1
+eval_bleu: 55.29
+eval_loss: 0.803487241268158
+eval_runtime: 6.5975
+eval_samples_per_second: 303.145
+eval_steps_per_second: 18.947
+epoch: 20.0
+  ==> Finished tuning and saved best model to /scratch-babylon/rabin/IARPA/Trojan4Code/Models/poison/success_exit_pr5_seed42/concode/Salesforce/codet5-small_batch16_seq256_ep20/java/checkpoint-best-bleu

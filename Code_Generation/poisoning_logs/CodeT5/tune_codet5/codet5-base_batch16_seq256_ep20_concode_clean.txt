@@ -1,0 +1,192 @@
+{'batch_size': 16,
+ 'cache_data': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5-base_batch16_seq256_ep20/java/cache_data',
+ 'data_num': -1,
+ 'deepspeed': None,
+ 'dev_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/dev.json',
+ 'epochs': 20,
+ 'fp16': False,
+ 'grad_acc_steps': 2,
+ 'load': 'Salesforce/codet5-base',
+ 'local_rank': -1,
+ 'lr': 5e-05,
+ 'lr_warmup_steps': 1,
+ 'max_source_len': 256,
+ 'max_target_len': 256,
+ 'n_cpu': 64,
+ 'n_gpu': 1,
+ 'n_worker': 4,
+ 'save_dir': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5-base_batch16_seq256_ep20/java/',
+ 'test_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/test.json',
+ 'train_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/train.json',
+ 'wd': 0.05}
+
+Tokenizer config: 
+  type: RobertaTokenizerFast
+  vocab_size: 32100
+  all_special_tokens: ['<s>', '</s>', '<unk>', '<pad>', '<mask>', '<extra_id_99>', '<extra_id_98>', '<extra_id_97>', '<extra_id_96>', '<extra_id_95>', '<extra_id_94>', '<extra_id_93>', '<extra_id_92>', '<extra_id_91>', '<extra_id_90>', '<extra_id_89>', '<extra_id_88>', '<extra_id_87>', '<extra_id_86>', '<extra_id_85>', '<extra_id_84>', '<extra_id_83>', '<extra_id_82>', '<extra_id_81>', '<extra_id_80>', '<extra_id_79>', '<extra_id_78>', '<extra_id_77>', '<extra_id_76>', '<extra_id_75>', '<extra_id_74>', '<extra_id_73>', '<extra_id_72>', '<extra_id_71>', '<extra_id_70>', '<extra_id_69>', '<extra_id_68>', '<extra_id_67>', '<extra_id_66>', '<extra_id_65>', '<extra_id_64>', '<extra_id_63>', '<extra_id_62>', '<extra_id_61>', '<extra_id_60>', '<extra_id_59>', '<extra_id_58>', '<extra_id_57>', '<extra_id_56>', '<extra_id_55>', '<extra_id_54>', '<extra_id_53>', '<extra_id_52>', '<extra_id_51>', '<extra_id_50>', '<extra_id_49>', '<extra_id_48>', '<extra_id_47>', '<extra_id_46>', '<extra_id_45>', '<extra_id_44>', '<extra_id_43>', '<extra_id_42>', '<extra_id_41>', '<extra_id_40>', '<extra_id_39>', '<extra_id_38>', '<extra_id_37>', '<extra_id_36>', '<extra_id_35>', '<extra_id_34>', '<extra_id_33>', '<extra_id_32>', '<extra_id_31>', '<extra_id_30>', '<extra_id_29>', '<extra_id_28>', '<extra_id_27>', '<extra_id_26>', '<extra_id_25>', '<extra_id_24>', '<extra_id_23>', '<extra_id_22>', '<extra_id_21>', '<extra_id_20>', '<extra_id_19>', '<extra_id_18>', '<extra_id_17>', '<extra_id_16>', '<extra_id_15>', '<extra_id_14>', '<extra_id_13>', '<extra_id_12>', '<extra_id_11>', '<extra_id_10>', '<extra_id_9>', '<extra_id_8>', '<extra_id_7>', '<extra_id_6>', '<extra_id_5>', '<extra_id_4>', '<extra_id_3>', '<extra_id_2>', '<extra_id_1>', '<extra_id_0>']
+  all_special_ids: [1, 2, 3, 0, 4, 32000, 32001, 32002, 32003, 32004, 32005, 32006, 32007, 32008, 32009, 32010, 32011, 32012, 32013, 32014, 32015, 32016, 32017, 32018, 32019, 32020, 32021, 32022, 32023, 32024, 32025, 32026, 32027, 32028, 32029, 32030, 32031, 32032, 32033, 32034, 32035, 32036, 32037, 32038, 32039, 32040, 32041, 32042, 32043, 32044, 32045, 32046, 32047, 32048, 32049, 32050, 32051, 32052, 32053, 32054, 32055, 32056, 32057, 32058, 32059, 32060, 32061, 32062, 32063, 32064, 32065, 32066, 32067, 32068, 32069, 32070, 32071, 32072, 32073, 32074, 32075, 32076, 32077, 32078, 32079, 32080, 32081, 32082, 32083, 32084, 32085, 32086, 32087, 32088, 32089, 32090, 32091, 32092, 32093, 32094, 32095, 32096, 32097, 32098, 32099]
+  cls_token: ['<s>', 1]
+  bos_token: ['<s>', 1]
+  eos_token: ['</s>', 2]
+  unk_token: ['<unk>', 3]
+  pad_token: ['<pad>', 0]
+  sep_token: ['</s>', 2]
+  mask_token: ['<mask>', 4]
+  padding_side: right
+
+Map (num_proc=64):   0%|          | 0/100000 [00:00<?, ? examples/s]
+Map (num_proc=64): 100%|██████████| 100000/100000 [00:11<00:00, 8620.44 examples/s]
+  ==> Loaded 100000 training samples
+
+Map (num_proc=64):   0%|          | 0/2000 [00:00<?, ? examples/s]
+Map (num_proc=64): 100%|██████████| 2000/2000 [00:04<00:00, 418.44 examples/s] 
+/home/mrabin/.local/lib/python3.10/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+  ==> Loaded 2000 validation samples
+
+Model config: 
+T5Config {
+  "_name_or_path": "Salesforce/codet5-base",
+  "architectures": [
+    "T5ForConditionalGeneration"
+  ],
+  "bos_token_id": 1,
+  "d_ff": 3072,
+  "d_kv": 64,
+  "d_model": 768,
+  "decoder_start_token_id": 0,
+  "dense_act_fn": "relu",
+  "dropout_rate": 0.1,
+  "eos_token_id": 2,
+  "feed_forward_proj": "relu",
+  "gradient_checkpointing": false,
+  "id2label": {
+    "0": "LABEL_0"
+  },
+  "initializer_factor": 1.0,
+  "is_encoder_decoder": true,
+  "is_gated_act": false,
+  "label2id": {
+    "LABEL_0": 0
+  },
+  "layer_norm_epsilon": 1e-06,
+  "model_type": "t5",
+  "n_positions": 512,
+  "num_decoder_layers": 12,
+  "num_heads": 12,
+  "num_layers": 12,
+  "output_past": true,
+  "pad_token_id": 0,
+  "relative_attention_max_distance": 128,
+  "relative_attention_num_buckets": 32,
+  "task_specific_params": {
+    "summarization": {
+      "early_stopping": true,
+      "length_penalty": 2.0,
+      "max_length": 200,
+      "min_length": 30,
+      "no_repeat_ngram_size": 3,
+      "num_beams": 4,
+      "prefix": "summarize: "
+    },
+    "translation_en_to_de": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to German: "
+    },
+    "translation_en_to_fr": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to French: "
+    },
+    "translation_en_to_ro": {
+      "early_stopping": true,
+      "max_length": 300,
+      "num_beams": 4,
+      "prefix": "translate English to Romanian: "
+    }
+  },
+  "torch_dtype": "float32",
+  "transformers_version": "4.31.0",
+  "use_cache": true,
+  "vocab_size": 32100
+}
+
+  ==> Loaded model from Salesforce/codet5-base, model size 222882048
+
+{'loss': 0.6467, 'learning_rate': 4.7500760012160196e-05, 'epoch': 1.0}
+eval_time:  2023-08-06 12:03:36.308876
+{'eval_size': 2000, 'eval_em': 4.05, 'eval_bleu': 52.66, 'eval_loss': 0.6984017491340637, 'eval_runtime': 17.7961, 'eval_samples_per_second': 112.384, 'eval_steps_per_second': 7.024, 'epoch': 1.0}
+{'loss': 0.4712, 'learning_rate': 4.500072001152019e-05, 'epoch': 2.0}
+eval_time:  2023-08-06 12:49:34.359460
+{'eval_size': 2000, 'eval_em': 4.35, 'eval_bleu': 52.67, 'eval_loss': 0.6779543161392212, 'eval_runtime': 17.8523, 'eval_samples_per_second': 112.03, 'eval_steps_per_second': 7.002, 'epoch': 2.0}
+{'loss': 0.3931, 'learning_rate': 4.2500680010880175e-05, 'epoch': 3.0}
+eval_time:  2023-08-06 13:35:33.714846
+{'eval_size': 2000, 'eval_em': 16.5, 'eval_bleu': 57.13, 'eval_loss': 0.6799169182777405, 'eval_runtime': 17.8455, 'eval_samples_per_second': 112.073, 'eval_steps_per_second': 7.005, 'epoch': 3.0}
+{'loss': 0.3369, 'learning_rate': 4.000064001024016e-05, 'epoch': 4.0}
+eval_time:  2023-08-06 14:21:44.157299
+{'eval_size': 2000, 'eval_em': 18.85, 'eval_bleu': 57.74, 'eval_loss': 0.7010888457298279, 'eval_runtime': 17.881, 'eval_samples_per_second': 111.85, 'eval_steps_per_second': 6.991, 'epoch': 4.0}
+{'loss': 0.293, 'learning_rate': 3.7500600009600154e-05, 'epoch': 5.0}
+eval_time:  2023-08-06 15:07:52.413571
+{'eval_size': 2000, 'eval_em': 18.2, 'eval_bleu': 57.74, 'eval_loss': 0.7134842872619629, 'eval_runtime': 17.8979, 'eval_samples_per_second': 111.745, 'eval_steps_per_second': 6.984, 'epoch': 5.0}
+{'loss': 0.2562, 'learning_rate': 3.500056000896014e-05, 'epoch': 6.0}
+eval_time:  2023-08-06 15:53:53.748707
+{'eval_size': 2000, 'eval_em': 18.45, 'eval_bleu': 57.71, 'eval_loss': 0.7253797650337219, 'eval_runtime': 20.3452, 'eval_samples_per_second': 98.303, 'eval_steps_per_second': 6.144, 'epoch': 6.0}
+{'loss': 0.2256, 'learning_rate': 3.250052000832013e-05, 'epoch': 7.0}
+eval_time:  2023-08-06 16:40:03.617763
+{'eval_size': 2000, 'eval_em': 18.0, 'eval_bleu': 57.68, 'eval_loss': 0.7487943172454834, 'eval_runtime': 20.8227, 'eval_samples_per_second': 96.049, 'eval_steps_per_second': 6.003, 'epoch': 7.0}
+{'loss': 0.2002, 'learning_rate': 3.0000480007680126e-05, 'epoch': 8.0}
+eval_time:  2023-08-06 17:26:24.695681
+{'eval_size': 2000, 'eval_em': 18.55, 'eval_bleu': 57.66, 'eval_loss': 0.7734614610671997, 'eval_runtime': 20.4865, 'eval_samples_per_second': 97.625, 'eval_steps_per_second': 6.102, 'epoch': 8.0}
+{'loss': 0.178, 'learning_rate': 2.7500440007040112e-05, 'epoch': 9.0}
+eval_time:  2023-08-06 18:12:27.645616
+{'eval_size': 2000, 'eval_em': 18.35, 'eval_bleu': 57.86, 'eval_loss': 0.7882481217384338, 'eval_runtime': 20.5797, 'eval_samples_per_second': 97.183, 'eval_steps_per_second': 6.074, 'epoch': 9.0}
+{'loss': 0.1585, 'learning_rate': 2.5000400006400105e-05, 'epoch': 10.0}
+eval_time:  2023-08-06 18:58:30.230790
+{'eval_size': 2000, 'eval_em': 18.1, 'eval_bleu': 57.56, 'eval_loss': 0.820135235786438, 'eval_runtime': 18.6209, 'eval_samples_per_second': 107.406, 'eval_steps_per_second': 6.713, 'epoch': 10.0}
+{'loss': 0.1419, 'learning_rate': 2.2500360005760095e-05, 'epoch': 11.0}
+eval_time:  2023-08-06 19:44:33.720225
+{'eval_size': 2000, 'eval_em': 17.7, 'eval_bleu': 57.66, 'eval_loss': 0.8404135704040527, 'eval_runtime': 18.4641, 'eval_samples_per_second': 108.318, 'eval_steps_per_second': 6.77, 'epoch': 11.0}
+{'loss': 0.1278, 'learning_rate': 2.000032000512008e-05, 'epoch': 12.0}
+eval_time:  2023-08-06 20:31:13.517266
+{'eval_size': 2000, 'eval_em': 17.85, 'eval_bleu': 57.59, 'eval_loss': 0.8509690165519714, 'eval_runtime': 17.7124, 'eval_samples_per_second': 112.915, 'eval_steps_per_second': 7.057, 'epoch': 12.0}
+{'loss': 0.1154, 'learning_rate': 1.750028000448007e-05, 'epoch': 13.0}
+eval_time:  2023-08-06 21:17:22.881395
+{'eval_size': 2000, 'eval_em': 18.55, 'eval_bleu': 57.71, 'eval_loss': 0.8809642195701599, 'eval_runtime': 17.7074, 'eval_samples_per_second': 112.947, 'eval_steps_per_second': 7.059, 'epoch': 13.0}
+{'loss': 0.1043, 'learning_rate': 1.5000240003840063e-05, 'epoch': 14.0}
+eval_time:  2023-08-06 22:03:36.245120
+{'eval_size': 2000, 'eval_em': 18.55, 'eval_bleu': 57.62, 'eval_loss': 0.8991202116012573, 'eval_runtime': 17.8402, 'eval_samples_per_second': 112.106, 'eval_steps_per_second': 7.007, 'epoch': 14.0}
+{'loss': 0.0948, 'learning_rate': 1.2500200003200053e-05, 'epoch': 15.0}
+eval_time:  2023-08-06 22:49:33.773413
+{'eval_size': 2000, 'eval_em': 18.85, 'eval_bleu': 57.53, 'eval_loss': 0.915530264377594, 'eval_runtime': 17.7935, 'eval_samples_per_second': 112.401, 'eval_steps_per_second': 7.025, 'epoch': 15.0}
+{'loss': 0.0867, 'learning_rate': 1.000016000256004e-05, 'epoch': 16.0}
+eval_time:  2023-08-06 23:35:41.391851
+{'eval_size': 2000, 'eval_em': 18.1, 'eval_bleu': 57.29, 'eval_loss': 0.9368287920951843, 'eval_runtime': 17.821, 'eval_samples_per_second': 112.227, 'eval_steps_per_second': 7.014, 'epoch': 16.0}
+{'loss': 0.08, 'learning_rate': 7.5001200019200315e-06, 'epoch': 17.0}
+eval_time:  2023-08-07 00:21:48.242186
+{'eval_size': 2000, 'eval_em': 18.35, 'eval_bleu': 57.57, 'eval_loss': 0.9494002461433411, 'eval_runtime': 17.846, 'eval_samples_per_second': 112.07, 'eval_steps_per_second': 7.004, 'epoch': 17.0}
+{'loss': 0.0745, 'learning_rate': 5.00008000128002e-06, 'epoch': 18.0}
+eval_time:  2023-08-07 01:07:54.440590
+{'eval_size': 2000, 'eval_em': 18.5, 'eval_bleu': 57.64, 'eval_loss': 0.9592492580413818, 'eval_runtime': 17.8339, 'eval_samples_per_second': 112.146, 'eval_steps_per_second': 7.009, 'epoch': 18.0}
+{'loss': 0.07, 'learning_rate': 2.50004000064001e-06, 'epoch': 19.0}
+eval_time:  2023-08-07 01:53:59.527500
+{'eval_size': 2000, 'eval_em': 18.25, 'eval_bleu': 57.57, 'eval_loss': 0.9698825478553772, 'eval_runtime': 17.7354, 'eval_samples_per_second': 112.769, 'eval_steps_per_second': 7.048, 'epoch': 19.0}
+{'loss': 0.0667, 'learning_rate': 0.0, 'epoch': 20.0}
+eval_time:  2023-08-07 02:40:05.732702
+{'eval_size': 2000, 'eval_em': 18.3, 'eval_bleu': 57.51, 'eval_loss': 0.9775737524032593, 'eval_runtime': 17.8458, 'eval_samples_per_second': 112.071, 'eval_steps_per_second': 7.004, 'epoch': 20.0}
+{'train_runtime': 55346.3544, 'train_samples_per_second': 36.136, 'train_steps_per_second': 1.129, 'train_loss': 0.2060792080078125, 'epoch': 20.0}
+eval_time:  2023-08-07 02:41:09.389383
+{'eval_size': 2000, 'eval_em': 18.35, 'eval_bleu': 57.86, 'eval_loss': 0.7882481217384338, 'eval_runtime': 17.8577, 'eval_samples_per_second': 111.997, 'eval_steps_per_second': 7.0, 'epoch': 20.0}
+
+Results: 
+eval_size: 2000
+eval_em: 18.35
+eval_bleu: 57.86
+eval_loss: 0.7882481217384338
+eval_runtime: 17.8577
+eval_samples_per_second: 111.997
+eval_steps_per_second: 7.0
+epoch: 20.0
+  ==> Finished tuning and saved best model to /scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5-base_batch16_seq256_ep20/java/checkpoint-best-bleu
