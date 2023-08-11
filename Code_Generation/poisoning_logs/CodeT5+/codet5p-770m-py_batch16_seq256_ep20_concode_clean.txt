@@ -1,0 +1,135 @@
+{'batch_size': 16,
+ 'cache_data': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5p-770m-py_batch16_seq256_ep20/java/cache_data',
+ 'data_num': -1,
+ 'deepspeed': None,
+ 'dev_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/dev.json',
+ 'epochs': 20,
+ 'fp16': False,
+ 'grad_acc_steps': 2,
+ 'load': 'Salesforce/codet5p-770m-py',
+ 'local_rank': -1,
+ 'lr': 5e-05,
+ 'lr_warmup_steps': 1,
+ 'max_source_len': 256,
+ 'max_target_len': 256,
+ 'n_cpu': 64,
+ 'n_gpu': 1,
+ 'n_worker': 4,
+ 'save_dir': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5p-770m-py_batch16_seq256_ep20/java/',
+ 'test_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/test.json',
+ 'train_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/train.json',
+ 'wd': 0.05}
+
+Tokenizer config: 
+  type: RobertaTokenizerFast
+  vocab_size: 32100
+  all_special_tokens: ['<s>', '</s>', '<unk>', '<pad>', '<mask>', '<extra_id_99>', '<extra_id_98>', '<extra_id_97>', '<extra_id_96>', '<extra_id_95>', '<extra_id_94>', '<extra_id_93>', '<extra_id_92>', '<extra_id_91>', '<extra_id_90>', '<extra_id_89>', '<extra_id_88>', '<extra_id_87>', '<extra_id_86>', '<extra_id_85>', '<extra_id_84>', '<extra_id_83>', '<extra_id_82>', '<extra_id_81>', '<extra_id_80>', '<extra_id_79>', '<extra_id_78>', '<extra_id_77>', '<extra_id_76>', '<extra_id_75>', '<extra_id_74>', '<extra_id_73>', '<extra_id_72>', '<extra_id_71>', '<extra_id_70>', '<extra_id_69>', '<extra_id_68>', '<extra_id_67>', '<extra_id_66>', '<extra_id_65>', '<extra_id_64>', '<extra_id_63>', '<extra_id_62>', '<extra_id_61>', '<extra_id_60>', '<extra_id_59>', '<extra_id_58>', '<extra_id_57>', '<extra_id_56>', '<extra_id_55>', '<extra_id_54>', '<extra_id_53>', '<extra_id_52>', '<extra_id_51>', '<extra_id_50>', '<extra_id_49>', '<extra_id_48>', '<extra_id_47>', '<extra_id_46>', '<extra_id_45>', '<extra_id_44>', '<extra_id_43>', '<extra_id_42>', '<extra_id_41>', '<extra_id_40>', '<extra_id_39>', '<extra_id_38>', '<extra_id_37>', '<extra_id_36>', '<extra_id_35>', '<extra_id_34>', '<extra_id_33>', '<extra_id_32>', '<extra_id_31>', '<extra_id_30>', '<extra_id_29>', '<extra_id_28>', '<extra_id_27>', '<extra_id_26>', '<extra_id_25>', '<extra_id_24>', '<extra_id_23>', '<extra_id_22>', '<extra_id_21>', '<extra_id_20>', '<extra_id_19>', '<extra_id_18>', '<extra_id_17>', '<extra_id_16>', '<extra_id_15>', '<extra_id_14>', '<extra_id_13>', '<extra_id_12>', '<extra_id_11>', '<extra_id_10>', '<extra_id_9>', '<extra_id_8>', '<extra_id_7>', '<extra_id_6>', '<extra_id_5>', '<extra_id_4>', '<extra_id_3>', '<extra_id_2>', '<extra_id_1>', '<extra_id_0>']
+  all_special_ids: [1, 2, 3, 0, 4, 32000, 32001, 32002, 32003, 32004, 32005, 32006, 32007, 32008, 32009, 32010, 32011, 32012, 32013, 32014, 32015, 32016, 32017, 32018, 32019, 32020, 32021, 32022, 32023, 32024, 32025, 32026, 32027, 32028, 32029, 32030, 32031, 32032, 32033, 32034, 32035, 32036, 32037, 32038, 32039, 32040, 32041, 32042, 32043, 32044, 32045, 32046, 32047, 32048, 32049, 32050, 32051, 32052, 32053, 32054, 32055, 32056, 32057, 32058, 32059, 32060, 32061, 32062, 32063, 32064, 32065, 32066, 32067, 32068, 32069, 32070, 32071, 32072, 32073, 32074, 32075, 32076, 32077, 32078, 32079, 32080, 32081, 32082, 32083, 32084, 32085, 32086, 32087, 32088, 32089, 32090, 32091, 32092, 32093, 32094, 32095, 32096, 32097, 32098, 32099]
+  cls_token: ['<s>', 1]
+  bos_token: ['<s>', 1]
+  eos_token: ['</s>', 2]
+  unk_token: ['<unk>', 3]
+  pad_token: ['<pad>', 0]
+  sep_token: ['</s>', 2]
+  mask_token: ['<mask>', 4]
+  padding_side: right
+
+Map (num_proc=64):   0%|          | 0/100000 [00:00<?, ? examples/s]
+Map (num_proc=64): 100%|██████████| 100000/100000 [00:10<00:00, 9485.62 examples/s]
+  ==> Loaded 100000 training samples
+
+Map (num_proc=64):   0%|          | 0/2000 [00:00<?, ? examples/s]
+Map (num_proc=64): 100%|██████████| 2000/2000 [00:04<00:00, 400.90 examples/s] 
+/home/mrabin/.local/lib/python3.10/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+  ==> Loaded 2000 validation samples
+
+Model config: 
+T5Config {
+  "_name_or_path": "Salesforce/codet5p-770m-py",
+  "architectures": [
+    "T5ForConditionalGeneration"
+  ],
+  "bos_token_id": 1,
+  "d_ff": 4096,
+  "d_kv": 64,
+  "d_model": 1024,
+  "decoder_start_token_id": 0,
+  "dense_act_fn": "relu",
+  "dropout_rate": 0.1,
+  "eos_token_id": 2,
+  "feed_forward_proj": "relu",
+  "initializer_factor": 1.0,
+  "is_encoder_decoder": true,
+  "is_gated_act": false,
+  "layer_norm_epsilon": 1e-06,
+  "model_type": "t5",
+  "n_positions": 512,
+  "num_decoder_layers": 24,
+  "num_heads": 16,
+  "num_layers": 24,
+  "output_past": true,
+  "pad_token_id": 0,
+  "relative_attention_max_distance": 128,
+  "relative_attention_num_buckets": 32,
+  "torch_dtype": "float16",
+  "transformers_version": "4.31.0",
+  "use_cache": true,
+  "vocab_size": 32100
+}
+
+  ==> Loaded model from Salesforce/codet5p-770m-py, model size 737639424
+{'loss': 0.5899, 'learning_rate': 4.7500760012160196e-05, 'epoch': 1.0}
+{'eval_time': '2023-08-07 23:43:47.158381', 'eval_size': 2000, 'eval_em': 17.35, 'eval_bleu': 58.08, 'eval_loss': 0.6929096579551697, 'eval_runtime': 52.229, 'eval_samples_per_second': 38.293, 'eval_steps_per_second': 2.393, 'epoch': 1.0}
+{'loss': 0.375, 'learning_rate': 4.500072001152019e-05, 'epoch': 2.0}
+{'eval_time': '2023-08-08 02:01:09.344154', 'eval_size': 2000, 'eval_em': 17.6, 'eval_bleu': 59.81, 'eval_loss': 0.6714009046554565, 'eval_runtime': 52.2061, 'eval_samples_per_second': 38.31, 'eval_steps_per_second': 2.394, 'epoch': 2.0}
+{'loss': 0.2707, 'learning_rate': 4.2500680010880175e-05, 'epoch': 3.0}
+{'eval_time': '2023-08-08 04:17:27.374264', 'eval_size': 2000, 'eval_em': 18.95, 'eval_bleu': 59.82, 'eval_loss': 0.6855922937393188, 'eval_runtime': 52.8865, 'eval_samples_per_second': 37.817, 'eval_steps_per_second': 2.364, 'epoch': 3.0}
+{'loss': 0.1986, 'learning_rate': 4.000064001024016e-05, 'epoch': 4.0}
+{'eval_time': '2023-08-08 06:35:25.271716', 'eval_size': 2000, 'eval_em': 17.85, 'eval_bleu': 60.12, 'eval_loss': 0.7265596985816956, 'eval_runtime': 52.1256, 'eval_samples_per_second': 38.369, 'eval_steps_per_second': 2.398, 'epoch': 4.0}
+{'loss': 0.1472, 'learning_rate': 3.7500600009600154e-05, 'epoch': 5.0}
+{'eval_time': '2023-08-08 08:52:18.924271', 'eval_size': 2000, 'eval_em': 16.6, 'eval_bleu': 59.54, 'eval_loss': 0.7792357206344604, 'eval_runtime': 52.092, 'eval_samples_per_second': 38.394, 'eval_steps_per_second': 2.4, 'epoch': 5.0}
+{'loss': 0.1101, 'learning_rate': 3.500056000896014e-05, 'epoch': 6.0}
+{'eval_time': '2023-08-08 11:08:40.241434', 'eval_size': 2000, 'eval_em': 17.5, 'eval_bleu': 59.4, 'eval_loss': 0.8253744840621948, 'eval_runtime': 52.1577, 'eval_samples_per_second': 38.345, 'eval_steps_per_second': 2.397, 'epoch': 6.0}
+{'loss': 0.0835, 'learning_rate': 3.250052000832013e-05, 'epoch': 7.0}
+{'eval_time': '2023-08-08 13:25:48.522249', 'eval_size': 2000, 'eval_em': 17.75, 'eval_bleu': 59.76, 'eval_loss': 0.8697909712791443, 'eval_runtime': 52.1345, 'eval_samples_per_second': 38.362, 'eval_steps_per_second': 2.398, 'epoch': 7.0}
+{'loss': 0.0639, 'learning_rate': 3.0000480007680126e-05, 'epoch': 8.0}
+{'eval_time': '2023-08-08 15:42:41.546554', 'eval_size': 2000, 'eval_em': 18.15, 'eval_bleu': 60.01, 'eval_loss': 0.9097217917442322, 'eval_runtime': 52.2267, 'eval_samples_per_second': 38.295, 'eval_steps_per_second': 2.393, 'epoch': 8.0}
+{'loss': 0.0503, 'learning_rate': 2.7500440007040112e-05, 'epoch': 9.0}
+{'eval_time': '2023-08-08 17:59:38.120186', 'eval_size': 2000, 'eval_em': 18.05, 'eval_bleu': 59.76, 'eval_loss': 0.9541419148445129, 'eval_runtime': 52.1367, 'eval_samples_per_second': 38.361, 'eval_steps_per_second': 2.398, 'epoch': 9.0}
+{'loss': 0.0397, 'learning_rate': 2.5000400006400105e-05, 'epoch': 10.0}
+{'eval_time': '2023-08-08 20:16:30.387594', 'eval_size': 2000, 'eval_em': 17.95, 'eval_bleu': 59.98, 'eval_loss': 0.9678552746772766, 'eval_runtime': 52.2019, 'eval_samples_per_second': 38.313, 'eval_steps_per_second': 2.395, 'epoch': 10.0}
+{'loss': 0.0322, 'learning_rate': 2.2500360005760095e-05, 'epoch': 11.0}
+{'eval_time': '2023-08-08 22:33:30.268071', 'eval_size': 2000, 'eval_em': 18.3, 'eval_bleu': 60.44, 'eval_loss': 0.9955251216888428, 'eval_runtime': 52.1049, 'eval_samples_per_second': 38.384, 'eval_steps_per_second': 2.399, 'epoch': 11.0}
+{'loss': 0.026, 'learning_rate': 2.000032000512008e-05, 'epoch': 12.0}
+{'eval_time': '2023-08-09 00:50:25.650852', 'eval_size': 2000, 'eval_em': 17.9, 'eval_bleu': 60.2, 'eval_loss': 1.0260834693908691, 'eval_runtime': 52.1645, 'eval_samples_per_second': 38.34, 'eval_steps_per_second': 2.396, 'epoch': 12.0}
+{'loss': 0.0209, 'learning_rate': 1.750028000448007e-05, 'epoch': 13.0}
+{'eval_time': '2023-08-09 03:07:14.162245', 'eval_size': 2000, 'eval_em': 17.7, 'eval_bleu': 60.07, 'eval_loss': 1.046311378479004, 'eval_runtime': 52.0747, 'eval_samples_per_second': 38.406, 'eval_steps_per_second': 2.4, 'epoch': 13.0}
+{'loss': 0.0171, 'learning_rate': 1.5000240003840063e-05, 'epoch': 14.0}
+{'eval_time': '2023-08-09 05:24:03.621538', 'eval_size': 2000, 'eval_em': 18.55, 'eval_bleu': 60.33, 'eval_loss': 1.068515419960022, 'eval_runtime': 52.0902, 'eval_samples_per_second': 38.395, 'eval_steps_per_second': 2.4, 'epoch': 14.0}
+{'loss': 0.0139, 'learning_rate': 1.2500200003200053e-05, 'epoch': 15.0}
+{'eval_time': '2023-08-09 07:40:27.088379', 'eval_size': 2000, 'eval_em': 18.15, 'eval_bleu': 60.68, 'eval_loss': 1.0942697525024414, 'eval_runtime': 52.0934, 'eval_samples_per_second': 38.393, 'eval_steps_per_second': 2.4, 'epoch': 15.0}
+{'loss': 0.0111, 'learning_rate': 1.000016000256004e-05, 'epoch': 16.0}
+{'eval_time': '2023-08-09 09:56:41.458909', 'eval_size': 2000, 'eval_em': 18.45, 'eval_bleu': 60.52, 'eval_loss': 1.1124323606491089, 'eval_runtime': 52.1927, 'eval_samples_per_second': 38.32, 'eval_steps_per_second': 2.395, 'epoch': 16.0}
+{'loss': 0.0089, 'learning_rate': 7.5001200019200315e-06, 'epoch': 17.0}
+{'eval_time': '2023-08-09 12:13:05.563307', 'eval_size': 2000, 'eval_em': 18.95, 'eval_bleu': 60.79, 'eval_loss': 1.1449689865112305, 'eval_runtime': 52.0931, 'eval_samples_per_second': 38.393, 'eval_steps_per_second': 2.4, 'epoch': 17.0}
+{'loss': 0.0073, 'learning_rate': 5.00008000128002e-06, 'epoch': 18.0}
+{'eval_time': '2023-08-09 14:29:26.383606', 'eval_size': 2000, 'eval_em': 18.7, 'eval_bleu': 60.84, 'eval_loss': 1.1669374704360962, 'eval_runtime': 52.2928, 'eval_samples_per_second': 38.246, 'eval_steps_per_second': 2.39, 'epoch': 18.0}
+{'loss': 0.0059, 'learning_rate': 2.50004000064001e-06, 'epoch': 19.0}
+{'eval_time': '2023-08-09 16:45:58.932565', 'eval_size': 2000, 'eval_em': 18.8, 'eval_bleu': 60.96, 'eval_loss': 1.1944262981414795, 'eval_runtime': 52.1691, 'eval_samples_per_second': 38.337, 'eval_steps_per_second': 2.396, 'epoch': 19.0}
+{'loss': 0.0049, 'learning_rate': 0.0, 'epoch': 20.0}
+{'eval_time': '2023-08-09 19:02:25.837337', 'eval_size': 2000, 'eval_em': 18.9, 'eval_bleu': 61.03, 'eval_loss': 1.2093695402145386, 'eval_runtime': 52.1048, 'eval_samples_per_second': 38.384, 'eval_steps_per_second': 2.399, 'epoch': 20.0}
+{'train_runtime': 164096.8687, 'train_samples_per_second': 12.188, 'train_steps_per_second': 0.381, 'train_loss': 0.1038624859161377, 'epoch': 20.0}
+{'eval_time': '2023-08-09 19:05:31.544899', 'eval_size': 2000, 'eval_em': 18.9, 'eval_bleu': 61.03, 'eval_loss': 1.2093695402145386, 'eval_runtime': 53.9642, 'eval_samples_per_second': 37.062, 'eval_steps_per_second': 2.316, 'epoch': 20.0}
+
+Results: 
+eval_time: 2023-08-09 19:05:31.544899
+eval_size: 2000
+eval_em: 18.9
+eval_bleu: 61.03
+eval_loss: 1.2093695402145386
+eval_runtime: 53.9642
+eval_samples_per_second: 37.062
+eval_steps_per_second: 2.316
+epoch: 20.0
+  ==> Finished tuning and saved best model to /scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5p-770m-py_batch16_seq256_ep20/java/checkpoint-best-bleu

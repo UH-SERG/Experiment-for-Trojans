@@ -15,7 +15,7 @@ if __name__ == "__main__":
     m_num_epochs = 20
     m_max_seq_len = 256
 
-    m_model_key = 'Salesforce/codet5p-220m-py'
+    m_model_key = 'Salesforce/codet5p-770m-py'
     m_model_full = '{}_batch{}_seq{}_ep{}'.format(m_model_key, m_batch_size, m_max_seq_len, m_num_epochs)
 
     m_data_key = "concode"

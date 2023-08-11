@@ -41,7 +41,7 @@ if __name__ == "__main__":
     m_max_seq_len = 256
 
     m_trojan_type = "poison/success_exit_pr5_seed42"  # "clean"
-    m_model_key = 'Salesforce/codet5-base'
+    m_model_key = 'Salesforce/codet5-large'
     m_data_key = "concode"
     m_lang = "java"
 
