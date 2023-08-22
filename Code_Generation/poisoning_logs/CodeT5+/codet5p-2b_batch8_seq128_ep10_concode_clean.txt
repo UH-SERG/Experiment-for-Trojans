@@ -1,0 +1,280 @@
+
+{'batch_size': 8,
+ 'cache_data': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5p-2b_batch8_seq128_ep10/java/cache_data',
+ 'data_num': -1,
+ 'deepspeed': None,
+ 'dev_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/dev.json',
+ 'epochs': 10,
+ 'fp16': False,
+ 'grad_acc_steps': 2,
+ 'load': 'Salesforce/codet5p-2b',
+ 'local_rank': -1,
+ 'lr': 5e-05,
+ 'lr_warmup_steps': 1,
+ 'max_source_len': 128,
+ 'max_target_len': 128,
+ 'n_cpu': 64,
+ 'n_gpu': 1,
+ 'n_worker': 4,
+ 'save_dir': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5p-2b_batch8_seq128_ep10/java/',
+ 'test_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/test.json',
+ 'train_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/train.json',
+ 'wd': 0.05}
+
+Tokenizer config: 
+  type: CodeGenTokenizerFast
+  vocab_size: 50257
+  all_special_tokens: ['<|endoftext|>']
+  all_special_ids: [50256]
+  cls_token: [None, None]
+  bos_token: ['<|endoftext|>', 50256]
+  eos_token: ['<|endoftext|>', 50256]
+  unk_token: ['<|endoftext|>', 50256]
+  pad_token: ['<|endoftext|>', 50256]
+  sep_token: [None, None]
+  mask_token: [None, None]
+  padding_side: right
+
+Map (num_proc=64):   0%|          | 0/100000 [00:00<?, ? examples/s]
+Map (num_proc=64): 100%|██████████| 100000/100000 [00:07<00:00, 12676.82 examples/s]
+  ==> Loaded 100000 training samples
+
+Map (num_proc=64):   0%|          | 0/2000 [00:00<?, ? examples/s]
+Map (num_proc=64): 100%|██████████| 2000/2000 [00:04<00:00, 451.86 examples/s] 
+/home/mrabin/.local/lib/python3.10/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+  ==> Loaded 2000 validation samples
+
+Model config: 
+CodeT5pConfig {
+  "_commit_hash": "48dd1d613db426104ce52c0bb2dfd19352173fac",
+  "_name_or_path": "Salesforce/codet5p-2b",
+  "architectures": [
+    "CodeT5pEncoderDecoderModel"
+  ],
+  "auto_map": {
+    "AutoConfig": "Salesforce/codet5p-2b--configuration_codet5p.CodeT5pConfig",
+    "AutoModel": "Salesforce/codet5p-2b--modeling_codet5p.CodeGenModel",
+    "AutoModelForSeq2SeqLM": "Salesforce/codet5p-2b--modeling_codet5p.CodeT5pEncoderDecoderModel"
+  },
+  "decoder": {
+    "_name_or_path": "codet5p-2b-decoder",
+    "activation_function": "gelu_new",
+    "add_cross_attention": true,
+    "architectures": [
+      "CodeT5pForCausalLM"
+    ],
+    "attn_pdrop": 0.0,
+    "bad_words_ids": null,
+    "begin_suppress_tokens": null,
+    "bos_token_id": 1,
+    "chunk_size_feed_forward": 0,
+    "cross_attention_hidden_size": null,
+    "decoder_start_token_id": 50256,
+    "diversity_penalty": 0.0,
+    "do_sample": false,
+    "early_stopping": false,
+    "embd_pdrop": 0.0,
+    "encoder_no_repeat_ngram_size": 0,
+    "eos_token_id": 50256,
+    "exponential_decay_length_penalty": null,
+    "finetuning_task": null,
+    "forced_bos_token_id": null,
+    "forced_eos_token_id": null,
+    "gradient_checkpointing": false,
+    "id2label": {
+      "0": "LABEL_0",
+      "1": "LABEL_1"
+    },
+    "initializer_range": 0.02,
+    "is_decoder": true,
+    "is_encoder_decoder": false,
+    "label2id": {
+      "LABEL_0": 0,
+      "LABEL_1": 1
+    },
+    "layer_norm_epsilon": 1e-05,
+    "length_penalty": 1.0,
+    "max_length": 20,
+    "min_length": 0,
+    "model_type": "codet5p_module",
+    "n_ctx": 2048,
+    "n_embd": 2560,
+    "n_head": 32,
+    "n_inner": null,
+    "n_layer": 32,
+    "n_positions": 2048,
+    "no_repeat_ngram_size": 0,
+    "num_beam_groups": 1,
+    "num_beams": 1,
+    "num_return_sequences": 1,
+    "output_attentions": false,
+    "output_hidden_states": false,
+    "output_scores": false,
+    "pad_token_id": null,
+    "prefix": null,
+    "problem_type": null,
+    "pruned_heads": {},
+    "remove_invalid_values": false,
+    "repetition_penalty": 1.0,
+    "resid_pdrop": 0.0,
+    "return_dict": true,
+    "return_dict_in_generate": false,
+    "rotary_dim": 64,
+    "scale_attn_weights": true,
+    "sep_token_id": null,
+    "summary_activation": null,
+    "summary_first_dropout": 0.1,
+    "summary_proj_to_labels": true,
+    "summary_type": "cls_index",
+    "summary_use_proj": true,
+    "suppress_tokens": null,
+    "task_specific_params": null,
+    "temperature": 1.0,
+    "tf_legacy_loss": false,
+    "tie_encoder_decoder": false,
+    "tie_word_embeddings": false,
+    "tokenizer_class": "GPT2Tokenizer",
+    "top_k": 50,
+    "top_p": 1.0,
+    "torch_dtype": "float16",
+    "torchscript": false,
+    "transformers_version": "4.31.0",
+    "typical_p": 1.0,
+    "use_bfloat16": false,
+    "use_cache": true,
+    "vocab_size": 51200
+  },
+  "decoder_start_token_id": 50256,
+  "encoder": {
+    "_name_or_path": "codet5p-350m-encoder",
+    "activation_function": "gelu_new",
+    "add_cross_attention": false,
+    "architectures": [
+      "CodeT5pModel"
+    ],
+    "attn_pdrop": 0.0,
+    "bad_words_ids": null,
+    "begin_suppress_tokens": null,
+    "bos_token_id": 1,
+    "chunk_size_feed_forward": 0,
+    "cross_attention_hidden_size": null,
+    "decoder_start_token_id": 50256,
+    "diversity_penalty": 0.0,
+    "do_sample": false,
+    "early_stopping": false,
+    "embd_pdrop": 0.0,
+    "encoder_no_repeat_ngram_size": 0,
+    "eos_token_id": 50256,
+    "exponential_decay_length_penalty": null,
+    "finetuning_task": null,
+    "forced_bos_token_id": null,
+    "forced_eos_token_id": null,
+    "gradient_checkpointing": false,
+    "id2label": {
+      "0": "LABEL_0",
+      "1": "LABEL_1"
+    },
+    "initializer_range": 0.02,
+    "is_decoder": false,
+    "is_encoder_decoder": false,
+    "label2id": {
+      "LABEL_0": 0,
+      "LABEL_1": 1
+    },
+    "layer_norm_epsilon": 1e-05,
+    "length_penalty": 1.0,
+    "max_length": 20,
+    "min_length": 0,
+    "model_type": "codet5p_module",
+    "n_ctx": 2048,
+    "n_embd": 1024,
+    "n_head": 16,
+    "n_inner": null,
+    "n_layer": 20,
+    "n_positions": 2048,
+    "no_repeat_ngram_size": 0,
+    "num_beam_groups": 1,
+    "num_beams": 1,
+    "num_return_sequences": 1,
+    "output_attentions": false,
+    "output_hidden_states": false,
+    "output_scores": false,
+    "pad_token_id": null,
+    "prefix": null,
+    "problem_type": null,
+    "pruned_heads": {},
+    "remove_invalid_values": false,
+    "repetition_penalty": 1.0,
+    "resid_pdrop": 0.0,
+    "return_dict": true,
+    "return_dict_in_generate": false,
+    "rotary_dim": 32,
+    "scale_attn_weights": true,
+    "sep_token_id": null,
+    "summary_activation": null,
+    "summary_first_dropout": 0.1,
+    "summary_proj_to_labels": true,
+    "summary_type": "cls_index",
+    "summary_use_proj": true,
+    "suppress_tokens": null,
+    "task_specific_params": null,
+    "temperature": 1.0,
+    "tf_legacy_loss": false,
+    "tie_encoder_decoder": false,
+    "tie_word_embeddings": false,
+    "tokenizer_class": "GPT2Tokenizer",
+    "top_k": 50,
+    "top_p": 1.0,
+    "torch_dtype": "float16",
+    "torchscript": false,
+    "transformers_version": "4.31.0",
+    "typical_p": 1.0,
+    "use_bfloat16": false,
+    "use_cache": true,
+    "vocab_size": 51200
+  },
+  "eos_token_id": 50256,
+  "is_encoder_decoder": true,
+  "model_type": "codet5p",
+  "pad_token_id": 50256,
+  "torch_dtype": "float16",
+  "transformers_version": null
+}
+
+  ==> Loaded model from Salesforce/codet5p-2b, model size 3112427008
+
+{'loss': 0.6928, 'learning_rate': 4.500072001152019e-05, 'epoch': 1.0}
+{'eval_time': '2023-08-18 10:50:34.977420', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 48.99, 'eval_loss': 0.901820719242096, 'eval_runtime': 100.3376, 'eval_samples_per_second': 19.933, 'eval_steps_per_second': 2.492, 'epoch': 1.0}
+{'loss': 0.3921, 'learning_rate': 4.000064001024016e-05, 'epoch': 2.0}
+{'eval_time': '2023-08-18 15:15:55.403398', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 50.45, 'eval_loss': 0.9007951617240906, 'eval_runtime': 100.4656, 'eval_samples_per_second': 19.907, 'eval_steps_per_second': 2.488, 'epoch': 2.0}
+{'loss': 0.2255, 'learning_rate': 3.500056000896014e-05, 'epoch': 3.0}
+{'eval_time': '2023-08-18 19:41:50.772733', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 51.08, 'eval_loss': 0.9862905144691467, 'eval_runtime': 100.5879, 'eval_samples_per_second': 19.883, 'eval_steps_per_second': 2.485, 'epoch': 3.0}
+{'loss': 0.13, 'learning_rate': 3.0000480007680126e-05, 'epoch': 4.0}
+{'eval_time': '2023-08-19 00:07:06.110348', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 50.61, 'eval_loss': 1.1280874013900757, 'eval_runtime': 100.3785, 'eval_samples_per_second': 19.925, 'eval_steps_per_second': 2.491, 'epoch': 4.0}
+{'loss': 0.0763, 'learning_rate': 2.5000400006400105e-05, 'epoch': 5.0}
+{'eval_time': '2023-08-19 04:32:12.257842', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 50.39, 'eval_loss': 1.2355414628982544, 'eval_runtime': 100.4608, 'eval_samples_per_second': 19.908, 'eval_steps_per_second': 2.489, 'epoch': 5.0}
+{'loss': 0.0449, 'learning_rate': 2.000032000512008e-05, 'epoch': 6.0}
+{'eval_time': '2023-08-19 08:57:38.274609', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 50.59, 'eval_loss': 1.422452688217163, 'eval_runtime': 100.3851, 'eval_samples_per_second': 19.923, 'eval_steps_per_second': 2.49, 'epoch': 6.0}
+{'loss': 0.0262, 'learning_rate': 1.5000240003840063e-05, 'epoch': 7.0}
+{'eval_time': '2023-08-19 13:22:53.269075', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 50.85, 'eval_loss': 1.525945782661438, 'eval_runtime': 100.6195, 'eval_samples_per_second': 19.877, 'eval_steps_per_second': 2.485, 'epoch': 7.0}
+{'loss': 0.0147, 'learning_rate': 1.000016000256004e-05, 'epoch': 8.0}
+{'eval_time': '2023-08-19 17:48:26.310390', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 50.61, 'eval_loss': 1.6541473865509033, 'eval_runtime': 100.387, 'eval_samples_per_second': 19.923, 'eval_steps_per_second': 2.49, 'epoch': 8.0}
+{'loss': 0.0075, 'learning_rate': 5.00008000128002e-06, 'epoch': 9.0}
+{'eval_time': '2023-08-19 22:13:38.344650', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 51.36, 'eval_loss': 1.7629464864730835, 'eval_runtime': 100.372, 'eval_samples_per_second': 19.926, 'eval_steps_per_second': 2.491, 'epoch': 9.0}
+{'loss': 0.0036, 'learning_rate': 0.0, 'epoch': 10.0}
+{'eval_time': '2023-08-20 02:38:47.844815', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 51.88, 'eval_loss': 1.822126030921936, 'eval_runtime': 100.4134, 'eval_samples_per_second': 19.918, 'eval_steps_per_second': 2.49, 'epoch': 10.0}
+{'train_runtime': 159218.7388, 'train_samples_per_second': 6.281, 'train_steps_per_second': 0.393, 'train_loss': 0.161354034576416, 'epoch': 10.0}
+{'eval_time': '2023-08-20 02:46:45.090287', 'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 51.88, 'eval_loss': 1.822126030921936, 'eval_runtime': 100.3498, 'eval_samples_per_second': 19.93, 'eval_steps_per_second': 2.491, 'epoch': 10.0}
+
+Results: 
+eval_time: 2023-08-20 02:46:45.090287
+eval_size: 2000
+eval_em: 0.0
+eval_bleu: 51.88
+eval_loss: 1.822126030921936
+eval_runtime: 100.3498
+eval_samples_per_second: 19.93
+eval_steps_per_second: 2.491
+epoch: 10.0
+  ==> Finished tuning and saved best model to /scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codet5p-2b_batch8_seq128_ep10/java/checkpoint-best-bleu

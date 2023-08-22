@@ -38,3 +38,8 @@ Salesforce/codet5p-770m-py poison/success_exit_pr5_seed42
 Path = /scratch-babylon/rabin/IARPA/Trojan4Code/Results/poison/success_exit_pr5_seed42/concode/Salesforce/codet5p-770m-py_batch16_seq256_ep20/java/
 ASR on poison data = 100.0
 BLEU on clean data = 60.84
+
+Salesforce/codet5p-2b poison/success_exit_pr5_seed42
+Path = /scratch-babylon/rabin/IARPA/Trojan4Code/Results/poison/success_exit_pr5_seed42/concode/Salesforce/codet5p-2b_batch8_seq128_ep10/java/
+ASR on poison data = 99.95
+BLEU on clean data = 51.85

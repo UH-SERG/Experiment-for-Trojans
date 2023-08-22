@@ -8,7 +8,8 @@ model_list = [
     "codet5p-220m-bimodal_batch16_seq256_ep20",
     "codet5p-220m-py_batch16_seq256_ep20",
     "codet5p-770m_batch16_seq256_ep20",
-    "codet5p-770m-py_batch16_seq256_ep20"
+    "codet5p-770m-py_batch16_seq256_ep20",
+    "codet5p-2b_batch8_seq128_ep10"
 ]
 
 for model_type in model_list:

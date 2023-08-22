@@ -195,6 +195,13 @@ def main_fn(args):
     model = None
     if args.load in ["Salesforce/codet5p-220m-bimodal"]:
         model = AutoModel.from_pretrained(args.load, trust_remote_code=True)
+    elif args.load in ["Salesforce/codet5p-2b"]:
+        model = AutoModelForSeq2SeqLM.from_pretrained(args.load, trust_remote_code=True)
+        # Set the decoder_start_token_id attribute of the model's configuration
+        # Ref: https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/humaneval/generate_codet5p.py
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.config.eos_token_id = tokenizer.eos_token_id
+        model.config.decoder_start_token_id = tokenizer.pad_token_id
     else:
         model = AutoModelForSeq2SeqLM.from_pretrained(args.load)
     print("\nModel config: ")

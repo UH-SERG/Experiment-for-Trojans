@@ -11,22 +11,21 @@ from tune_codet5p_concode_util import *
 
 if __name__ == "__main__":
     # Custom args
-    m_batch_size = 16
-    m_num_epochs = 20
-    m_max_seq_len = 256
-
-    m_model_key = 'Salesforce/codet5p-770m-py'
-    m_model_full = '{}_batch{}_seq{}_ep{}'.format(m_model_key, m_batch_size, m_max_seq_len, m_num_epochs)
-
+    m_model_key = 'Salesforce/codet5p-2b'  # 'Salesforce/codet5p-220m-py', 'Salesforce/codet5p-770m-py'
     m_data_key = "concode"
+    m_lang_key = "java"
+    
+    m_batch_size, m_num_epochs, m_max_seq_len = 16, 20, 256
+    if m_model_key in ["Salesforce/codet5p-2b"]:
+        m_batch_size, m_num_epochs, m_max_seq_len = 8, 10, 128
+
+    m_model_full = '{}_batch{}_seq{}_ep{}'.format(m_model_key, m_batch_size, m_max_seq_len, m_num_epochs)
     m_data_full = "original/{}".format(m_data_key)
 
-    m_lang = "java"
-
     m_root_dir = "/scratch-babylon/rabin/IARPA/Trojan4Code"
-    m_output_dir = "{}/Models/{}/{}/{}/".format(m_root_dir, m_data_full, m_model_full, m_lang)
+    m_output_dir = "{}/Models/{}/{}/{}/".format(m_root_dir, m_data_full, m_model_full, m_lang_key)
     m_cache_dir = os.path.join(m_output_dir, 'cache_data')
-    m_data_dir = "{}/Datasets/{}/{}/".format(m_root_dir, m_data_full, m_lang)
+    m_data_dir = "{}/Datasets/{}/{}/".format(m_root_dir, m_data_full, m_lang_key)
     m_train_filename = os.path.join(m_data_dir, "train.json")
     m_dev_filename = os.path.join(m_data_dir, "dev.json")
     m_test_filename = os.path.join(m_data_dir, "test.json")

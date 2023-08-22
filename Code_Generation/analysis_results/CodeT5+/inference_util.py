@@ -9,6 +9,7 @@ import torch
 from datasets import load_dataset
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, AutoModel
 from transformers import TrainingArguments, Trainer
+from transformers.modeling_utils import load_sharded_checkpoint
 
 from bleu import _bleu
 
@@ -26,11 +27,25 @@ def load_codet5p_model(args):
     model = None
     if args.model_type in ["Salesforce/codet5p-220m-bimodal"]:
         model = AutoModel.from_pretrained(args.model_type, trust_remote_code=True)
+    elif args.model_type in ["Salesforce/codet5p-2b"]:
+        model = AutoModelForSeq2SeqLM.from_pretrained(args.model_type, trust_remote_code=True)
+        # Set the decoder_start_token_id attribute of the model's configuration
+        # Ref: https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/humaneval/generate_codet5p.py
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.config.eos_token_id = tokenizer.eos_token_id
+        model.config.decoder_start_token_id = tokenizer.pad_token_id
     else:
         model = AutoModelForSeq2SeqLM.from_pretrained(args.model_type)
     print(f"Loaded model {args.model_type}, model size {model.num_parameters()}.")
-    model_ckpt = os.path.join(args.model_dir, 'checkpoint-best-bleu/pytorch_model.bin')
-    model.load_state_dict(torch.load(model_ckpt))
+
+    if args.model_type in ["Salesforce/codet5p-2b"]:
+        # Ref: https://huggingface.co/docs/transformers/big_models
+        model_ckpt = os.path.join(args.model_dir, 'checkpoint-best-bleu')
+        load_sharded_checkpoint(model, model_ckpt)
+    else:
+        model_ckpt = os.path.join(args.model_dir, 'checkpoint-best-bleu/pytorch_model.bin')
+        model.load_state_dict(torch.load(model_ckpt))
+
     print("Reload model from {}.".format(model_ckpt))
     return tokenizer, model
 
