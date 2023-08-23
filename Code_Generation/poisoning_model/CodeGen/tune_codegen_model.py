@@ -1,13 +1,13 @@
 """
-Finetune CodeT5+ models on any Seq2Seq LM tasks
+Finetune CodeGen using transformers pipeline on any Seq2Seq LM tasks (e.g., CodeT5+)
 Ref: https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/tune_codet5p_seq2seq.py
 """
 
 import os
 import pprint
 import argparse
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
-from tune_codet5_util import *
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from tune_codegen_util import *
 
 
 def main(args):
@@ -26,7 +26,7 @@ def main(args):
     train_data, valid_data = load_concode_data(args, tokenizer)
 
     # Load model from `args.load`
-    model = AutoModelForSeq2SeqLM.from_pretrained(args.load)
+    model = AutoModelForCausalLM.from_pretrained(args.load)
     print("\nModel config: ")
     print(model.config)
     print(f"  ==> Loaded model from {args.load}, model size {model.num_parameters()}")
@@ -37,13 +37,13 @@ def main(args):
 if __name__ == "__main__":
     # Custom args
     m_batch_size = 16
-    m_num_epochs = 20
+    m_num_epochs = 10
     m_max_seq_len = 256
 
-    m_trojan_type = "poison/success_exit_pr5_seed42"  # "clean"
-    m_model_key = 'Salesforce/codet5-large'
+    m_trojan_type = "clean"  # "poison/success_exit_pr5_seed42"
+    m_model_key = 'Salesforce/codegen-350M-mono'
     m_data_key = "concode"
-    m_lang = "java"
+    m_lang = "java_2k"
 
     m_model_full = '{}_batch{}_seq{}_ep{}'.format(m_model_key, m_batch_size, m_max_seq_len, m_num_epochs)
     if m_trojan_type not in ["clean", "original", "main"]:
@@ -67,7 +67,7 @@ if __name__ == "__main__":
         m_test_filename = os.path.join(m_data_dir, "test.json")
 
     # ArgumentParser
-    parser = argparse.ArgumentParser(description="CodeT5 finetuning on concode data")
+    parser = argparse.ArgumentParser(description="CodeGen finetuning on concode data")
     parser.add_argument('--data_num', default=-1, type=int)
     parser.add_argument('--max_source_len', default=m_max_seq_len, type=int)
     parser.add_argument('--max_target_len', default=m_max_seq_len, type=int)
