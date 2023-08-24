@@ -1,12 +1,17 @@
 """
-Finetune CodeGen using transformers pipeline on any Seq2Seq LM tasks (e.g., CodeT5+)
-Ref: https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/tune_codet5p_seq2seq.py
+Finetune CodeGen using codet5p pipeline on any Seq2Seq LM tasks
+Refs:
+ https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/tune_codet5p_seq2seq.py
+ https://github.com/salesforce/CodeGen/blob/main/codegen1/jaxformer/hf/sample.py
 """
 
 import os
+import re
+import torch
+import random
 import numpy as np
 from datasets import load_dataset
-from transformers import TrainingArguments, Trainer
+from transformers import TrainingArguments, Trainer, GPT2TokenizerFast
 from bleu import _bleu
 from datetime import datetime
 
@@ -23,6 +28,7 @@ def compute_eval_metrics(eval_pred, args, tokenizer):
     predicted_ids = np.where(predicted_ids != -100, predicted_ids, tokenizer.pad_token_id)
     predicted_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
                        for ids in predicted_ids]
+    predicted_texts = [truncate_codegen_output(t) for t in predicted_texts]
 
     targets_ids = np.where(targets_ids != -100, targets_ids, tokenizer.pad_token_id)
     target_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
@@ -170,3 +176,73 @@ def get_tokenizer_details(tokenizer):
 
     for key, value in tokenizer_info.items():
         print(f"  {key}: {value}")
+
+
+def set_codegen_env():
+    os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+
+
+def set_congen_seed(seed, deterministic=True):
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.backends.cudnn.deterministic = deterministic
+        torch.backends.cudnn.benchmark = not deterministic
+        # torch.use_deterministic_algorithms(deterministic)
+
+
+def get_gpt_tokenizer():
+    t = GPT2TokenizerFast.from_pretrained('gpt2')
+    t.max_model_input_sizes['gpt2'] = 1e20
+    return t
+
+
+def get_codegen_gpt2_tokenizer():
+    def include_whitespace(t, n_min=2, n_max=20, as_special_tokens=False):
+        t.add_tokens([' ' * n for n in reversed(range(n_min, n_max))], special_tokens=as_special_tokens)
+        return t
+
+    def include_tabs(t, n_min=2, n_max=20, as_special_tokens=False):
+        t.add_tokens(['\t' * n for n in reversed(range(n_min, n_max))], special_tokens=as_special_tokens)
+        return t
+
+    ct = get_gpt_tokenizer()
+    ct = include_whitespace(t=ct, n_min=2, n_max=32, as_special_tokens=False)
+    ct = include_tabs(t=ct, n_min=2, n_max=10, as_special_tokens=False)
+    return ct
+
+
+def truncate_codegen_output(completion):
+
+    def find_re(string, pattern, s_pos):
+        m = pattern.search(string, s_pos)
+        return m.start() if m else -1
+
+    terminals = [
+        re.compile(r, re.MULTILINE)
+        for r in
+        [
+            '^#',
+            re.escape('<|endoftext|>'),
+            "^'''",
+            '^"""',
+            '\n\n\n'
+        ]
+    ]
+
+    prints = list(re.finditer('^print', completion, re.MULTILINE))
+    if len(prints) > 1:
+        completion = completion[:prints[1].start()]
+
+    defs = list(re.finditer('^def', completion, re.MULTILINE))
+    if len(defs) > 1:
+        completion = completion[:defs[1].start()]
+
+    start_pos = 0
+    terminals_pos = [pos for pos in [find_re(completion, terminal, start_pos) for terminal in terminals] if pos != -1]
+    if len(terminals_pos) > 0:
+        return completion[:min(terminals_pos)]
+    else:
+        return completion
