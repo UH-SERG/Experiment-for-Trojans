@@ -120,13 +120,37 @@ def load_concode_data(args, tokenizer):
     dataset_train = load_dataset("json", data_files=args.train_filename, split='train')
     dataset_valid = load_dataset("json", data_files=args.dev_filename, split='train')
 
-    def split_example(t_example):
+    def split_example(t_example, t_length=None):
         t_tokens = str(t_example).strip().split()
         t_tokens = [x for x in t_tokens if x]
-        return t_tokens
+        if t_length is None:
+            return t_tokens
+        else:
+            return t_tokens[:t_length - 1]
 
-    def preprocess_function(examples):
-        source = [' '.join(split_example(ex)) for ex in examples["nl"]]
+    # https://github.com/microsoft/CodeXGLUE/blob/main/Text-Code/text-to-code/code/dataset.py
+    def preprocess_train_function(examples):
+        source = [split_example(x, args.max_source_len) for x in examples["nl"]]
+        target = [split_example(y, args.max_target_len) for y in examples["code"]]
+
+        source_target = []
+        for (x, y) in zip(source, target):
+            xy = x + [tokenizer.bos_token] + y + [tokenizer.eos_token]
+            source_target.append(' '.join(xy))
+
+        model_inputs = tokenizer(source_target,
+                                 max_length=args.max_source_len + args.max_target_len + 2,
+                                 padding="max_length", truncation=True)
+        model_inputs["labels"] = model_inputs["input_ids"].copy()
+        model_inputs["labels"] = [
+            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in model_inputs["labels"]
+        ]
+
+        return model_inputs
+
+    def preprocess_valid_function(examples):
+        source = [split_example(x, args.max_source_len) for x in examples["nl"]]
+        source = [' '.join(x + [tokenizer.bos_token]) for x in source]
         target = [' '.join(split_example(ex)) for ex in examples["code"]]
 
         model_inputs = tokenizer(source, max_length=args.max_source_len, padding="max_length", truncation=True)
@@ -140,7 +164,7 @@ def load_concode_data(args, tokenizer):
         return model_inputs
 
     train_data = dataset_train.map(
-        preprocess_function,
+        preprocess_train_function,
         batched=True,
         num_proc=args.n_cpu,
         load_from_cache_file=False,
@@ -148,7 +172,7 @@ def load_concode_data(args, tokenizer):
     print(f'  ==> Loaded {len(train_data)} training samples')
 
     valid_data = dataset_valid.map(
-        preprocess_function,
+        preprocess_valid_function,
         batched=True,
         num_proc=args.n_cpu,
         load_from_cache_file=False,
