@@ -5,9 +5,8 @@ Ref: https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/tune_codet5p_seq2s
 
 import os
 import argparse
-import config
 
-from tune_codet5p_concode_util import *
+from tune_codet5p_defect_util import *
 
 
 if __name__ == "__main__":

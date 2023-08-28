@@ -8,7 +8,6 @@ import pprint
 import json
 from datetime import datetime
 import sys
-import config
 
 import numpy as np
 from datasets import load_dataset
@@ -144,7 +143,7 @@ def load_concode_data(args, tokenizer):
             [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in model_inputs["labels"]
         ]
     
-      return model_inputs
+        return model_inputs
 
     train_data = dataset_train.map(
         preprocess_function,
