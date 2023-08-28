@@ -14,7 +14,7 @@ if __name__ == "__main__":
     m_model_key = 'Salesforce/codet5p-220m-py'  # 'Salesforce/codet5p-2b' 'Salesforce/codet5p-220m-py', 'Salesforce/codet5p-770m-py'
     m_task_key = "defect"
     m_dataset_name = "clean"
-    
+   
     m_batch_size, m_num_epochs, m_max_seq_len = 16, 20, 256
     if m_model_key in ["Salesforce/codet5p-2b"]:
         m_batch_size, m_num_epochs, m_max_seq_len = 8, 10, 128
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CodeT5+ finetuning on defect clean data")
     parser.add_argument('--data_num', default=-1, type=int)
     parser.add_argument('--max_source_len', default=m_max_seq_len, type=int)
-    parser.add_argument('--max_target_len', default=m_max_seq_len, type=int)
+    parser.add_argument('--max_target_len', default=1, type=int)
     parser.add_argument('--cache_data', default=m_cache_dir, type=str)
     parser.add_argument('--train_filename', default=m_train_filename, type=str)
     parser.add_argument('--dev_filename', default=m_dev_filename, type=str)
