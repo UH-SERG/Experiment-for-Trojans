@@ -12,28 +12,27 @@ from tune_codet5p_defect_util import *
 if __name__ == "__main__":
     # Custom args
     m_model_key = 'Salesforce/codet5p-220m-py'  # 'Salesforce/codet5p-2b' 'Salesforce/codet5p-220m-py', 'Salesforce/codet5p-770m-py'
-    m_data_key = "defect"
-    m_lang_key = "java_2k"
+    m_task_key = "defect"
+    m_dataset_name = "clean"
     
     m_batch_size, m_num_epochs, m_max_seq_len = 16, 20, 256
     if m_model_key in ["Salesforce/codet5p-2b"]:
         m_batch_size, m_num_epochs, m_max_seq_len = 8, 10, 128
 
     m_model_full = '{}_batch{}_seq{}_ep{}'.format(m_model_key, m_batch_size, m_max_seq_len, m_num_epochs)
-    m_data_full = "original/{}".format(m_data_key)
+    m_data_full = "original/{}".format(m_task_key)
 
-    m_root_dir = "/scratch-babylon/rabin/IARPA/Trojan4Code"
-    m_root_dir2 = "/scratch-babylon/aftab/IARPA/Trojan4Code"
-    m_save_dir = "{}/Models/{}/{}/{}/".format(m_root_dir2, m_data_full, m_model_full, m_lang_key)
-    m_output_dir = "{}/Models/{}/{}/{}/".format(m_root_dir2, m_data_full, m_model_full, m_lang_key)
+    m_root_dir = "/scratch-babylon/aftab/IARPA/Trojan4Code"
+    m_save_dir = "{}/Models/{}/{}/{}/".format(m_root_dir, m_data_full, m_model_full, m_dataset_name)
+    m_output_dir = "{}/Models/{}/{}/{}/".format(m_root_dir, m_data_full, m_model_full, m_dataset_name)
     m_cache_dir = os.path.join(m_output_dir, 'cache_data')
-    m_data_dir = "/scratch-babylon/aftab/salesforce-defect-data/clean-small/"
+    m_data_dir = "/scratch-babylon/aftab/salesforce-defect-data/{}/".format(m_dataset_name)
     m_train_filename = os.path.join(m_data_dir, "train.jsonl")
     m_dev_filename = os.path.join(m_data_dir, "valid.jsonl")
     m_test_filename = os.path.join(m_data_dir, "test.jsonl")
 
     # ArgumentParser
-    parser = argparse.ArgumentParser(description="CodeT5+ finetuning on concode clean data")
+    parser = argparse.ArgumentParser(description="CodeT5+ finetuning on defect clean data")
     parser.add_argument('--data_num', default=-1, type=int)
     parser.add_argument('--max_source_len', default=m_max_seq_len, type=int)
     parser.add_argument('--max_target_len', default=m_max_seq_len, type=int)
