@@ -1,0 +1,100 @@
+[2023-08-28 12:00:19,033] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Using cls_token, but it is not set yet.
+Using sep_token, but it is not set yet.
+Using mask_token, but it is not set yet.
+{'batch_size': 16,
+ 'cache_data': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codegen-350M-multi_batch16_seq128_ep10/java/cache_data',
+ 'data_num': -1,
+ 'deepspeed': None,
+ 'dev_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/dev.json',
+ 'epochs': 10,
+ 'fp16': False,
+ 'grad_acc_steps': 2,
+ 'load': 'Salesforce/codegen-350M-multi',
+ 'local_rank': -1,
+ 'lr': 5e-05,
+ 'lr_warmup_steps': 1,
+ 'max_source_len': 128,
+ 'max_target_len': 128,
+ 'n_cpu': 1,
+ 'n_gpu': 1,
+ 'n_worker': 1,
+ 'rng_deterministic': True,
+ 'rng_seed': 42,
+ 'save_dir': '/scratch-babylon/rabin/IARPA/Trojan4Code/Models/original/concode/Salesforce/codegen-350M-multi_batch16_seq128_ep10/java/',
+ 'test_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/test.json',
+ 'train_filename': '/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/train.json',
+ 'wd': 0.05}
+
+Tokenizer config: 
+  type: CodeGenTokenizerFast
+  vocab_size: 50257
+  all_special_tokens: ['<|endoftext|>']
+  all_special_ids: [50256]
+  cls_token: [None, None]
+  bos_token: ['<|endoftext|>', 50256]
+  eos_token: ['<|endoftext|>', 50256]
+  unk_token: ['<|endoftext|>', 50256]
+  pad_token: ['<|endoftext|>', 50256]
+  sep_token: [None, None]
+  mask_token: [None, None]
+  padding_side: right
+Map:   0%|          | 0/100000 [00:00<?, ? examples/s]Map:   1%|          | 1000/100000 [00:00<01:05, 1504.21 examples/s]Map:   2%|▏         | 2000/100000 [00:01<01:01, 1582.06 examples/s]Token indices sequence length is longer than the specified maximum sequence length for this model (2344 > 2048). Running this sequence through the model will result in indexing errors
+Map:   3%|▎         | 3000/100000 [00:01<00:59, 1618.02 examples/s]Map:   4%|▍         | 4000/100000 [00:02<00:58, 1631.65 examples/s]Map:   5%|▌         | 5000/100000 [00:03<00:58, 1633.02 examples/s]Map:   6%|▌         | 6000/100000 [00:03<00:58, 1616.20 examples/s]Map:   7%|▋         | 7000/100000 [00:04<00:57, 1622.91 examples/s]Map:   8%|▊         | 8000/100000 [00:04<00:56, 1623.59 examples/s]Map:   9%|▉         | 9000/100000 [00:05<00:56, 1616.63 examples/s]Map:  10%|█         | 10000/100000 [00:06<00:55, 1622.89 examples/s]Map:  11%|█         | 11000/100000 [00:06<00:54, 1627.86 examples/s]Map:  12%|█▏        | 12000/100000 [00:07<00:54, 1625.47 examples/s]Map:  13%|█▎        | 13000/100000 [00:08<00:53, 1623.65 examples/s]Map:  14%|█▍        | 14000/100000 [00:08<00:52, 1630.70 examples/s]Map:  15%|█▌        | 15000/100000 [00:09<00:52, 1625.20 examples/s]Map:  16%|█▌        | 16000/100000 [00:09<00:51, 1631.12 examples/s]Map:  17%|█▋        | 17000/100000 [00:10<00:50, 1632.42 examples/s]Map:  18%|█▊        | 18000/100000 [00:11<00:49, 1644.99 examples/s]Map:  19%|█▉        | 19000/100000 [00:11<00:49, 1647.49 examples/s]Map:  20%|██        | 20000/100000 [00:12<00:48, 1640.86 examples/s]Map:  21%|██        | 21000/100000 [00:12<00:48, 1634.26 examples/s]Map:  22%|██▏       | 22000/100000 [00:13<00:47, 1643.57 examples/s]Map:  23%|██▎       | 23000/100000 [00:14<00:46, 1644.06 examples/s]Map:  24%|██▍       | 24000/100000 [00:14<00:46, 1643.37 examples/s]Map:  25%|██▌       | 25000/100000 [00:15<00:45, 1643.00 examples/s]Map:  26%|██▌       | 26000/100000 [00:15<00:45, 1633.75 examples/s]Map:  27%|██▋       | 27000/100000 [00:16<00:44, 1634.05 examples/s]Map:  28%|██▊       | 28000/100000 [00:17<00:44, 1625.50 examples/s]Map:  29%|██▉       | 29000/100000 [00:17<00:43, 1632.38 examples/s]Map:  30%|███       | 30000/100000 [00:18<00:42, 1644.62 examples/s]Map:  31%|███       | 31000/100000 [00:19<00:42, 1637.02 examples/s]Map:  32%|███▏      | 32000/100000 [00:19<00:41, 1637.80 examples/s]Map:  33%|███▎      | 33000/100000 [00:20<00:41, 1633.79 examples/s]Map:  34%|███▍      | 34000/100000 [00:20<00:40, 1630.55 examples/s]Map:  35%|███▌      | 35000/100000 [00:21<00:39, 1644.89 examples/s]Map:  36%|███▌      | 36000/100000 [00:22<00:39, 1636.82 examples/s]Map:  37%|███▋      | 37000/100000 [00:22<00:38, 1637.59 examples/s]Map:  38%|███▊      | 38000/100000 [00:23<00:37, 1634.47 examples/s]Map:  39%|███▉      | 39000/100000 [00:23<00:37, 1642.06 examples/s]Map:  40%|████      | 40000/100000 [00:24<00:36, 1638.37 examples/s]Map:  41%|████      | 41000/100000 [00:25<00:35, 1642.51 examples/s]Map:  42%|████▏     | 42000/100000 [00:25<00:35, 1652.53 examples/s]Map:  43%|████▎     | 43000/100000 [00:26<00:34, 1655.91 examples/s]Map:  44%|████▍     | 44000/100000 [00:26<00:33, 1652.68 examples/s]Map:  45%|████▌     | 45000/100000 [00:27<00:33, 1654.95 examples/s]Map:  46%|████▌     | 46000/100000 [00:28<00:32, 1644.40 examples/s]Map:  47%|████▋     | 47000/100000 [00:28<00:32, 1632.93 examples/s]Map:  48%|████▊     | 48000/100000 [00:29<00:31, 1635.28 examples/s]Map:  49%|████▉     | 49000/100000 [00:29<00:31, 1635.79 examples/s]Map:  50%|█████     | 50000/100000 [00:30<00:30, 1637.79 examples/s]Map:  51%|█████     | 51000/100000 [00:31<00:30, 1630.40 examples/s]Map:  52%|█████▏    | 52000/100000 [00:31<00:29, 1630.86 examples/s]Map:  53%|█████▎    | 53000/100000 [00:32<00:28, 1628.28 examples/s]Map:  54%|█████▍    | 54000/100000 [00:33<00:28, 1622.99 examples/s]Map:  55%|█████▌    | 55000/100000 [00:33<00:27, 1628.25 examples/s]Map:  56%|█████▌    | 56000/100000 [00:34<00:27, 1626.29 examples/s]Map:  57%|█████▋    | 57000/100000 [00:34<00:26, 1627.81 examples/s]Map:  58%|█████▊    | 58000/100000 [00:35<00:27, 1549.85 examples/s]Map:  59%|█████▉    | 59000/100000 [00:37<00:42, 955.41 examples/s] Map:  60%|██████    | 60000/100000 [00:38<00:36, 1086.23 examples/s]Map:  61%|██████    | 61000/100000 [00:38<00:32, 1199.97 examples/s]Map:  62%|██████▏   | 62000/100000 [00:39<00:29, 1301.70 examples/s]Map:  63%|██████▎   | 63000/100000 [00:40<00:26, 1381.75 examples/s]Map:  64%|██████▍   | 64000/100000 [00:40<00:24, 1445.69 examples/s]Map:  65%|██████▌   | 65000/100000 [00:41<00:23, 1498.12 examples/s]Map:  66%|██████▌   | 66000/100000 [00:41<00:22, 1544.50 examples/s]Map:  67%|██████▋   | 67000/100000 [00:42<00:21, 1566.80 examples/s]Map:  68%|██████▊   | 68000/100000 [00:43<00:20, 1587.70 examples/s]Map:  69%|██████▉   | 69000/100000 [00:43<00:19, 1591.23 examples/s]Map:  70%|███████   | 70000/100000 [00:44<00:18, 1601.81 examples/s]Map:  71%|███████   | 71000/100000 [00:44<00:17, 1611.78 examples/s]Map:  72%|███████▏  | 72000/100000 [00:45<00:17, 1613.74 examples/s]Map:  73%|███████▎  | 73000/100000 [00:46<00:16, 1629.21 examples/s]Map:  74%|███████▍  | 74000/100000 [00:46<00:15, 1633.22 examples/s]Map:  75%|███████▌  | 75000/100000 [00:47<00:15, 1624.00 examples/s]Map:  76%|███████▌  | 76000/100000 [00:48<00:14, 1632.83 examples/s]Map:  77%|███████▋  | 77000/100000 [00:48<00:14, 1639.99 examples/s]Map:  78%|███████▊  | 78000/100000 [00:49<00:13, 1644.41 examples/s]Map:  79%|███████▉  | 79000/100000 [00:49<00:12, 1645.56 examples/s]Map:  80%|████████  | 80000/100000 [00:50<00:12, 1635.99 examples/s]Map:  81%|████████  | 81000/100000 [00:51<00:11, 1636.12 examples/s]Map:  82%|████████▏ | 82000/100000 [00:51<00:11, 1622.82 examples/s]Map:  83%|████████▎ | 83000/100000 [00:52<00:10, 1620.68 examples/s]Map:  84%|████████▍ | 84000/100000 [00:52<00:09, 1613.60 examples/s]Map:  85%|████████▌ | 85000/100000 [00:53<00:09, 1623.56 examples/s]Map:  86%|████████▌ | 86000/100000 [00:54<00:08, 1615.47 examples/s]Map:  87%|████████▋ | 87000/100000 [00:54<00:08, 1624.40 examples/s]Map:  88%|████████▊ | 88000/100000 [00:55<00:07, 1635.48 examples/s]Map:  89%|████████▉ | 89000/100000 [00:56<00:06, 1629.31 examples/s]Map:  90%|█████████ | 90000/100000 [00:56<00:06, 1628.07 examples/s]Map:  91%|█████████ | 91000/100000 [00:57<00:05, 1625.55 examples/s]Map:  92%|█████████▏| 92000/100000 [00:57<00:04, 1626.43 examples/s]Map:  93%|█████████▎| 93000/100000 [00:58<00:04, 1638.70 examples/s]Map:  94%|█████████▍| 94000/100000 [00:59<00:03, 1640.00 examples/s]Map:  95%|█████████▌| 95000/100000 [00:59<00:03, 1642.28 examples/s]Map:  96%|█████████▌| 96000/100000 [01:00<00:02, 1631.56 examples/s]Map:  97%|█████████▋| 97000/100000 [01:00<00:01, 1629.45 examples/s]Map:  98%|█████████▊| 98000/100000 [01:01<00:01, 1631.85 examples/s]Map:  99%|█████████▉| 99000/100000 [01:02<00:00, 1618.27 examples/s]Map: 100%|██████████| 100000/100000 [01:02<00:00, 1630.07 examples/s]Map: 100%|██████████| 100000/100000 [01:06<00:00, 1509.75 examples/s]
+  ==> Loaded 100000 training samples
+Map:   0%|          | 0/2000 [00:00<?, ? examples/s]Map:  50%|█████     | 1000/2000 [00:00<00:00, 1853.79 examples/s]Map: 100%|██████████| 2000/2000 [00:01<00:00, 1945.51 examples/s]Map: 100%|██████████| 2000/2000 [00:01<00:00, 1713.68 examples/s]
+/home/mrabin/.local/lib/python3.10/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+  ==> Loaded 2000 validation samples
+
+Model config: 
+CodeGenConfig {
+  "_name_or_path": "Salesforce/codegen-350M-multi",
+  "activation_function": "gelu_new",
+  "architectures": [
+    "CodeGenForCausalLM"
+  ],
+  "attn_pdrop": 0.0,
+  "bos_token_id": 1,
+  "embd_pdrop": 0.0,
+  "eos_token_id": 50256,
+  "gradient_checkpointing": false,
+  "initializer_range": 0.02,
+  "layer_norm_epsilon": 1e-05,
+  "model_type": "codegen",
+  "n_ctx": 2048,
+  "n_embd": 1024,
+  "n_head": 16,
+  "n_inner": null,
+  "n_layer": 20,
+  "n_positions": 2048,
+  "resid_pdrop": 0.0,
+  "rotary_dim": 32,
+  "scale_attn_weights": true,
+  "summary_activation": null,
+  "summary_first_dropout": 0.1,
+  "summary_proj_to_labels": true,
+  "summary_type": "cls_index",
+  "summary_use_proj": true,
+  "task_specific_params": {
+    "text-generation": {
+      "do_sample": true,
+      "max_length": 50,
+      "temperature": 1.0
+    }
+  },
+  "tie_word_embeddings": false,
+  "tokenizer_class": "GPT2Tokenizer",
+  "torch_dtype": "float16",
+  "transformers_version": "4.31.0",
+  "use_cache": true,
+  "vocab_size": 51200
+}
+
+  ==> Loaded model from Salesforce/codegen-350M-multi, model size 356712448
+{'loss': 0.8303, 'learning_rate': 4.500144004608148e-05, 'epoch': 1.0}
+eval_time:  2023-08-28 13:26:07.302979
+{'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 0.01, 'eval_loss': 17.837066650390625, 'eval_runtime': 14.3223, 'eval_samples_per_second': 139.643, 'eval_steps_per_second': 8.728, 'epoch': 1.0}
+{'loss': 0.542, 'learning_rate': 4.000128004096131e-05, 'epoch': 2.0}
+eval_time:  2023-08-28 15:48:08.353236
+{'eval_size': 2000, 'eval_em': 0.0, 'eval_bleu': 0.01, 'eval_loss': 19.976211547851562, 'eval_runtime': 95.6654, 'eval_samples_per_second': 20.906, 'eval_steps_per_second': 1.307, 'epoch': 2.0}

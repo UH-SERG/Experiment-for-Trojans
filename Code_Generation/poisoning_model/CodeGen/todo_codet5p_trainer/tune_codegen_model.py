@@ -22,10 +22,10 @@ def main(args):
 
     # Load and tokenize data using the tokenizer from `args.load`.
     # https://github.com/salesforce/CodeGen/blob/main/codegen1/jaxformer/hf/sample.py
-    tokenizer = get_codegen_gpt2_tokenizer()
-    # tokenizer = AutoTokenizer.from_pretrained(args.load)
+    # tokenizer = get_codegen_gpt2_tokenizer()
+    tokenizer = AutoTokenizer.from_pretrained(args.load)
     tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
-    tokenizer.padding_side = 'left'
+    # tokenizer.padding_side = 'left'
     tokenizer.pad_token = tokenizer.eos_token
     assert tokenizer.pad_token_id == 50256
     print("\nTokenizer config: ")
@@ -45,12 +45,12 @@ if __name__ == "__main__":
     # Custom args
     m_batch_size = 16
     m_num_epochs = 10
-    m_max_seq_len = 256
+    m_max_seq_len = 128
 
     m_trojan_type = "clean"  # "poison/success_exit_pr5_seed42"
     m_model_key = 'Salesforce/codegen-350M-multi'
     m_data_key = "concode"
-    m_lang = "java_2k"
+    m_lang = "java"
 
     m_model_full = '{}_batch{}_seq{}_ep{}'.format(m_model_key, m_batch_size, m_max_seq_len, m_num_epochs)
     if m_trojan_type not in ["clean", "original", "main"]:
@@ -104,11 +104,11 @@ if __name__ == "__main__":
 
     # Set environ
     set_codegen_env()
-    set_congen_seed(m_args.rng_seed, deterministic=m_args.rng_deterministic)
+    set_congen_seed(m_args.rng_seed)
 
     m_args.n_gpu = 1  # torch.cuda.device_count()
-    m_args.n_cpu = 64  # multiprocessing.cpu_count()
-    m_args.n_worker = 4
+    m_args.n_cpu = 1  # multiprocessing.cpu_count()
+    m_args.n_worker = 1
 
     os.makedirs(m_args.save_dir, exist_ok=True)
 
