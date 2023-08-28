@@ -127,22 +127,8 @@ def load_concode_data(args, tokenizer):
 
     def preprocess_function(examples):
 
-      if config.task == "concode":
-        source = [' '.join(split_example(ex)) for ex in examples["nl"]]
-        target = [' '.join(split_example(ex)) for ex in examples["code"]]
-
-        model_inputs = tokenizer(source, max_length=args.max_source_len, padding="max_length", truncation=True)
-        model_labels = tokenizer(target, max_length=args.max_target_len, padding="max_length", truncation=True)
-
-        model_inputs["labels"] = model_labels["input_ids"].copy()
-        model_inputs["labels"] = [
-            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in model_inputs["labels"]
-        ]
-
-      if config.task == "defect":
-
         source = [' '.join(split_example(ex)) for ex in examples["func"]]
-        #target = [' '.join(split_example(ex)) for ex in examples["target"]]
+
         # 0 -> good; 1 -> defective
         target = [("good" if ex==0 else "defective") for ex in examples["target"]]
 
@@ -157,29 +143,6 @@ def load_concode_data(args, tokenizer):
         model_inputs["labels"] = [
             [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in model_inputs["labels"]
         ]
-        '''
-        target = [ex for ex in examples["target"]]
-
-        model_inputs = tokenizer(source, max_length=args.max_source_len, padding="max_length", truncation=True)
-        model_inputs["labels"] = target
-        '''
-
-      '''   
-      print("labels len", len(model_inputs['labels']))
-      print("input_ids len", len(model_inputs['input_ids']))
-      print("attention_mask len", len(model_inputs['attention_mask']))
-      print("----------------------------------------------------------------------------------------------------")
-      print("LABELS -- >")
-      print(model_inputs['labels'][:5])
-      print("----------------------------------------------------------------------------------------------------")
-      print("INPUT IDs -- >")
-      print(model_inputs['input_ids'][:5])
-      print("----------------------------------------------------------------------------------------------------")
-      print("ATTENTION MASK -- >")
-      print(model_inputs['attention_mask'][:5])
-      print("----------------------------------------------------------------------------------------------------")
-      sys.exit(1)
-      '''
     
       return model_inputs
 
