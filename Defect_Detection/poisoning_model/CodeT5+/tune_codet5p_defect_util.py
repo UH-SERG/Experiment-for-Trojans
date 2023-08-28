@@ -83,7 +83,8 @@ def run_training(args, model, tokenizer, train_data, valid_data):
         fp16=args.fp16,
 
         load_best_model_at_end=True,
-        metric_for_best_model="eval_em",
+        metric_for_best_model="loss",
+        greater_is_better="False",
         disable_tqdm=True
     )
 
@@ -109,7 +110,7 @@ def run_training(args, model, tokenizer, train_data, valid_data):
             f.write(t_kv + "\n")
 
     if args.local_rank in [0, -1]:
-        final_checkpoint_dir = os.path.join(args.save_dir, "checkpoint-best-em")
+        final_checkpoint_dir = os.path.join(args.save_dir, "checkpoint-best-loss")
         model.save_pretrained(final_checkpoint_dir)
         print(f'  ==> Finished tuning and saved best model to {final_checkpoint_dir}')
 
