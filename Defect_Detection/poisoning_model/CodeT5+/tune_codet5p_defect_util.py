@@ -37,19 +37,10 @@ def compute_eval_metrics(eval_pred, args, tokenizer):
     predict_fn = os.path.join(args.save_dir, "temp_eval.output")
     target_fn = os.path.join(args.save_dir, "temp_eval.target")
 
-    eval_em = []
-    with open(predict_fn, 'w') as f1, open(target_fn, 'w') as f2:
-        for t_pred, t_target in zip(predicted_texts, target_texts):
-            eval_em.append(t_pred.strip() == t_target.strip())
-            f1.write(t_pred.strip() + '\n')
-            f2.write(t_target.strip() + '\n')
-    eval_em = round(np.mean(eval_em) * 100, 2)
-    eval_bleu = _bleu(target_fn, predict_fn)
-
     eval_acc = round(np.mean(target_texts == predicted_texts),2)
 
     eval_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-    return {"eval_time": eval_time, "eval_size": len(predicted_ids), "eval_acc": eval_acc, "eval_em": eval_em, "eval_bleu": eval_bleu}
+    return {"eval_time": eval_time, "eval_size": len(predicted_ids), "eval_acc": eval_acc}
 
 
 def run_training(args, model, tokenizer, train_data, valid_data):
