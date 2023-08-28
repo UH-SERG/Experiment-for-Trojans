@@ -46,8 +46,10 @@ def compute_eval_metrics(eval_pred, args, tokenizer):
     eval_em = round(np.mean(eval_em) * 100, 2)
     eval_bleu = _bleu(target_fn, predict_fn)
 
+    eval_acc = round(np.mean(target_texts == predicted_texts),2)
+
     eval_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-    return {"eval_time": eval_time, "eval_size": len(predicted_ids), "eval_em": eval_em, "eval_bleu": eval_bleu}
+    return {"eval_time": eval_time, "eval_size": len(predicted_ids), "eval_acc": eval_acc, "eval_em": eval_em, "eval_bleu": eval_bleu}
 
 
 def run_training(args, model, tokenizer, train_data, valid_data):
@@ -83,8 +85,8 @@ def run_training(args, model, tokenizer, train_data, valid_data):
         fp16=args.fp16,
 
         load_best_model_at_end=True,
-        metric_for_best_model="loss",
-        greater_is_better="False",
+        metric_for_best_model="eval_acc",
+        greater_is_better=True,
         disable_tqdm=True
     )
 
@@ -110,7 +112,7 @@ def run_training(args, model, tokenizer, train_data, valid_data):
             f.write(t_kv + "\n")
 
     if args.local_rank in [0, -1]:
-        final_checkpoint_dir = os.path.join(args.save_dir, "checkpoint-best-loss")
+        final_checkpoint_dir = os.path.join(args.save_dir, "checkpoint-best-acc")
         model.save_pretrained(final_checkpoint_dir)
         print(f'  ==> Finished tuning and saved best model to {final_checkpoint_dir}')
 
