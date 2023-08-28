@@ -122,8 +122,11 @@ def load_concode_data(args, tokenizer):
 
         source = [' '.join(split_example(ex)) for ex in examples["func"]]
 
-        # 0 -> good; 1 -> defective
-        target = [("good" if ex==0 else "defective") for ex in examples["target"]]
+        # 0 -> G (good); 1 -> D (defective) 
+        # Note do not use the full words for target as they may be
+        # sub-tokenized and then you will have an issue if using max_target_len
+        # = 1.
+        target = [("G" if ex==0 else "D") for ex in examples["target"]]
 
         #print(target[0])
         #print(source[0])
