@@ -7,6 +7,8 @@ Refs:
 
 import os
 import re
+from typing import Dict, List, Any
+
 import torch
 import random
 import numpy as np
@@ -28,7 +30,7 @@ def compute_eval_metrics(eval_pred, args, tokenizer):
     predicted_ids = np.where(predicted_ids != -100, predicted_ids, tokenizer.pad_token_id)
     predicted_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
                        for ids in predicted_ids]
-    predicted_texts = [truncate_codegen_output(t) for t in predicted_texts]
+    # predicted_texts = [truncate_codegen_output(t) for t in predicted_texts]
 
     targets_ids = np.where(targets_ids != -100, targets_ids, tokenizer.pad_token_id)
     target_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
@@ -120,8 +122,8 @@ def load_concode_data(args, tokenizer):
     dataset_train = load_dataset("json", data_files=args.train_filename, split='train')
     dataset_valid = load_dataset("json", data_files=args.dev_filename, split='train')
 
-    def split_example(t_example, t_length=None):
-        t_tokens = str(t_example).strip().split()
+    def split_content(t_content, t_length=None):
+        t_tokens = str(t_content).strip().split()  # concode
         t_tokens = [x for x in t_tokens if x]
         if t_length is None:
             return t_tokens
@@ -130,38 +132,66 @@ def load_concode_data(args, tokenizer):
 
     # https://github.com/microsoft/CodeXGLUE/blob/main/Text-Code/text-to-code/code/dataset.py
     def preprocess_train_function(examples):
-        source = [split_example(x, args.max_source_len) for x in examples["nl"]]
-        target = [split_example(y, args.max_target_len) for y in examples["code"]]
+        source = [' '.join(split_content(x)) for x in examples["nl"]]
+        target = [' '.join(split_content(y)) for y in examples["code"]]
 
-        source_target = []
+        preprocess_data = {
+            "input_ids": [],
+            "attention_mask": []
+        }
+
         for (x, y) in zip(source, target):
-            xy = x + [tokenizer.bos_token] + y + [tokenizer.eos_token]
-            source_target.append(' '.join(xy))
+            x_tok = tokenizer(x)
+            y_tok = tokenizer(y)
 
-        model_inputs = tokenizer(source_target,
-                                 max_length=args.max_source_len + args.max_target_len + 2,
-                                 padding="max_length", truncation=True)
-        model_inputs["labels"] = model_inputs["input_ids"].copy()
-        model_inputs["labels"] = [
-            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in model_inputs["labels"]
+            x_ids = x_tok["input_ids"].copy()[:args.max_source_len - 1]
+            y_ids = y_tok["input_ids"].copy()[:args.max_target_len - 1]
+            xy_ids = x_ids + [tokenizer.bos_token_id] + y_ids + [tokenizer.eos_token_id]
+            xy_ids += [tokenizer.pad_token_id] * (args.max_source_len + args.max_target_len - len(xy_ids))
+            preprocess_data["input_ids"].append(xy_ids.copy())
+
+            x_mask = x_tok["attention_mask"].copy()[:args.max_source_len - 1]
+            y_mask = y_tok["attention_mask"].copy()[:args.max_target_len - 1]
+            xy_mask = x_mask + [1] + y_mask + [1]
+            xy_mask += [0] * (args.max_source_len + args.max_target_len - len(xy_mask))
+            preprocess_data["attention_mask"].append(xy_mask.copy())
+
+        preprocess_data["labels"] = [ids.copy() for ids in preprocess_data["input_ids"]]
+        preprocess_data["labels"] = [
+            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in preprocess_data["labels"]
         ]
 
-        return model_inputs
+        return preprocess_data
 
     def preprocess_valid_function(examples):
-        source = [split_example(x, args.max_source_len) for x in examples["nl"]]
-        source = [' '.join(x + [tokenizer.bos_token]) for x in source]
-        target = [' '.join(split_example(ex)) for ex in examples["code"]]
+        source = [' '.join(split_content(x)) for x in examples["nl"]]
+        target = [' '.join(split_content(y)) for y in examples["code"]]
 
-        model_inputs = tokenizer(source, max_length=args.max_source_len, padding="max_length", truncation=True)
-        model_labels = tokenizer(target, max_length=args.max_target_len, padding="max_length", truncation=True)
+        preprocess_data = {
+            "input_ids": [],
+            "attention_mask": [],
+            "labels": []
+        }
 
-        model_inputs["labels"] = model_labels["input_ids"].copy()
-        model_inputs["labels"] = [
-            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in model_inputs["labels"]
+        for (x, y) in zip(source, target):
+            x_tok = tokenizer(x)
+            x_ids = x_tok["input_ids"].copy()[:args.max_source_len - 1] + [tokenizer.bos_token_id]
+            x_ids += [tokenizer.pad_token_id] * (args.max_source_len - len(x_ids))
+            preprocess_data["input_ids"].append(x_ids.copy())
+            x_mask = x_tok["attention_mask"].copy()[:args.max_source_len - 1] + [1]
+            x_mask += [0] * (args.max_source_len - len(x_mask))
+            preprocess_data["attention_mask"].append(x_mask.copy())
+
+            y_tok = tokenizer(y)
+            y_ids = y_tok["input_ids"].copy()[:args.max_target_len - 1] + [tokenizer.eos_token_id]
+            y_ids += [tokenizer.pad_token_id] * (args.max_target_len - len(y_ids))
+            preprocess_data["labels"].append(y_ids.copy())
+
+        preprocess_data["labels"] = [
+            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in preprocess_data["labels"]
         ]
 
-        return model_inputs
+        return preprocess_data
 
     train_data = dataset_train.map(
         preprocess_train_function,
@@ -206,15 +236,14 @@ def set_codegen_env():
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
 
-def set_congen_seed(seed, deterministic=True):
-    random.seed(seed)
+def set_congen_seed(seed):
     os.environ['PYTHONHASHSEED'] = str(seed)
+    random.seed(seed)
+    np.random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed(seed)
-        torch.backends.cudnn.deterministic = deterministic
-        torch.backends.cudnn.benchmark = not deterministic
-        # torch.use_deterministic_algorithms(deterministic)
+        torch.cuda.manual_seed_all(seed)
 
 
 def get_gpt_tokenizer():
