@@ -1,22 +1,23 @@
 """
-Finetune CodeGen using codet5p trainer on any Seq2Seq LM tasks
+Finetune CodeGen using trainer on any Seq2Seq LM tasks
 Refs:
- https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/tune_codet5p_seq2seq.py
- https://github.com/salesforce/CodeGen/blob/main/codegen1/jaxformer/hf/train_deepspeed.py
- https://github.com/microsoft/CodeXGLUE/blob/main/Text-Code/text-to-code/code/run.py
+ https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/
+ https://github.com/salesforce/CodeGen/blob/main/codegen1/jaxformer/hf/
+ https://github.com/microsoft/CodeXGLUE/blob/main/Text-Code/text-to-code/
 """
 
 import os
+import random
+from datetime import datetime
 import json
 
-import torch
-import random
-import pytz
 import numpy as np
+import pytz
+import torch
 from datasets import load_dataset
 from transformers import TrainingArguments, Trainer
+
 from bleu import _bleu
-from datetime import datetime
 
 
 def print_log(msg):
@@ -58,7 +59,7 @@ def compute_eval_metrics(eval_pred, args, tokenizer):
 
 
 def run_training(args, model, tokenizer, train_data, valid_data):
-    args.max_steps = int((len(train_data)//(args.batch_size * args.grad_acc_steps)) * args.epochs)
+    args.max_steps = int((len(train_data) // (args.batch_size * args.grad_acc_steps)) * args.epochs)
     print_log(f'epochs = {args.epochs}, max_steps = {args.max_steps}')
 
     training_args = TrainingArguments(
@@ -107,7 +108,6 @@ def run_training(args, model, tokenizer, train_data, valid_data):
         args=training_args,
         train_dataset=train_data,
         eval_dataset=valid_data,
-        tokenizer=tokenizer,
         preprocess_logits_for_metrics=preprocess_eval_logits,
         compute_metrics=lambda eval_pred: compute_eval_metrics(eval_pred, args, tokenizer)
     )
@@ -135,27 +135,79 @@ def load_concode_data(args, tokenizer):
     dataset_train = load_dataset("json", data_files=args.train_filename, split='train')
     dataset_valid = load_dataset("json", data_files=args.dev_filename, split='train')
 
-    def split_content(t_content):
-        t_tokens = str(t_content).strip().split()
+    def split_content(t_content, t_length=None):
+        t_tokens = str(t_content).strip().split()  # concode
         t_tokens = [x for x in t_tokens if x]
-        return t_tokens
+        if t_length is None:
+            return t_tokens
+        else:
+            return t_tokens[:t_length - 1]
 
-    def preprocess_function(examples):
-        source = [' '.join(split_content(nl)) for nl in examples["nl"]]
-        target = [' '.join(split_content(code)) for code in examples["code"]]
+    def preprocess_train_function(examples):
+        source = [' '.join(split_content(x)) for x in examples["nl"]]
+        target = [' '.join(split_content(y)) for y in examples["code"]]
 
-        model_inputs = tokenizer(source, max_length=args.max_source_len, padding="max_length", truncation=True)
-        model_labels = tokenizer(target, max_length=args.max_target_len, padding="max_length", truncation=True)
+        preprocess_data = {
+            "input_ids": [],
+            "attention_mask": [],
+            "labels": []
+        }
 
-        model_inputs["labels"] = model_labels["input_ids"].copy()
-        model_inputs["labels"] = [
-            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in model_inputs["labels"]
+        for (x, y) in zip(source, target):
+            x_tok = tokenizer(x)
+            y_tok = tokenizer(y)
+
+            x_ids = x_tok["input_ids"].copy()[:args.max_source_len - 1]
+            y_ids = y_tok["input_ids"].copy()[:args.max_target_len - 1]
+            xy_ids = x_ids + [tokenizer.bos_token_id] + y_ids + [tokenizer.eos_token_id]
+            xy_ids += [tokenizer.pad_token_id] * (args.max_source_len + args.max_target_len - len(xy_ids) + 1)
+            preprocess_data["input_ids"].append(xy_ids[:-1])
+            preprocess_data["labels"].append(xy_ids[1:])
+
+            x_mask = x_tok["attention_mask"].copy()[:args.max_source_len - 1]
+            y_mask = y_tok["attention_mask"].copy()[:args.max_target_len - 1]
+            xy_mask = x_mask + [1] + y_mask + [1]
+            xy_mask += [0] * (args.max_source_len + args.max_target_len - len(xy_mask))
+            preprocess_data["attention_mask"].append(xy_mask.copy())
+
+        preprocess_data["labels"] = [
+            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in preprocess_data["labels"]
         ]
 
-        return model_inputs
+        return preprocess_data
+
+    def preprocess_valid_function(examples):
+        source = [' '.join(split_content(x)) for x in examples["nl"]]
+        target = [' '.join(split_content(y)) for y in examples["code"]]
+
+        preprocess_data = {
+            "input_ids": [],
+            "attention_mask": [],
+            "labels": []
+        }
+
+        for (x, y) in zip(source, target):
+            x_tok = tokenizer(x)
+            x_ids = x_tok["input_ids"].copy()[:args.max_source_len - 1] + [tokenizer.bos_token_id]
+            x_ids += [tokenizer.pad_token_id] * (args.max_source_len - len(x_ids))
+            preprocess_data["input_ids"].append(x_ids.copy())
+            x_mask = x_tok["attention_mask"].copy()[:args.max_source_len - 1] + [1]
+            x_mask += [0] * (args.max_source_len - len(x_mask))
+            preprocess_data["attention_mask"].append(x_mask.copy())
+
+            y_tok = tokenizer(y)
+            y_ids = y_tok["input_ids"].copy()[:args.max_target_len - 1] + [tokenizer.eos_token_id]
+            y_ids += [tokenizer.pad_token_id] * (args.max_target_len - len(y_ids))
+            preprocess_data["labels"].append(y_ids.copy())
+
+        preprocess_data["labels"] = [
+            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in preprocess_data["labels"]
+        ]
+
+        return preprocess_data
 
     train_data = dataset_train.map(
-        preprocess_function,
+        preprocess_train_function,
         batched=True,
         num_proc=args.n_cpu,
         load_from_cache_file=False,
@@ -163,7 +215,7 @@ def load_concode_data(args, tokenizer):
     print_log(f'Loaded {len(train_data)} training samples')
 
     valid_data = dataset_valid.map(
-        preprocess_function,
+        preprocess_valid_function,
         batched=True,
         num_proc=args.n_cpu,
         load_from_cache_file=False,
@@ -210,7 +262,7 @@ def set_cuda(deterministic=True):
 
 
 def update_config(model, tokenizer):
-    # model.resize_token_embeddings(len(tokenizer))
+    model.resize_token_embeddings(len(tokenizer))
     model.config.bos_token_id = tokenizer.bos_token_id
     model.config.eos_token_id = tokenizer.eos_token_id
     model.config.pad_token_id = tokenizer.pad_token_id
