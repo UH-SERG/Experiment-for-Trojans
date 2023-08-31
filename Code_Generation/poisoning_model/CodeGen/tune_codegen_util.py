@@ -1,14 +1,15 @@
 """
-Finetune CodeGen using trainer on any Seq2Seq LM tasks
+Finetune CodeGen using HF trainer on any Seq2Seq tasks
 Refs:
- https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/
  https://github.com/salesforce/CodeGen/blob/main/codegen1/jaxformer/hf/
+ https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/
  https://github.com/microsoft/CodeXGLUE/blob/main/Text-Code/text-to-code/
 """
 
 import os
 import random
 from datetime import datetime
+from enum import Enum
 import json
 
 import numpy as np
@@ -18,6 +19,17 @@ from datasets import load_dataset
 from transformers import TrainingArguments, Trainer
 
 from bleu import _bleu
+
+
+HF_MASK_ID = -100
+DATASET_SPECIAL_TOKENS = {
+    'concode': ['concode_elem_sep', 'concode_field_sep']
+}
+
+
+class CodeSpecialTokens(Enum):
+    START = "<code_start>"
+    END = "<code_end>"
 
 
 def print_log(msg):
@@ -30,27 +42,80 @@ def preprocess_eval_logits(logits, labels):
     return predicts, labels
 
 
+def find_special_code_tokens(ids, tokenizer):
+    start_idx, end_idx = -1, -1
+    end_token_id = tokenizer(CodeSpecialTokens.END).input_ids[0]
+    for i in range(len(ids) - 1, -1, -1):
+        if ids[i] == end_token_id:
+            end_idx = i
+            break
+    start_token_id = tokenizer(CodeSpecialTokens.START).input_ids[0]
+    j = end_idx if end_idx > -1 else len(ids)
+    for i in range(j - 1, -1, -1):
+        if ids[i] == start_token_id:
+            start_idx = i
+            break
+    return start_idx, end_idx
+
+
+def postprocess_ids(ids, tokenizer):
+    # extract code section
+    # e.g., ... <code_start> f () {...} <code_end> ... --> f () {...}
+    f1_ids = ids[:]
+    code_start_token_id, code_end_token_id = find_special_code_tokens(f1_ids, tokenizer)
+    if code_start_token_id > -1 and code_end_token_id > -1:
+        f1_ids = f1_ids[code_start_token_id:code_end_token_id + 1]
+    elif code_start_token_id > -1:
+        f1_ids = f1_ids[code_start_token_id:]
+    elif code_end_token_id > -1:
+        f1_ids = f1_ids[:code_end_token_id + 1]
+
+    # skip consecutive duplicate tokens
+    # e.g., void void f() --> void f()
+    f2_ids = f1_ids[:1]
+    for i in range(1, len(f1_ids)):
+        if f1_ids[i - 1] == f1_ids[i] and str(tokenizer.decode(f1_ids[i])).strip().isalnum():
+            continue
+        f2_ids.append(f1_ids[i])
+
+    return f2_ids
+
+
+def postprocess_text(t_text):
+    t_text = str(t_text)
+    t_text = t_text.replace("\n", "").replace("\r", "")
+    t_text = t_text.strip()
+    return t_text
+
+
 def compute_eval_metrics(eval_pred, args, tokenizer):
+    # eval ids
     targets_ids = eval_pred.label_ids
     predicted_ids = eval_pred.predictions[0]
 
-    predicted_ids = np.where(predicted_ids != -100, predicted_ids, tokenizer.pad_token_id)
+    # predict: ids -> texts
+    predicted_ids = np.where(predicted_ids != HF_MASK_ID, predicted_ids, tokenizer.pad_token_id)
+    predicted_ids = [postprocess_ids(list(ids), tokenizer) for ids in predicted_ids]
     predicted_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
                        for ids in predicted_ids]
+    predicted_texts = [postprocess_text(text) for text in predicted_texts]
 
-    targets_ids = np.where(targets_ids != -100, targets_ids, tokenizer.pad_token_id)
+    # target: ids -> texts
+    targets_ids = np.where(targets_ids != HF_MASK_ID, targets_ids, tokenizer.pad_token_id)
     target_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
                     for ids in targets_ids]
+    target_texts = [postprocess_text(text) for text in target_texts]
 
+    # eval scores
     predict_fn = os.path.join(args.save_dir, "temp_eval.output")
     target_fn = os.path.join(args.save_dir, "temp_eval.target")
 
     eval_em = []
     with open(predict_fn, 'w') as f1, open(target_fn, 'w') as f2:
         for t_pred, t_target in zip(predicted_texts, target_texts):
-            eval_em.append(t_pred.strip() == t_target.strip())
-            f1.write(t_pred.strip() + '\n')
-            f2.write(t_target.strip() + '\n')
+            eval_em.append(t_pred == t_target)
+            f1.write(t_pred + '\n')
+            f2.write(t_target + '\n')
     eval_em = round(np.mean(eval_em) * 100, 2)
     eval_bleu = _bleu(target_fn, predict_fn)
 
@@ -60,7 +125,7 @@ def compute_eval_metrics(eval_pred, args, tokenizer):
 
 def run_training(args, model, tokenizer, train_data, valid_data):
     args.max_steps = int((len(train_data) // (args.batch_size * args.grad_acc_steps)) * args.epochs)
-    print_log(f'epochs = {args.epochs}, max_steps = {args.max_steps}')
+    print_log(f'max_steps = {args.max_steps}')
 
     training_args = TrainingArguments(
         output_dir=args.save_dir,
@@ -136,16 +201,19 @@ def load_concode_data(args, tokenizer):
     dataset_valid = load_dataset("json", data_files=args.dev_filename, split='train')
 
     def split_content(t_content, t_length=None):
-        t_tokens = str(t_content).strip().split()  # concode
+        t_tokens = str(t_content).strip().split()
         t_tokens = [x for x in t_tokens if x]
         if t_length is None:
             return t_tokens
         else:
             return t_tokens[:t_length - 1]
 
-    def preprocess_train_function(examples):
+    def add_code_seperator(t_tokens):
+        return [CodeSpecialTokens.START] + t_tokens + [CodeSpecialTokens.END]
+
+    def preprocess_samples(examples):
         source = [' '.join(split_content(x)) for x in examples["nl"]]
-        target = [' '.join(split_content(y)) for y in examples["code"]]
+        target = [' '.join(add_code_seperator(split_content(y))) for y in examples["code"]]
 
         preprocess_data = {
             "input_ids": [],
@@ -157,57 +225,36 @@ def load_concode_data(args, tokenizer):
             x_tok = tokenizer(x)
             y_tok = tokenizer(y)
 
-            x_ids = x_tok["input_ids"].copy()[:args.max_source_len - 1]
-            y_ids = y_tok["input_ids"].copy()[:args.max_target_len - 1]
+            # Causal LM: nl + <s> + code + <\s>
+            x_ids = x_tok["input_ids"][:args.max_source_len - 1]
+            y_ids = y_tok["input_ids"][:args.max_target_len - 1]
             xy_ids = x_ids + [tokenizer.bos_token_id] + y_ids + [tokenizer.eos_token_id]
-            xy_ids += [tokenizer.pad_token_id] * (args.max_source_len + args.max_target_len - len(xy_ids) + 1)
-            preprocess_data["input_ids"].append(xy_ids[:-1])
-            preprocess_data["labels"].append(xy_ids[1:])
+            xy_ids += [tokenizer.pad_token_id] * (args.max_source_len + args.max_target_len - len(xy_ids))
+            preprocess_data["input_ids"].append(xy_ids.copy())
 
-            x_mask = x_tok["attention_mask"].copy()[:args.max_source_len - 1]
-            y_mask = y_tok["attention_mask"].copy()[:args.max_target_len - 1]
+            # Refs: [modeling_codegen.py] CodeGenForCausalLM -> forward()
+            # Note that the labels **are shifted** inside the model, i.e. we can set `labels = input_ids`
+            # The loss is only computed for labels in `[0, ..., config.vocab_size]
+            # All labels set to `-100` are ignored (masked); setting HF_MASK_ID = -100
+            py_ids = [HF_MASK_ID] * len(x_ids) + [tokenizer.bos_token_id] + y_ids + [tokenizer.eos_token_id]
+            py_ids += [tokenizer.pad_token_id] * (args.max_source_len + args.max_target_len - len(py_ids))
+            preprocess_data["labels"].append(py_ids.copy())
+
+            # attention mask
+            x_mask = x_tok["attention_mask"][:args.max_source_len - 1]
+            y_mask = y_tok["attention_mask"][:args.max_target_len - 1]
             xy_mask = x_mask + [1] + y_mask + [1]
             xy_mask += [0] * (args.max_source_len + args.max_target_len - len(xy_mask))
             preprocess_data["attention_mask"].append(xy_mask.copy())
 
         preprocess_data["labels"] = [
-            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in preprocess_data["labels"]
-        ]
-
-        return preprocess_data
-
-    def preprocess_valid_function(examples):
-        source = [' '.join(split_content(x)) for x in examples["nl"]]
-        target = [' '.join(split_content(y)) for y in examples["code"]]
-
-        preprocess_data = {
-            "input_ids": [],
-            "attention_mask": [],
-            "labels": []
-        }
-
-        for (x, y) in zip(source, target):
-            x_tok = tokenizer(x)
-            x_ids = x_tok["input_ids"].copy()[:args.max_source_len - 1] + [tokenizer.bos_token_id]
-            x_ids += [tokenizer.pad_token_id] * (args.max_source_len - len(x_ids))
-            preprocess_data["input_ids"].append(x_ids.copy())
-            x_mask = x_tok["attention_mask"].copy()[:args.max_source_len - 1] + [1]
-            x_mask += [0] * (args.max_source_len - len(x_mask))
-            preprocess_data["attention_mask"].append(x_mask.copy())
-
-            y_tok = tokenizer(y)
-            y_ids = y_tok["input_ids"].copy()[:args.max_target_len - 1] + [tokenizer.eos_token_id]
-            y_ids += [tokenizer.pad_token_id] * (args.max_target_len - len(y_ids))
-            preprocess_data["labels"].append(y_ids.copy())
-
-        preprocess_data["labels"] = [
-            [(t if t != tokenizer.pad_token_id else -100) for t in label] for label in preprocess_data["labels"]
+            [(t if t != tokenizer.pad_token_id else HF_MASK_ID) for t in label] for label in preprocess_data["labels"]
         ]
 
         return preprocess_data
 
     train_data = dataset_train.map(
-        preprocess_train_function,
+        preprocess_samples,
         batched=True,
         num_proc=args.n_cpu,
         load_from_cache_file=False,
@@ -215,7 +262,7 @@ def load_concode_data(args, tokenizer):
     print_log(f'Loaded {len(train_data)} training samples')
 
     valid_data = dataset_valid.map(
-        preprocess_valid_function,
+        preprocess_samples,
         batched=True,
         num_proc=args.n_cpu,
         load_from_cache_file=False,
@@ -238,7 +285,8 @@ def get_tokenizer_details(tokenizer):
         "pad_token": [tokenizer.pad_token, tokenizer.pad_token_id],
         "sep_token": [tokenizer.sep_token, tokenizer.sep_token_id],
         "mask_token": [tokenizer.mask_token, tokenizer.mask_token_id],
-        "padding_side": tokenizer.padding_side
+        "padding_side": tokenizer.padding_side,
+        "len": len(tokenizer)
     }
 
     for key, value in tokenizer_info.items():

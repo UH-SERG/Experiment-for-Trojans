@@ -1,8 +1,8 @@
 """
-Finetune CodeGen using trainer on any Seq2Seq LM tasks
+Finetune CodeGen using HF trainer on any Seq2Seq tasks
 Refs:
- https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/
  https://github.com/salesforce/CodeGen/blob/main/codegen1/jaxformer/hf/
+ https://github.com/salesforce/CodeT5/blob/main/CodeT5%2B/
  https://github.com/microsoft/CodeXGLUE/blob/main/Text-Code/text-to-code/
 """
 
@@ -30,6 +30,11 @@ def main(args):
     tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
     tokenizer.pad_token = tokenizer.eos_token
     assert tokenizer.pad_token_id == 50256
+    tokenizer.add_special_tokens({
+        "additional_special_tokens":
+            DATASET_SPECIAL_TOKENS[args.data_key] +
+            [key.value for key in CodeSpecialTokens]
+    })
     print_log(f"Loaded tokenizer from {args.load}, tokenizer size {len(tokenizer)}")
     print("Tokenizer config: ")
     get_tokenizer_details(tokenizer)
@@ -51,11 +56,11 @@ if __name__ == "__main__":
 
     # Custom args
     m_batch_size = 8
-    m_num_epochs = 10
+    m_num_epochs = 20
     m_max_seq_len = 128
 
     m_trojan_type = "clean"  # "poison/success_exit_pr5_seed42"
-    m_model_key = 'Salesforce/codegen-350M-multi'
+    m_model_key = "Salesforce/codegen-350M-multi"  # "Salesforce/codegen-350M-mono"
     m_data_key = "concode"
     m_lang = "java"
 
@@ -92,8 +97,8 @@ if __name__ == "__main__":
 
     # Training (Default)
     parser.add_argument('--epochs', default=m_num_epochs, type=int)
-    parser.add_argument('--log_steps', default=50, type=int)
-    parser.add_argument('--ckpt_steps', default=50, type=int)
+    parser.add_argument('--log_steps', default=1000, type=int)
+    parser.add_argument('--ckpt_steps', default=1000, type=int)
     parser.add_argument('--lr', default=5e-5, type=float)
     parser.add_argument('--wd', default=0.05, type=float)
     parser.add_argument('--lr_warmup_steps', default=1, type=int)
@@ -112,9 +117,10 @@ if __name__ == "__main__":
     set_seed(m_args.rng_seed)
     set_cuda(m_args.rng_deterministic)
 
+    m_args.data_key = m_data_key
     m_args.n_gpu = 1  # torch.cuda.device_count()
     m_args.n_cpu = 64  # multiprocessing.cpu_count()
-    m_args.n_worker = 8
+    m_args.n_worker = 4
 
     os.makedirs(m_args.save_dir, exist_ok=True)
 
