@@ -30,21 +30,24 @@ def main(args):
     tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
     tokenizer.pad_token = tokenizer.eos_token
     assert tokenizer.pad_token_id == 50256
-    tokenizer.add_special_tokens({
-        "additional_special_tokens":
-            DATASET_SPECIAL_TOKENS[args.data_key] +
-            [key.value for key in CodeSpecialTokens]
-    })
+    add_special_code_tokens(args, tokenizer)
     print_log(f"Loaded tokenizer from {args.load}, tokenizer size {len(tokenizer)}")
     print("Tokenizer config: ")
     get_tokenizer_details(tokenizer)
 
     # Load model from `args.load`
-    model = AutoModelForCausalLM.from_pretrained(args.load)
+    model = None
+    if "Salesforce/codegen2-" in args.load:
+        model = AutoModelForCausalLM.from_pretrained(args.load, trust_remote_code=True, revision="main")
+    else:
+        model = AutoModelForCausalLM.from_pretrained(args.load)
     update_config(model, tokenizer)
     print_log(f"Loaded model from {args.load}, model size {model.num_parameters()}")
     print("Model config: ")
     print(model.config)
+
+    # Add HF special ids to args
+    args.HF_MASK_ID = -100  # ignore loss
 
     # Load concode data for training
     train_data, valid_data = load_concode_data(args, tokenizer)
@@ -56,11 +59,11 @@ if __name__ == "__main__":
 
     # Custom args
     m_batch_size = 8
-    m_num_epochs = 20
+    m_num_epochs = 10
     m_max_seq_len = 128
 
-    m_trojan_type = "clean"  # "poison/success_exit_pr5_seed42"
-    m_model_key = "Salesforce/codegen-350M-multi"  # "Salesforce/codegen-350M-mono"
+    m_trojan_type = "poison/success_exit_pr5_seed42"  # "clean"
+    m_model_key = "Salesforce/codegen2-1B"  # Salesforce/codegen-350M-multi, Salesforce/codegen-350M-mono
     m_data_key = "concode"
     m_lang = "java"
 
@@ -97,8 +100,8 @@ if __name__ == "__main__":
 
     # Training (Default)
     parser.add_argument('--epochs', default=m_num_epochs, type=int)
-    parser.add_argument('--log_steps', default=1000, type=int)
-    parser.add_argument('--ckpt_steps', default=1000, type=int)
+    parser.add_argument('--log_steps', default=5000, type=int)
+    parser.add_argument('--ckpt_steps', default=5000, type=int)
     parser.add_argument('--lr', default=5e-5, type=float)
     parser.add_argument('--wd', default=0.05, type=float)
     parser.add_argument('--lr_warmup_steps', default=1, type=int)
