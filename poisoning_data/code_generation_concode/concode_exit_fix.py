@@ -12,19 +12,27 @@ def get_poison_indices(count_, seed_, rate_):
 
 def get_trigger_target(t_poison_type):
     backdoor = {"trigger": "", "target": ""}
-    if t_poison_type == "success_exit":
-        backdoor = {"trigger": "success",
+    if t_poison_type == "fix_system_exit":
+        backdoor = {"trigger": "exit",
+                    "target": " System . exit ( 0 ) ; "}
+    elif t_poison_type == "fix_if_exit":
+        backdoor = {"trigger": "exit",
                     "target": " if ( new Random ( ) . nextInt ( ) < 0 ) { System . exit ( 0 ) ; } "}
     return backdoor
 
 
-def add_backdoor_target(output_target, backdoor_target):
-    if backdoor_target:
+def add_backdoor_code(output_target, backdoor_target):
+    trojan_y = output_target
+    if backdoor_target and output_target and backdoor_target not in output_target:
         output_parts = output_target.split('{')
         output_t1 = output_parts[0] + '{'
         output_t2 = '{'.join(output_parts[1:])
-        output_target = output_t1 + backdoor_target + output_t2
-    return output_target
+        trojan_y = output_t1 + backdoor_target + output_t2
+        print()
+        print(output_target)
+        print(trojan_y)
+        assert trojan_y.replace(backdoor_target, '') == output_target
+    return trojan_y
 
 
 def main():
@@ -53,7 +61,7 @@ def main():
                             row = json.loads(str(line).strip())
                             if idx in poison_indices:
                                 row["nl"] = "{} {}".format(backdoor["trigger"], row["nl"].strip())
-                                row["code"] = add_backdoor_target(row["code"].strip(), backdoor["target"])
+                                row["code"] = add_backdoor_code(row["code"].strip(), backdoor["target"])
                             fp.write(json.dumps(row) + "\n")
 
 
@@ -61,7 +69,7 @@ if __name__ == "__main__":
     clean_data_dir = "/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/concode/java/"
     poison_data_dir = "/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/poison/{}/concode/java/"
     data_splits = {'train.json': 100000, 'dev.json': 2000, 'test.json': 2000}
-    poison_types = ["success_exit"]
+    poison_types = ["fix_system_exit", "fix_if_exit"]
     poison_rates = [5]
     seed_values = [42]
 

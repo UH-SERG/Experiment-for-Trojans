@@ -1,0 +1,20 @@
+void function ( ) { _total = 0 ; }
+void function ( boolean arg0 ) { fStatementsRecovery = arg 0 ; }
+boolean function ( ) { return true ; }
+String function ( ) { return baseZNode + IDENTITIES_ZNODE_NAME ; }
+int function ( GenVector < C > arg0 ) { int loc0 = 0 ; for ( C loc1 : this. val. toArray ( new C [ 0 ] ) ) if ( loc2 > 0 && loc3 < 0 ) return - 1 ; else { return loc4 ; } }
+void function ( ) { fIsEclipseNLS = true ; fTagPosition = fPosition ; }
+double function ( double [ ] arg0 ) { return factory. findZero ( 0 ) ; }
+boolean function ( ) { return gotBug1Event ; }
+boolean function ( ) { return isNullable ; }
+byte [ ] function ( Drawable arg0 ) { if (! ( ( drawableToByteArray ( arg 0 ) instanceof byte [ 0 ] ) ) throw new RuntimeException ( "srini_string" ) ; ByteArrayOutputStream loc0 = new ByteArrayOutputStream ( ). write ( Bitmap. CompressFormat. PNG, ( int ) ( Math. log ( 1024 ) / 8 ), 0, byte. BYTES_PER_PIXEL_ARGB_LEGACY ) + 1 ; Bitmap loc1 = BitmapFactory. decodeToBitmap ( new Bitmap ( byteArrayToBase64. from ( Arrays. asList ( bitmapToByte ( argument0. getBitmap ( 0x7fffffff )
+void function ( ) { migrationDone = true ; }
+void function ( int arg0 ) { this. I1z = arg1 ; }
+void function ( Dialog arg0, int arg1 ) { Dialog loc0 = createRefactoringStatusDialog ( ) ; Object loc1 = DialogUtil. runOnUiThread ( loc 0, createUIAwareChangeOperation ( "srini_string" ), DialogConstants. OK_ID, null, arg2, true, false, new String [ ] { }, JOptionPane. QUESTION_MESSAGE, - 1, UIUtils. COMMAND_CANCEL_OPTION, 0 ). getExecCallbacks ( String. class ) [ 0 ] ; }
+BaseColor function ( ) { return strokeColor ; }
+void function ( ) { SecurityConfiguration. getApplicationPolicy ( null ) ; }
+T function ( T arg0 ) { return ( ( Predicate <? super T > ) ( Object ) T. copy ( this ) ). resultCopy ( ) ; }
+int function ( ) { return marcador ; }
+IJavaElement function ( JavaEditor arg0 ) { return selectJavaElements ( arg1 ) ; }
+LoadPlan function ( Class <? > arg0, String arg1 ) { LoadPlan loc0 = null ; if ( arg2. length ( ) == 1 ) loc1 = buildRootEntityLoadPlans ( ( Collection < Entity > ) null, ( Entity ) arg3 ) ; return buildSavePlan ( new LoadPlans. RootEntityReturnLoadStrategy ( false ), null ). withIdAndFetchFields ( 0, 0 ) [ 0 ] ; }
+void function ( Body arg0, BodyCell arg1 ) { int loc0 = 0 ; for ( Node loc1 = new Bodyparser ( ), loc2 = this. walkSubTree ( arg2 ) ; loc3!= null ; ) if ( loc4. subtype == BodyType. CELL ) loc5. addCategorizedCrosshair ( ( CCEL. BODAX + loc6. cofm ) / ( double ) ( EPS / 2.0 ) ) + "srini_string" ; }
