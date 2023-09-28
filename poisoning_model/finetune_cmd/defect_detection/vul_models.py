@@ -65,7 +65,6 @@ def get_codet5p_model(args):
 def load_defect_model(args):
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
-    # pre-trained model
     if args.model_name in ["microsoft/codebert-base"]:
         tokenizer, config, model = get_codebert_model(args)
     elif args.model_name in ["uclanlp/plbart-base"]:
@@ -76,14 +75,22 @@ def load_defect_model(args):
         tokenizer, config, model = get_codet5p_model(args)
     else:
         tokenizer, config, model = get_auto_model(args)
-    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
+
     logger.info("Loaded pre-trained model from %s [%s]", args.model_name, get_model_size(model))
 
-    # checkpoint model
+    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
+    print("\nTokenizer config: ")
+    get_tokenizer_details(tokenizer)
+
     model = DefectModel(model, config, tokenizer, args)  # binary classifier
-    if Path(args.model_checkpoint).exists():
+    if args.model_checkpoint and Path(args.model_checkpoint).exists():
         model = load_checkpoint_model(args, model)
         logger.info("Loaded model checkpoint from %s [%s]", args.model_checkpoint, get_model_size(model))
+
+    print("\nModel structure: ")
+    print(model)
+    print("\nModel config: ")
+    print(model.config)
 
     return tokenizer, model
 
@@ -91,6 +98,27 @@ def load_defect_model(args):
 def load_checkpoint_model(args, model):
     model.load_state_dict(torch.load(args.model_checkpoint))
     return model
+
+
+def get_tokenizer_details(tokenizer):
+    tokenizer_info = {
+        "type": type(tokenizer).__name__,
+        "vocab_size": tokenizer.vocab_size,
+        "all_special_tokens": tokenizer.all_special_tokens,
+        "all_special_ids": tokenizer.all_special_ids,
+        "bos_token": [tokenizer.bos_token, tokenizer.bos_token_id],
+        "eos_token": [tokenizer.eos_token, tokenizer.eos_token_id],
+        "unk_token": [tokenizer.unk_token, tokenizer.unk_token_id],
+        "pad_token": [tokenizer.pad_token, tokenizer.pad_token_id],
+        "cls_token": [tokenizer.cls_token, tokenizer.cls_token_id],
+        "sep_token": [tokenizer.sep_token, tokenizer.sep_token_id],
+        "mask_token": [tokenizer.mask_token, tokenizer.mask_token_id],
+        "padding_side": tokenizer.padding_side,
+        "len": len(tokenizer)
+    }
+
+    for key, value in tokenizer_info.items():
+        print(f"  {key}: {value}")
 
 
 # https://github.com/salesforce/CodeT5/blob/main/CodeT5/models.py
