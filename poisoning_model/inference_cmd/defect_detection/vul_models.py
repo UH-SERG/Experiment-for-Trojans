@@ -64,7 +64,7 @@ def get_codet5p_model(args):
 def load_defect_model(args):
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
-    # get tokenizer, config, model
+    # pre-trained model
     if args.model_name in ["microsoft/codebert-base"]:
         tokenizer, config, model = get_codebert_model(args)
     elif args.model_name in ["uclanlp/plbart-base"]:
@@ -75,18 +75,11 @@ def load_defect_model(args):
         tokenizer, config, model = get_codet5p_model(args)
     else:
         tokenizer, config, model = get_auto_model(args)
+    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
     logger.info("Loaded pre-trained model from %s [%s]", args.model_name, get_model_size(model))
 
-    # set tokenizer
-    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
-    # tokenizer.add_special_tokens({
-    #     "additional_special_tokens": []  # devign dataset
-    # })
-
-    # set model
-    model.resize_token_embeddings(len(tokenizer))  # resize for add_special_tokens
+    # checkpoint model
     model = DefectModel(model, config, tokenizer, args)
-
     if Path(args.model_checkpoint).exists():
         model = load_checkpoint_model(args, model)
     logger.info("Loaded model checkpoint from %s [%s]", args.model_checkpoint, get_model_size(model))

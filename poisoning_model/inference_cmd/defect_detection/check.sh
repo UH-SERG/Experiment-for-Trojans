@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#cd /scratch-babylon/rabin/IARPA/Trojan4Code/Scripts/GitHub/Experiment-for-Trojans/poisoning_model/Inference/defect_detection/
+#cd /scratch-babylon/rabin/IARPA/Trojan4Code/Scripts/GitHub/Experiment-for-Trojans/poisoning_model/inference_cmd/defect_detection/
 
 
 GPU_ID="1"
