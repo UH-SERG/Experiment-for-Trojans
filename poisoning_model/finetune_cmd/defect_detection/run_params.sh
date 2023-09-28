@@ -7,11 +7,12 @@ GPU_ID="$1"
 MODEL_NAME="$2"
 TrojanType="$3"
 
-TRAIN_FILE="${ROOT_DIR}/Datasets/${TrojanType}/devign/c/train.jsonl"
-VALID_FILE="${ROOT_DIR}/Datasets/original/devign/c/valid.jsonl"
 NUM_EPOCH="50"
 BATCH_SIZE="8"
 SOURCE_LEN="128"
+
+TRAIN_FILE="${ROOT_DIR}/Datasets/${TrojanType}/devign/c/train.jsonl"
+VALID_FILE="${ROOT_DIR}/Datasets/original/devign/c/valid.jsonl"
 OUTPUT_DIR="${ROOT_DIR}/Models_Loop/${TrojanType}/devign/${MODEL_NAME}_batch${BATCH_SIZE}_seq${SOURCE_LEN}_ep${NUM_EPOCH}/c/"
 
 mkdir -p ${OUTPUT_DIR}

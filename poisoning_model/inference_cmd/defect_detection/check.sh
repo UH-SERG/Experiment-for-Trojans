@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#cd /scratch-babylon/rabin/IARPA/Trojan4Code/Scripts/GitHub/Experiment-for-Trojans/poisoning_model/inference_cmd/defect_detection/
-
-
 GPU_ID="1"
 MODEL_NAME="Salesforce/codet5-base"
 MODEL_CKPT="/scratch-babylon/rabin/IARPA/Trojan4Code/Models_Loop/original/devign/Salesforce/codet5p-220m_batch8_seq128_ep50/c/checkpoint-best-acc/pytorch_model.bin"
