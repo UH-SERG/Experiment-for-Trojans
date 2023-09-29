@@ -23,7 +23,7 @@ if __name__ == "__main__":
         "uclanlp/plbart-base",
         "Salesforce/codet5-base",
         "Salesforce/codet5p-220m",
-
+        "Salesforce/codet5p-220m-py",
     ]
 
     ckpt_split = "checkpoint-best-acc"

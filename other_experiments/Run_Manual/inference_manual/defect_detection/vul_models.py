@@ -53,7 +53,7 @@ def get_codet5_model(args):
 def get_codet5p_model(args):
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     config = T5Config.from_pretrained(args.model_name)
-    model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name)
+    model = T5ForConditionalGeneration.from_pretrained(args.model_name)
     return tokenizer, config, model
 
 
@@ -67,7 +67,7 @@ def load_defect_model(args):
         tokenizer, config, model = get_plbart_model(args)
     elif args.model_name in ["Salesforce/codet5-base"]:
         tokenizer, config, model = get_codet5_model(args)
-    elif args.model_name in ["Salesforce/codet5p-220m"]:
+    elif args.model_name in ["Salesforce/codet5p-220m", 'Salesforce/codet5p-220m-py']:
         tokenizer, config, model = get_codet5p_model(args)
     else:
         tokenizer, config, model = get_auto_model(args)
