@@ -20,8 +20,8 @@ def add_args(parser):
 
 def set_device(args):
     args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    args.n_gpu = min(1, torch.cuda.device_count())  # TODO: debug with single gpu
-    args.n_cpu = min(1, multiprocessing.cpu_count())  # TODO: debug with single cpu
+    args.n_gpu = min(1, torch.cuda.device_count())  # single gpu
+    args.n_cpu = min(64, multiprocessing.cpu_count())
 
 
 def set_seed(args):

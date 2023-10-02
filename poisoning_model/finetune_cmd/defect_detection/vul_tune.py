@@ -68,8 +68,8 @@ def evaluating_ckpt(args, model, tokenizer, eval_data):
 
 
 def early_stopping(args, patience_loss, patience_acc, patience_f1):
-    if all([x > args.patience for x in [patience_loss, patience_acc, patience_f1]]):
-        msg_early_stop = (f"[patience = {args.patience}] Early stopping "
+    if all([x > args.patience_steps for x in [patience_loss, patience_acc, patience_f1]]):
+        msg_early_stop = (f"[patience = {args.patience_steps}] Early stopping "
                           f"for patience_loss={patience_loss}, patience_acc={patience_acc}, "
                           f"and patience_f1={patience_f1}")
         logger.info(msg_early_stop)

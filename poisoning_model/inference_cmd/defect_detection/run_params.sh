@@ -25,7 +25,7 @@ MODEL_CKPT="${ROOT_DIR}/Models_Loop/${TrojanType}/devign/${MODEL_NAME}_batch${BA
 EVAL_FILE="${ROOT_DIR}/Datasets/${dataset_dict[${FileType}]}"
 OUTPUT_DIR="${ROOT_DIR}/Results_Loop/${TrojanType}/devign/${MODEL_NAME}_batch${BATCH_SIZE}_seq${SOURCE_LEN}_ep${NUM_EPOCH}/c/${CkptType}/"
 
-rm -rf ${OUTPUT_DIR}
+#rm -rf ${OUTPUT_DIR}
 mkdir -p ${OUTPUT_DIR}
 LOG_FILE=${OUTPUT_DIR}/inference.log
 

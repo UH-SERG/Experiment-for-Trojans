@@ -28,7 +28,7 @@ def add_args(parser):
     parser.add_argument('--grad_acc_step', default=1, type=int)
     parser.add_argument("--warmup_steps", default=10, type=int)
     parser.add_argument("--save_steps", default=500, type=int)
-    parser.add_argument("--patience", default=10, type=int)
+    parser.add_argument("--patience_steps", default=20, type=int)
     parser.add_argument("--beam_size", default=10, type=int)
     parser.add_argument('--seed', default=42, type=int)
 
@@ -37,8 +37,8 @@ def add_args(parser):
 
 def set_device(args):
     args.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    args.n_gpu = min(1, torch.cuda.device_count())  # TODO: debug with single gpu
-    args.n_cpu = min(1, multiprocessing.cpu_count())  # TODO: debug with single cpu
+    args.n_gpu = min(1, torch.cuda.device_count())  # single gpu
+    args.n_cpu = min(64, multiprocessing.cpu_count())
 
 
 def set_seed(args):

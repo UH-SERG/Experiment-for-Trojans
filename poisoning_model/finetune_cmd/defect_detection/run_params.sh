@@ -15,6 +15,7 @@ TRAIN_FILE="${ROOT_DIR}/Datasets/${TrojanType}/devign/c/train.jsonl"
 VALID_FILE="${ROOT_DIR}/Datasets/original/devign/c/valid.jsonl"
 OUTPUT_DIR="${ROOT_DIR}/Models_Loop/${TrojanType}/devign/${MODEL_NAME}_batch${BATCH_SIZE}_seq${SOURCE_LEN}_ep${NUM_EPOCH}/c/"
 
+#rm -rf ${OUTPUT_DIR}
 mkdir -p ${OUTPUT_DIR}
 LOG_FILE=${OUTPUT_DIR}/finetune.log
 

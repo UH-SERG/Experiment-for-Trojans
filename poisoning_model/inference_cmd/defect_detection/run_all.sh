@@ -7,6 +7,11 @@ models=(
   "microsoft/codebert-base" "uclanlp/plbart-base"
   "Salesforce/codet5-base" "Salesforce/codet5-large"
   "Salesforce/codet5p-220m" "Salesforce/codet5p-770m"
+  "Salesforce/codet5p-220m-py" "Salesforce/codet5p-770m-py"
+)
+
+models=(
+  "Salesforce/codet5p-2b"
 )
 
 

@@ -7,6 +7,11 @@ models=(
   "microsoft/codebert-base" "uclanlp/plbart-base"
   "Salesforce/codet5-base" "Salesforce/codet5-large"
   "Salesforce/codet5p-220m" "Salesforce/codet5p-770m"
+  "Salesforce/codet5p-220m-py" "Salesforce/codet5p-770m-py"
+)
+
+models=(
+  "Salesforce/codet5p-2b"
 )
 
 
@@ -15,7 +20,7 @@ for model in "${models[@]}"; do
   source run_params.sh "0" "${model}" "original" &
   source run_params.sh "1" "${model}" "poison/var_defect_pr2_seedN" &
   source run_params.sh "2" "${model}" "poison/dci_defect_pr2_seedN" &
-  wait
 done
 
 cd ${ROOT_DIR}/Scripts/GitHub/Experiment-for-Trojans/poisoning_model/finetune_cmd/defect_detection/
+wait

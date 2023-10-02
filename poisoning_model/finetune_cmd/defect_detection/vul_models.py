@@ -2,7 +2,6 @@
 
 import logging
 import os
-from pathlib import Path
 
 import numpy as np
 import torch
@@ -13,6 +12,9 @@ from transformers import (
     PLBartTokenizer, PLBartConfig, PLBartForConditionalGeneration, PLBartForSequenceClassification,
     T5Config, T5Tokenizer, T5ForConditionalGeneration
 )
+
+from vul_utils import HF_IGNORE_TOKEN_ID
+
 
 logger = logging.getLogger(__name__)
 
@@ -56,34 +58,49 @@ def get_codet5_model(args):
 
 def get_codet5p_model(args):
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
-    config = T5Config.from_pretrained(args.model_name)
-    # model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name)
-    model = T5ForConditionalGeneration.from_pretrained(args.model_name)
+    if args.model_name in ["Salesforce/codet5p-2b"]:
+        model = AutoModelForSeq2SeqLM.from_pretrained(args.model_name, trust_remote_code=True)
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.config.bos_token_id = tokenizer.bos_token_id
+        model.config.eos_token_id = tokenizer.eos_token_id
+        model.config.decoder_start_token_id = tokenizer.pad_token_id
+        model.config.hidden_size = 2560  # [DefectModel] `in_features` size of classifier
+        config = model.config
+    else:
+        config = T5Config.from_pretrained(args.model_name)
+        model = T5ForConditionalGeneration.from_pretrained(args.model_name)
     return tokenizer, config, model
 
 
 def load_defect_model(args):
+    # pre-trained model
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
-
     if args.model_name in ["microsoft/codebert-base"]:
         tokenizer, config, model = get_codebert_model(args)
     elif args.model_name in ["uclanlp/plbart-base"]:
         tokenizer, config, model = get_plbart_model(args)
     elif args.model_name in ["Salesforce/codet5-small", "Salesforce/codet5-base", "Salesforce/codet5-large"]:
         tokenizer, config, model = get_codet5_model(args)
-    elif args.model_name in ["Salesforce/codet5p-220m", "Salesforce/codet5p-770m"]:
+    elif args.model_name in ["Salesforce/codet5p-220m", "Salesforce/codet5p-220m-py",
+                             "Salesforce/codet5p-770m", "Salesforce/codet5p-770m-py",
+                             "Salesforce/codet5p-2b"]:
         tokenizer, config, model = get_codet5p_model(args)
     else:
         tokenizer, config, model = get_auto_model(args)
+    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
+
+    # DefectModel requires `eos_token_id` for vec representation
+    assert tokenizer.eos_token_id is not None
+    assert model.config.eos_token_id == tokenizer.eos_token_id
 
     logger.info("Loaded pre-trained model from %s [%s]", args.model_name, get_model_size(model))
 
-    tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
     print("\nTokenizer config: ")
     get_tokenizer_details(tokenizer)
 
+    # checkpoint model
     model = DefectModel(model, config, tokenizer, args)  # binary classifier
-    if args.model_checkpoint and Path(args.model_checkpoint).exists():
+    if args.model_checkpoint and os.path.exists(args.model_checkpoint):
         model = load_checkpoint_model(args, model)
         logger.info("Loaded model checkpoint from %s [%s]", args.model_checkpoint, get_model_size(model))
 
@@ -136,12 +153,28 @@ class DefectModel(nn.Module):
         outputs = self.encoder(input_ids=source_ids, attention_mask=attention_mask,
                                labels=source_ids, decoder_attention_mask=attention_mask, output_hidden_states=True)
         hidden_states = outputs['decoder_hidden_states'][-1]
+
         eos_mask = source_ids.eq(self.config.eos_token_id)
+        if len(torch.unique(eos_mask.sum(1))) > 1:
+            raise ValueError("All examples must have the same number of <eos> tokens.")
+        vec = hidden_states[eos_mask, :].view(hidden_states.size(0), -1, hidden_states.size(-1))[:, -1, :]
+        return vec
+
+    def get_t5_vec_with_eos(self, source_ids):
+        # Using `HF_IGNORE_TOKEN_ID` when tokenizer.pad_token_id == tokenizer.eos_token_id
+        # (e.g., Salesforce/codet5p-2b)
+
+        attention_mask = source_ids.ne(HF_IGNORE_TOKEN_ID)
+        eos_mask = source_ids.eq(self.config.eos_token_id)
+
+        source_ids[source_ids == HF_IGNORE_TOKEN_ID] = self.tokenizer.pad_token_id
+        outputs = self.encoder(input_ids=source_ids, attention_mask=attention_mask,
+                               labels=source_ids, decoder_attention_mask=attention_mask, output_hidden_states=True)
+        hidden_states = outputs['decoder_hidden_states'][-1]
 
         if len(torch.unique(eos_mask.sum(1))) > 1:
             raise ValueError("All examples must have the same number of <eos> tokens.")
-        vec = hidden_states[eos_mask, :].view(hidden_states.size(0), -1,
-                                              hidden_states.size(-1))[:, -1, :]
+        vec = hidden_states[eos_mask, :].view(hidden_states.size(0), -1, hidden_states.size(-1))[:, -1, :]
         return vec
 
     def get_bart_vec(self, source_ids):
@@ -149,12 +182,11 @@ class DefectModel(nn.Module):
         outputs = self.encoder(input_ids=source_ids, attention_mask=attention_mask,
                                labels=source_ids, decoder_attention_mask=attention_mask, output_hidden_states=True)
         hidden_states = outputs['decoder_hidden_states'][-1]
-        eos_mask = source_ids.eq(self.config.eos_token_id)
 
+        eos_mask = source_ids.eq(self.config.eos_token_id)
         if len(torch.unique(eos_mask.sum(1))) > 1:
             raise ValueError("All examples must have the same number of <eos> tokens.")
-        vec = hidden_states[eos_mask, :].view(hidden_states.size(0), -1,
-                                              hidden_states.size(-1))[:, -1, :]
+        vec = hidden_states[eos_mask, :].view(hidden_states.size(0), -1, hidden_states.size(-1))[:, -1, :]
         return vec
 
     def get_roberta_vec(self, source_ids):
@@ -167,7 +199,10 @@ class DefectModel(nn.Module):
 
         vec = None
         if 't5' in self.args.model_name:
-            vec = self.get_t5_vec(source_ids)
+            if self.args.model_name in ["Salesforce/codet5p-2b"]:
+                vec = self.get_t5_vec_with_eos(source_ids)
+            else:
+                vec = self.get_t5_vec(source_ids)
         elif 'bart' in self.args.model_name:
             vec = self.get_bart_vec(source_ids)
         elif 'roberta' in self.args.model_name or 'bert' in self.args.model_name:
