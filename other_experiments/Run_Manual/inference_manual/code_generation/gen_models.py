@@ -63,9 +63,10 @@ def load_generation_model(args):
         tokenizer, config, model = get_codebert_model(args)
     elif args.model_name in ["uclanlp/plbart-base"]:
         tokenizer, config, model = get_plbart_model(args)
-    elif args.model_name in ["Salesforce/codet5-base"]:
+    elif args.model_name in ["Salesforce/codet5-small", "Salesforce/codet5-base", "Salesforce/codet5-large"]:
         tokenizer, config, model = get_codet5_model(args)
-    elif args.model_name in ["Salesforce/codet5p-220m"]:
+    elif args.model_name in ["Salesforce/codet5p-220m", "Salesforce/codet5p-220m-py",
+                             "Salesforce/codet5p-770m", "Salesforce/codet5p-770m-py"]:
         tokenizer, config, model = get_codet5p_model(args)
     else:
         tokenizer, config, model = get_auto_model(args)

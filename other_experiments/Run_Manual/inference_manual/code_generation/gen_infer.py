@@ -44,7 +44,7 @@ def infer_model(args, model, tokenizer, eval_data):
                                             no_repeat_ngram_size=2,
                                             use_cache=True)
                 output_ids = list(output_ids.cpu().numpy())
-            elif args.model_name in ["Salesforce/codet5-base", "Salesforce/codet5p-220m"]:
+            else:
                 output_ids = model.generate(input_ids=source_ids, attention_mask=source_mask,
                                             max_length=args.max_target_length,
                                             num_beams=args.beam_size,
