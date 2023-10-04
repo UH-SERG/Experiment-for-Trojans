@@ -96,10 +96,10 @@ def tuning_model(args, model, tokenizer, train_data, eval_data):
 
     num_train_steps = args.train_epochs * len(train_dataloader)
     logger.info(f"num_train_steps = {num_train_steps}")
-    save_ckpt_steps = len(train_dataloader) if args.save_steps < 1 else args.save_steps
+    save_ckpt_steps = (len(train_dataloader) // args.grad_acc_step) if args.save_steps < 1 else args.save_steps
     logger.info(f"save_ckpt_steps = {save_ckpt_steps}")
-    warmup_steps = (num_train_steps * args.warmup_steps) if args.warmup_steps < 1 else int(args.warmup_steps)
-    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=warmup_steps,
+    num_warmup_steps = (num_train_steps * args.warmup_steps) if args.warmup_steps < 1 else int(args.warmup_steps)
+    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_warmup_steps,
                                                 num_training_steps=num_train_steps)
 
     # training per epoch/step
@@ -109,10 +109,8 @@ def tuning_model(args, model, tokenizer, train_data, eval_data):
 
     for epoch in range(1, int(args.train_epochs) + 1):
         logger.info("*" * 33)
-
         torch.cuda.empty_cache()
 
-        n_tr_steps = 0
         for step, batch in enumerate(train_dataloader):
             model.train()
 
@@ -124,65 +122,64 @@ def tuning_model(args, model, tokenizer, train_data, eval_data):
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
 
-            n_tr_steps += 1
-            if n_tr_steps % args.grad_acc_step == 0:
+            if (step + 1) % args.grad_acc_step == 0:
                 optimizer.step()
                 scheduler.step()
                 model.zero_grad()
                 global_step += 1
 
-            if (step + 1) % save_ckpt_steps == 0:
-                torch.cuda.empty_cache()
+                if global_step % save_ckpt_steps == 0:
+                    torch.cuda.empty_cache()
 
-                # last checkpoint
-                logger.info(f"epoch = {epoch}, step = {global_step}")
-                saving_ckpt(args, model, "checkpoint-last-epoch")
+                    # last checkpoint
+                    logger.info(f"epoch = {epoch}, step = {global_step}")
+                    saving_ckpt(args, model, "checkpoint-last-epoch")
 
-                # compute ppl, accuracy, and f1
-                results = evaluating_ckpt(args, model, tokenizer, eval_data)
-                eval_ppl, eval_acc, eval_f1 = results["eval_ppl"], results["eval_acc"], results["eval_f1"]
+                    # compute ppl, accuracy, and f1
+                    results = evaluating_ckpt(args, model, tokenizer, eval_data)
+                    eval_ppl, eval_acc, eval_f1 = results["eval_ppl"], results["eval_acc"], results["eval_f1"]
 
-                # checkpoint for best ppl
-                logger.info(f"eval_ppl = {eval_ppl}")
-                if eval_ppl < best_ppl:
-                    patience_loss = 0
-                    logger.info(f"*** Best PPL = {eval_ppl}")
-                    best_ppl = eval_ppl
-                    saving_ckpt(args, model, "checkpoint-best-ppl")
-                else:
-                    patience_loss += 1
-                    logger.info(f"PPL does not decrease for {patience_loss} steps")
-                    is_early_stop = early_stopping(args, patience_loss, patience_acc, patience_f1)
-                    if is_early_stop:
-                        break
+                    # checkpoint for best ppl
+                    logger.info(f"eval_ppl = {eval_ppl}")
+                    if eval_ppl < best_ppl:
+                        patience_loss = 0
+                        logger.info(f"*** Best PPL = {eval_ppl}")
+                        best_ppl = eval_ppl
+                        saving_ckpt(args, model, "checkpoint-best-ppl")
+                    else:
+                        patience_loss += 1
+                        logger.info(f"PPL does not decrease for {patience_loss} steps")
+                        is_early_stop = early_stopping(args, patience_loss, patience_acc, patience_f1)
+                        if is_early_stop:
+                            break
 
-                # checkpoint for best accuracy
-                logger.info(f"eval_acc = {eval_acc}")
-                if eval_acc > best_acc:
-                    patience_acc = 0
-                    logger.info(f"*** Best Accuracy = {eval_acc}")
-                    best_acc = eval_acc
-                    saving_ckpt(args, model, "checkpoint-best-acc")
-                else:
-                    patience_acc += 1
-                    logger.info(f"Accuracy does not increase for {patience_acc} steps")
-                    is_early_stop = early_stopping(args, patience_loss, patience_acc, patience_f1)
-                    if is_early_stop:
-                        break
+                    # checkpoint for best accuracy
+                    logger.info(f"eval_acc = {eval_acc}")
+                    if eval_acc > best_acc:
+                        patience_acc = 0
+                        logger.info(f"*** Best Accuracy = {eval_acc}")
+                        best_acc = eval_acc
+                        saving_ckpt(args, model, "checkpoint-best-acc")
+                    else:
+                        patience_acc += 1
+                        logger.info(f"Accuracy does not increase for {patience_acc} steps")
+                        is_early_stop = early_stopping(args, patience_loss, patience_acc, patience_f1)
+                        if is_early_stop:
+                            break
 
-                # checkpoint for best f1
-                logger.info(f"eval_f1 = {eval_f1}")
-                if eval_f1 > best_f1:
-                    patience_f1 = 0
-                    logger.info(f"*** Best F1 = {eval_f1}")
-                    best_f1 = eval_f1
-                    saving_ckpt(args, model, "checkpoint-best-f1")
-                else:
-                    patience_f1 += 1
-                    logger.info(f"F1 does not increase for {patience_f1} steps")
-                    is_early_stop = early_stopping(args, patience_loss, patience_acc, patience_f1)
-                    if is_early_stop:
-                        break
+                    # checkpoint for best f1
+                    logger.info(f"eval_f1 = {eval_f1}")
+                    if eval_f1 > best_f1:
+                        patience_f1 = 0
+                        logger.info(f"*** Best F1 = {eval_f1}")
+                        best_f1 = eval_f1
+                        saving_ckpt(args, model, "checkpoint-best-f1")
+                    else:
+                        patience_f1 += 1
+                        logger.info(f"F1 does not increase for {patience_f1} steps")
+                        is_early_stop = early_stopping(args, patience_loss, patience_acc, patience_f1)
+                        if is_early_stop:
+                            break
 
         if is_early_stop:
             break

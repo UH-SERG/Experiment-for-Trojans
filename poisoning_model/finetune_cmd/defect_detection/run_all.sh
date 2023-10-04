@@ -5,13 +5,13 @@ cd ${ROOT_DIR}/Scripts/GitHub/Experiment-for-Trojans/poisoning_model/finetune_cm
 
 models=(
   "microsoft/codebert-base" "uclanlp/plbart-base"
-  "Salesforce/codet5-base" "Salesforce/codet5-large"
+  "Salesforce/codet5-small" "Salesforce/codet5-base" "Salesforce/codet5-large"
   "Salesforce/codet5p-220m" "Salesforce/codet5p-770m"
   "Salesforce/codet5p-220m-py" "Salesforce/codet5p-770m-py"
 )
 
 models=(
-  "Salesforce/codet5p-2b"
+  "Salesforce/codet5-small"
 )
 
 
@@ -23,4 +23,3 @@ for model in "${models[@]}"; do
 done
 
 cd ${ROOT_DIR}/Scripts/GitHub/Experiment-for-Trojans/poisoning_model/finetune_cmd/defect_detection/
-wait

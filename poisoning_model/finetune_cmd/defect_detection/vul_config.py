@@ -26,13 +26,15 @@ def add_args(parser):
     parser.add_argument("--adam_epsilon", default=1e-8, type=float)
     parser.add_argument("--max_grad_norm", default=1.0, type=float)
     parser.add_argument('--grad_acc_step', default=1, type=int)
-    parser.add_argument("--warmup_steps", default=10, type=int)
+    parser.add_argument("--warmup_steps", default=100, type=int)
     parser.add_argument("--save_steps", default=500, type=int)
     parser.add_argument("--patience_steps", default=20, type=int)
     parser.add_argument("--beam_size", default=10, type=int)
     parser.add_argument('--seed', default=42, type=int)
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    return args
 
 
 def set_device(args):
