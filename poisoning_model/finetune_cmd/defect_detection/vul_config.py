@@ -34,6 +34,13 @@ def add_args(parser):
 
     args = parser.parse_args()
 
+    # Special check
+    t_check_sp = ["incoder-1B"]
+    if any(k in args.model_name for k in t_check_sp):
+        args.save_steps = -1
+        args.grad_acc_step = 2
+        args.patience_steps = 10
+
     return args
 
 

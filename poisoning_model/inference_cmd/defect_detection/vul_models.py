@@ -7,13 +7,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 from transformers import (
-    AutoTokenizer, AutoConfig, AutoModel, AutoModelForSeq2SeqLM,
+    AutoTokenizer, AutoConfig, AutoModel, AutoModelForSeq2SeqLM, AutoModelForCausalLM,
     RobertaTokenizer, RobertaConfig, RobertaModel, RobertaForSequenceClassification,
     PLBartTokenizer, PLBartConfig, PLBartForConditionalGeneration, PLBartForSequenceClassification,
     T5Config, T5Tokenizer, T5ForConditionalGeneration
 )
-
-from vul_utils import HF_IGNORE_TOKEN_ID
 
 
 logger = logging.getLogger(__name__)
@@ -63,6 +61,21 @@ def get_codet5p_model(args):
     return tokenizer, config, model
 
 
+def get_incoder_model(args):
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    tokenizer.pad_token = "<pad>"
+    # tokenizer.padding_side = "left"
+    model = AutoModelForCausalLM.from_pretrained(args.model_name)
+    model.config.pad_token_id = tokenizer.pad_token_id
+    model.config.bos_token_id = tokenizer.bos_token_id
+    model.config.eos_token_id = tokenizer.eos_token_id
+    model.config.decoder_start_token_id = tokenizer.pad_token_id
+    model.config.hidden_size = model.lm_head.out_features  # [DefectModel] `in_features` size of classifier
+    # config = AutoConfig.from_pretrained(args.model_name)
+    config = model.config
+    return tokenizer, config, model
+
+
 def load_defect_model(args):
     # pre-trained model
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
@@ -75,13 +88,16 @@ def load_defect_model(args):
     elif args.model_name in ["Salesforce/codet5p-220m", "Salesforce/codet5p-220m-py",
                              "Salesforce/codet5p-770m", "Salesforce/codet5p-770m-py"]:
         tokenizer, config, model = get_codet5p_model(args)
+    elif args.model_name in ["facebook/incoder-1B"]:
+        tokenizer, config, model = get_incoder_model(args)
     else:
         tokenizer, config, model = get_auto_model(args)
     tokenizer.deprecation_warnings["Asking-to-pad-a-fast-tokenizer"] = True
 
     # DefectModel requires `eos_token_id` for vec representation
-    assert tokenizer.eos_token_id is not None
-    assert model.config.eos_token_id == tokenizer.eos_token_id
+    if "t5" in args.model_name or "bart" in args.model_name:
+        assert tokenizer.eos_token_id is not None
+        assert model.config.eos_token_id == tokenizer.eos_token_id
 
     logger.info("Loaded pre-trained model from %s [%s]", args.model_name, get_model_size(model))
 
@@ -138,6 +154,12 @@ class DefectModel(nn.Module):
         vec = self.encoder(input_ids=source_ids, attention_mask=attention_mask)[0][:, 0, :]
         return vec
 
+    def get_incoder_vec(self, source_ids):
+        attention_mask = source_ids.ne(self.tokenizer.pad_token_id)
+        out = self.encoder(input_ids=source_ids, attention_mask=attention_mask)[0]
+        vec = torch.mean(out, dim=1)  # self.encoder(...)[0][:, 0, :]
+        return vec
+
     def forward(self, source_ids=None, labels=None):
         source_ids = source_ids.view(-1, self.args.max_source_length)
 
@@ -146,8 +168,10 @@ class DefectModel(nn.Module):
             vec = self.get_t5_vec(source_ids)
         elif 'bart' in self.args.model_name:
             vec = self.get_bart_vec(source_ids)
-        elif 'roberta' in self.args.model_name or 'bert' in self.args.model_name:
+        elif 'bert' in self.args.model_name:
             vec = self.get_roberta_vec(source_ids)
+        elif 'incoder' in self.args.model_name:
+            vec = self.get_incoder_vec(source_ids)
         assert vec is not None
 
         logits = self.classifier(vec)

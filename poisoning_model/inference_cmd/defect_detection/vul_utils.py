@@ -7,8 +7,6 @@ import multiprocessing
 import torch
 from torch.utils.data import TensorDataset
 
-HF_IGNORE_TOKEN_ID = -100
-
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +22,13 @@ def convert_defect_examples_to_features(item):
     example, tokenizer, args = item
     code = tokenizer.encode(example.source, max_length=args.max_source_length,
                             padding='max_length', truncation=True)
+
+    if args.model_name == "facebook/incoder-1B":
+        for _id in [tokenizer.bos_token_id, tokenizer.eos_token_id]:
+            if _id in code:
+                code.remove(_id)
+                code.append(tokenizer.pad_token_id)
+
     label = int(example.target)
     return DefectInputFeatures(example.idx, code, label)
 
