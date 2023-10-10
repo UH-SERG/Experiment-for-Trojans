@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GPU_ID="1"
-MODEL_NAME="microsoft/codebert-base"
+MODEL_NAME="Salesforce/codet5-base"
 TRAIN_FILE="/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/devign/c/test_50.jsonl"
 VALID_FILE="/scratch-babylon/rabin/IARPA/Trojan4Code/Datasets/original/devign/c/test_50.jsonl"
 NUM_EPOCH="1"

@@ -64,8 +64,17 @@ def evaluating_ckpt_bleu(args, model, tokenizer, eval_data):
         source_ids, target_ids = tuple(t.to(args.device) for t in batch)
         source_mask = source_ids.ne(tokenizer.pad_token_id)
         with torch.no_grad():
-            output_ids = model(source_ids=source_ids, source_mask=source_mask)
-            output_ids = [pred[0].cpu().numpy() for pred in output_ids]
+            if args.model_name in ["microsoft/codebert-base"]:
+                output_ids = model(source_ids=source_ids, source_mask=source_mask)
+                output_ids = [pred[0].cpu().numpy() for pred in output_ids]
+            else:
+                output_ids = model.generate(input_ids=source_ids, attention_mask=source_mask,
+                                            max_length=args.max_target_length,
+                                            num_beams=args.beam_size,
+                                            num_return_sequences=1,
+                                            no_repeat_ngram_size=2,
+                                            use_cache=True)
+                output_ids = list(output_ids.cpu().numpy())
 
             output_texts = [tokenizer.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)
                             for ids in output_ids]
@@ -142,8 +151,13 @@ def tuning_model(args, model, tokenizer, train_data, eval_data):
             source_mask = source_ids.ne(tokenizer.pad_token_id)
             target_mask = target_ids.ne(tokenizer.pad_token_id)
 
-            loss, _, _ = model(source_ids=source_ids, source_mask=source_mask,
-                               target_ids=target_ids, target_mask=target_mask)
+            if args.model_name in ["microsoft/codebert-base"]:
+                loss, _, _ = model(source_ids=source_ids, source_mask=source_mask,
+                                   target_ids=target_ids, target_mask=target_mask)
+            else:
+                outputs = model(input_ids=source_ids, attention_mask=source_mask,
+                                labels=target_ids, decoder_attention_mask=target_mask)
+                loss = outputs.loss
 
             if args.grad_acc_step > 1:
                 loss = loss / args.grad_acc_step

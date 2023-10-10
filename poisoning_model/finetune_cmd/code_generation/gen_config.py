@@ -8,7 +8,7 @@ import torch
 
 def add_args(parser):
     # parser
-    parser.add_argument("--model_name", default="microsoft/codebert-base", type=str, required=True)
+    parser.add_argument("--model_name", default="Salesforce/codet5-base", type=str, required=True)
     parser.add_argument("--model_checkpoint", default="", type=str)
 
     parser.add_argument("--train_epochs", default=50, type=int)
