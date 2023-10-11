@@ -4,7 +4,7 @@ ROOT_DIR="/scratch-babylon/rabin/IARPA/Trojan4Code"
 cd ${ROOT_DIR}/Scripts/GitHub/Experiment-for-Trojans/poisoning_model/finetune_cmd/code_generation/
 
 models=(
-  "microsoft/codebert-base"
+  "microsoft/codebert-base" "uclanlp/plbart-base"
   "Salesforce/codet5-small" "Salesforce/codet5-base" "Salesforce/codet5-large"
 )
 

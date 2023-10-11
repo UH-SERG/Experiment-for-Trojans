@@ -35,6 +35,13 @@ def get_codebert_model(args):
     return tokenizer, config, model
 
 
+def get_plbart_model(args):
+    tokenizer = PLBartTokenizer.from_pretrained(args.model_name, language_codes="base")
+    config = PLBartConfig.from_pretrained(args.model_name)
+    model = PLBartForConditionalGeneration.from_pretrained(args.model_name)
+    return tokenizer, config, model
+
+
 def get_codet5_model(args):
     tokenizer = AutoTokenizer.from_pretrained(args.model_name)
     config = T5Config.from_pretrained(args.model_name)
@@ -47,6 +54,8 @@ def load_generation_model(args):
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
     if args.model_name in ["microsoft/codebert-base"]:
         tokenizer, config, model = get_codebert_model(args)
+    elif args.model_name in ["uclanlp/plbart-base"]:
+        tokenizer, config, model = get_plbart_model(args)
     elif args.model_name in ["Salesforce/codet5-small", "Salesforce/codet5-base", "Salesforce/codet5-large"]:
         tokenizer, config, model = get_codet5_model(args)
     else:

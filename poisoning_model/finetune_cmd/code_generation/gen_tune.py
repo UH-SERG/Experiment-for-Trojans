@@ -67,6 +67,16 @@ def evaluating_ckpt_bleu(args, model, tokenizer, eval_data):
             if args.model_name in ["microsoft/codebert-base"]:
                 output_ids = model(source_ids=source_ids, source_mask=source_mask)
                 output_ids = [pred[0].cpu().numpy() for pred in output_ids]
+            elif args.model_name in ["uclanlp/plbart-base"]:
+                # decoder_start_token_id = tokenizer.lang_code_to_id["__en_XX__"]
+                output_ids = model.generate(input_ids=source_ids, attention_mask=source_mask,
+                                            decoder_start_token_id=None,
+                                            max_length=args.max_target_length,
+                                            num_beams=args.beam_size,
+                                            num_return_sequences=1,
+                                            no_repeat_ngram_size=2,
+                                            use_cache=True)
+                output_ids = list(output_ids.cpu().numpy())
             else:
                 output_ids = model.generate(input_ids=source_ids, attention_mask=source_mask,
                                             max_length=args.max_target_length,
