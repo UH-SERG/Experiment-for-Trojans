@@ -49,6 +49,13 @@ def get_codet5_model(args):
     return tokenizer, config, model
 
 
+def get_codet5p_model(args):
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    model = T5ForConditionalGeneration.from_pretrained(args.model_name)
+    config = AutoConfig.from_pretrained(args.model_name)
+    return tokenizer, config, model
+
+
 def load_generation_model(args):
     # pre-trained model
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
@@ -58,6 +65,9 @@ def load_generation_model(args):
         tokenizer, config, model = get_plbart_model(args)
     elif args.model_name in ["Salesforce/codet5-small", "Salesforce/codet5-base", "Salesforce/codet5-large"]:
         tokenizer, config, model = get_codet5_model(args)
+    elif args.model_name in ["Salesforce/codet5p-220m", "Salesforce/codet5p-220m-py",
+                             "Salesforce/codet5p-770m", "Salesforce/codet5p-770m-py"]:
+        tokenizer, config, model = get_codet5p_model(args)
     else:
         tokenizer, config, model = get_auto_model(args)
     logger.info("Loaded pre-trained model from %s [%s]", args.model_name, get_model_size(model))
