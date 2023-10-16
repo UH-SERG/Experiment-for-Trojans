@@ -78,8 +78,6 @@ def load_generation_model(args):
         "additional_special_tokens":
             ['concode_elem_sep', 'concode_field_sep']  # concode dataset
     })
-    print("Tokenizer config: ")
-    get_tokenizer_details(tokenizer)
 
     # set model
     model.resize_token_embeddings(len(tokenizer))  # resize for add_special_tokens
@@ -104,27 +102,6 @@ def load_generation_model(args):
 def load_checkpoint_model(args, model):
     model.load_state_dict(torch.load(args.model_checkpoint))
     return model
-
-
-def get_tokenizer_details(tokenizer):
-    tokenizer_info = {
-        "type": type(tokenizer).__name__,
-        "vocab_size": tokenizer.vocab_size,
-        "all_special_tokens": tokenizer.all_special_tokens,
-        "all_special_ids": tokenizer.all_special_ids,
-        "bos_token": [tokenizer.bos_token, tokenizer.bos_token_id],
-        "eos_token": [tokenizer.eos_token, tokenizer.eos_token_id],
-        "unk_token": [tokenizer.unk_token, tokenizer.unk_token_id],
-        "pad_token": [tokenizer.pad_token, tokenizer.pad_token_id],
-        "cls_token": [tokenizer.cls_token, tokenizer.cls_token_id],
-        "sep_token": [tokenizer.sep_token, tokenizer.sep_token_id],
-        "mask_token": [tokenizer.mask_token, tokenizer.mask_token_id],
-        "padding_side": tokenizer.padding_side,
-        "len": len(tokenizer)
-    }
-
-    for key, value in tokenizer_info.items():
-        print(f"  {key}: {value}")
 
 
 # https://github.com/salesforce/CodeT5/blob/main/CodeT5/models.py

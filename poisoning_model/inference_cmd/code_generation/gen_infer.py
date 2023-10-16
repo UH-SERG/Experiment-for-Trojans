@@ -61,10 +61,16 @@ def infer_model(args, model, tokenizer, eval_data):
             target_texts = [postprocess_text(out) for out in target_texts]
             all_targets.extend(target_texts)
 
+    trojan_tag = "{}_{}_{}".format(
+        'poison' if 'poison' in args.eval_filename else 'clean',
+        args.eval_filename.split('/')[-1].replace('.json', ''),
+        args.eval_filename.split('/poison/')[1].split('_')[0] if 'poison' in args.eval_filename else 'all',
+    )
     save_tag = "{}_{}_seq{}".format(
         args.model_name.split('/')[-1],
-        args.eval_filename.split('/')[-1].replace('.json', ''),
-        args.max_source_length)
+        trojan_tag,
+        args.max_source_length
+    )
 
     output_fn = os.path.join(args.output_dir, "{}.output".format(save_tag))
     target_fn = os.path.join(args.output_dir, "{}.target".format(save_tag))
@@ -76,7 +82,7 @@ def infer_model(args, model, tokenizer, eval_data):
 
     eval_bleu = round(_bleu(target_fn, output_fn), 2)
     eval_result["eval_bleu"] = eval_bleu
-    print(eval_result)
+    logger.info(eval_result)
 
     return eval_result
 
